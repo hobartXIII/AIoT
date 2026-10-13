@@ -448,6 +448,36 @@ r2   = r2_score(y_test, y_pred)
 mae  = mean_absolute_error(y_test, y_pred)
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))</code></pre>
 
+      <h3>範例報告：50 STARTUP Kaggle Report</h3>
+      <p>一份照 CRISP-DM 六步驟寫成的完整報告，可當作業報告的格式參考。資料準備用 <code>OneHotEncoder(drop='first')</code>，再比較四種特徵選擇方法，各自訓練 Linear Regression。</p>
+      <ul>
+        <li><strong>Backward Elimination</strong>：從全部特徵開始，依 p-value 逐一刪掉最不顯著的</li>
+        <li><strong>Forward Selection</strong>：從零開始，逐一加入最顯著的</li>
+        <li><strong>RFE</strong>：依模型係數遞迴刪除不重要的特徵</li>
+        <li><strong>Lasso</strong>：用 L1 懲罰把部分係數壓到 0</li>
+      </ul>
+      <div class="tbl"><table>
+        <thead><tr><th>方法</th><th>選到的特徵</th><th>特徵數</th><th>MSE</th><th>R²</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Backward Elimination</td><td>R&amp;D Spend</td><td class="num">1</td><td class="num">59,510,960</td><td class="num">0.9265</td></tr>
+          <tr><td>Forward Selection</td><td>R&amp;D Spend, Marketing Spend</td><td class="num">2</td><td class="num">67,343,830</td><td class="num">0.9168</td></tr>
+          <tr><td>RFE</td><td>R&amp;D Spend, State_Florida, State_New York</td><td class="num">3</td><td class="num">63,144,830</td><td class="num">0.9220</td></tr>
+          <tr><td>Lasso</td><td>R&amp;D Spend, Administration, Marketing Spend</td><td class="num">3</td><td class="num">80,926,320</td><td class="num">0.9001</td></tr>
+        </tbody>
+      </table></div>
+      <pre><code>from sklearn.feature_selection import RFE
+model = LinearRegression()
+rfe = RFE(model, n_features_to_select=3).fit(X_train, y_train)
+selected = X_train.columns[rfe.support_].tolist()
+model.fit(X_train[selected], y_train)</code></pre>
+      <p>結論：只用 R&amp;D Spend 就是很強的預測因子，加入其他變數影響很小，有些反而變差。視覺化用雙 Y 軸圖：長條畫 MSE，折線畫 R²（<code>ax1.twinx()</code>）。</p>
+      <p class="note">這份報告用 <code>random_state=42</code> 切資料，跟上面 forward selection 表（<code>random_state=0</code>）不同，數字不能直接比較。</p>
+
+      <h3>練習：用 AI 改寫履歷</h3>
+      <p>頁面提供老師的履歷範本（英文自傳、經歷表、授課列表、著作連結），把它丟給 AI 換成自己的資料，可用在 DIC-1 個人網站的 Profile。</p>
+      <blockquote><button class="copy" type="button">複製</button><p>analyze the attached resume and convert to my information</p></blockquote>
+      <p class="note">範本結構：英文自傳（學歷 → 經歷 → 現職 → 研究興趣）→ 經歷表（服務機關、部門、職稱、起訖年月）→ 作品／課程列表 → 著作或連結。</p>
+
       <h3>補充：交叉驗證</h3>
       <ul>
         <li><strong>K-Fold</strong>：資料切 k 份，輪流當測試集。</li>

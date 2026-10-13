@@ -163,7 +163,66 @@ y_pred = regressor.predict(X_test)
   - **Stratified K-Fold**：每個 fold 依類別比例抽樣；測試集更能代表整體、對不平衡資料有用，主要用在分類問題
   - sklearn：`RepeatedKFold`、`StratifiedKFold`、`StratifiedShuffleSplit`
 
-## 延伸頁面（原頁面子頁，未展開）
+## 子頁：50 STARTUP Kaggle Report（範例報告）
 
-- AI'25-L6B Resume
-- 50 STARTUP Kaggle Report
+一份用 CRISP-DM 寫成的完整分析報告，可當作業報告的格式參考。
+
+**1. Business Understanding**：用 R&D Spend、Administration、Marketing Spend、State 預測新創利潤，找出最影響利潤的因素，幫助分配預算。
+
+**2. Data Understanding**：50 筆資料；4 個數值欄（含目標 Profit）+ 1 個類別欄（State）。用 `df.head()`、`df.info()` 檢查。
+
+**3. Data Preparation**：
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import train_test_split
+
+X = df.drop("Profit", axis=1)
+y = df["Profit"]
+encoder = OneHotEncoder(drop='first', sparse_output=False)   # drop='first' 避免共線性
+encoded = encoder.fit_transform(X[['State']])
+encoded_df = pd.DataFrame(encoded, columns=encoder.get_feature_names_out(['State']))
+X = pd.concat([X.drop("State", axis=1), encoded_df], axis=1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+**4. Modeling & Feature Selection**：比較四種特徵選擇方法，再各自訓練 Linear Regression。
+
+- **Backward Elimination**：從全部特徵開始，依 p-value 逐一刪掉最不顯著的
+- **Forward Selection**：從零開始，逐一加入最顯著的
+- **RFE（Recursive Feature Elimination）**：依模型係數遞迴刪除不重要的特徵
+- **Lasso**：用 L1 懲罰把部分係數壓到 0
+
+```python
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+rfe = RFE(model, n_features_to_select=3).fit(X_train, y_train)
+selected = X_train.columns[rfe.support_].tolist()
+model.fit(X_train[selected], y_train)
+```
+
+**5. Evaluation**（test set，`random_state=42`）：
+
+| 方法 | 選到的特徵 | 特徵數 | MSE | R² |
+|---|---|---|---|---|
+| **Backward Elimination** | R&D Spend | 1 | **59,510,960** | **0.9265** |
+| Forward Selection | R&D Spend, Marketing Spend | 2 | 67,343,830 | 0.9168 |
+| RFE | R&D Spend, State_Florida, State_New York | 3 | 63,144,830 | 0.9220 |
+| Lasso | R&D Spend, Administration, Marketing Spend | 3 | 80,926,320 | 0.9001 |
+
+**6. Deployment & Visualization**：用 matplotlib 雙 Y 軸圖比較各方法 — 長條圖畫 MSE（左軸），折線畫 R²（右軸，`ax1.twinx()`）。
+
+**結論**：只用 R&D Spend 就是很強的預測因子（Backward Elimination 表現最好）；加入其他變數影響很小，有些反而變差 → 新創應把資源集中在研發投入。
+
+> 註：這份報告用 `random_state=42`，跟上面 forward selection 表（`random_state=0`）的切分不同，所以數字不能直接比較。
+
+## 子頁：AI'25-L6B Resume（用 AI 改寫履歷的練習）
+
+- 頁面提供老師的履歷範本（附件 zip，含英文自傳、經歷表、授課列表、著作連結）。
+- 練習：把範本丟給 AI，請它換成自己的資料：
+
+  > analyze the attached resume and convert to my information
+
+- 範本結構可以照抄：**英文自傳段落**（學歷 → 經歷 → 現職 → 研究興趣）→ **經歷表**（服務機關、部門、職稱、起訖年月）→ **作品／課程列表** → **著作或連結**。適合拿來做 DIC-1 個人網站的 Profile 內容。
