@@ -4,7 +4,7 @@
 
 ## 網頁版
 
-- L04-1 ～ L06：https://claude.ai/artifact/5VDco6BDRHD4AGkbkFwMKK （私人，需從頁面 Share 選單分享才看得到）
+- L04-1 ～ L07：https://claude.ai/artifact/5VDco6BDRHD4AGkbkFwMKK （私人，需從頁面 Share 選單分享才看得到）
 - 原始檔：[`web/aiot-da-notes.html`](web/aiot-da-notes.html)
 
 ## 目錄
