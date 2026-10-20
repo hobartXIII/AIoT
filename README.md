@@ -18,6 +18,8 @@
 | [L04-2](L04-2-crisp-dm.md) | 2026.9.30 | CRISP-DM 資料分析方法 | — |
 | [L05](L05-linear-to-auto-regression.md) | 2026.9.30 | 簡單線性回歸 → 自回歸股票預測 | — |
 | [L06](L06-multiple-linear-regression.md) | 2026.9.30 | 多元線性回歸（50 Startups） | DIC-2 股票預測 |
+| [Quiz 1](Quiz1-supervised-learning.md) | — | 監督式學習十大演算法、題庫 prompt、資訊圖表 | — |
+| [L07](L07-logistic-regression.md) | 2026.10.14 | Logistic Regression（分類問題）、混淆矩陣 | — |
 
 ## 筆記整理方式
 

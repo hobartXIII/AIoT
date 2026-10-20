@@ -1,4 +1,4 @@
-<title>AIoT-DA 課堂筆記 L4–L6</title>
+<title>AIoT-DA 課堂筆記 L4–L7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -84,6 +84,9 @@ th { font-weight: 700; background: var(--code-bg); white-space: nowrap; }
 tr:last-child td { border-bottom: 0; }
 td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 tr.best td { background: var(--accent-soft); font-weight: 500; }
+tr.drop td { color: var(--muted); }
+tr.drop td:nth-child(2) { text-decoration: line-through; }
+.tag-drop { font-size: 12px; color: var(--mark); border: 1px solid var(--mark); border-radius: 999px; padding: 0 8px; margin-left: 6px; display: inline-block; }
 
 pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: 13.5px; line-height: 1.6; margin: 12px 0 18px; }
 pre code { background: none; padding: 0; font-size: inherit; }
@@ -137,8 +140,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 <div class="wrap">
   <header class="mast">
     <div class="eyebrow">AIoT-DA 物聯網應用與資料分析 · 115-1</div>
-    <h1>課堂筆記 L04-1 – L06</h1>
-    <p>從期末 Proposal 寫作、CRISP-DM，到簡單／多元線性回歸與自回歸股票預測。整理自課程 Notion 頁面（2026.9.30 更新），含頁面圖片重點。</p>
+    <h1>課堂筆記 L04-1 – L07</h1>
+    <p>從期末 Proposal 寫作、CRISP-DM，到簡單／多元線性回歸、自回歸股票預測、Quiz 1 監督式學習總覽與邏輯迴歸。整理自課程 Notion 頁面（2026.10.14 更新），含頁面圖片重點。</p>
   </header>
 
   <nav class="rail" aria-label="講次">
@@ -147,6 +150,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <li><a href="#l042"><span class="code">L04-2</span><span class="name">CRISP-DM 資料分析方法</span></a></li>
       <li><a href="#l05"><span class="code">L05</span><span class="name">線性回歸 → 自回歸</span></a></li>
       <li><a href="#l06"><span class="code">L06</span><span class="name">多元線性回歸 · 50 Startups</span></a></li>
+      <li><a href="#quiz1"><span class="code">Quiz 1</span><span class="name">監督式學習演算法總覽</span></a></li>
+      <li><a href="#l07"><span class="code">L07</span><span class="name">邏輯迴歸 · 混淆矩陣</span></a></li>
     </ol>
   </nav>
 
@@ -484,6 +489,140 @@ model.fit(X_train[selected], y_train)</code></pre>
         <li><strong>Repeated K-Fold</strong>：重複 n 次 k-fold，每次重新洗牌（k=2、n=2 會訓練 4 次）。</li>
         <li><strong>Stratified K-Fold</strong>：每個 fold 依類別比例抽樣；測試集更能代表整體，適合不平衡的分類資料。</li>
       </ul>
+    </section>
+
+    <!-- ================= Quiz 1 ================= -->
+    <section class="lecture" id="quiz1">
+      <div class="lec-head">
+        <span class="lec-code">Quiz 1</span>
+        <h2>監督式學習演算法精華總覽</h2>
+        <div class="meta"><span class="chip hw">考試範圍</span><span>頁面是和 ChatGPT 的對話：列演算法 → 出題 → 畫資訊圖表</span></div>
+      </div>
+
+      <p>監督式學習用<strong>有標籤</strong>的資料學出 X → y 的對應。y 是連續值叫<strong>回歸</strong>，是類別叫<strong>分類</strong>。</p>
+
+      <h3>十大演算法</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>#</th><th>演算法</th><th>類型</th><th>scikit-learn</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Linear Regression</td><td>回歸</td><td><code>LinearRegression</code></td></tr>
+          <tr><td class="num">2</td><td>Logistic Regression</td><td>分類</td><td><code>LogisticRegression</code></td></tr>
+          <tr><td class="num">3</td><td>Decision Tree</td><td>兩者</td><td><code>DecisionTreeClassifier</code>、<code>DecisionTreeRegressor</code></td></tr>
+          <tr><td class="num">4</td><td>Random Forest</td><td>兩者</td><td><code>RandomForestClassifier</code>、<code>RandomForestRegressor</code></td></tr>
+          <tr><td class="num">5</td><td>Support Vector Machine（SVM）</td><td>兩者</td><td><code>SVC</code>、<code>SVR</code></td></tr>
+          <tr><td class="num">6</td><td>K-Nearest Neighbors（KNN）</td><td>兩者</td><td><code>KNeighborsClassifier</code>、<code>KNeighborsRegressor</code></td></tr>
+          <tr><td class="num">7</td><td>Naive Bayes</td><td>分類</td><td><code>GaussianNB</code>、<code>MultinomialNB</code></td></tr>
+          <tr><td class="num">8</td><td>Gradient Boosting（XGBoost）</td><td>兩者</td><td><code>XGBClassifier</code>、<code>XGBRegressor</code></td></tr>
+          <tr class="drop"><td class="num">9</td><td>Neural Networks（MLP）</td><td>兩者 <span class="tag-drop">不考</span></td><td><code>MLPClassifier</code>、<code>MLPRegressor</code></td></tr>
+          <tr><td class="num">10</td><td>Ridge / Lasso Regression</td><td>回歸</td><td><code>Ridge</code>、<code>Lasso</code></td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">這是教學用排名，不是效能排名。XGBoost 來自獨立的 <code>xgboost</code> 套件。神經網路老師在頁面上劃掉了，不考。</p>
+
+      <h3>每個演算法的核心思想</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>#</th><th>演算法</th><th>核心思想</th><th>優點</th><th>缺點</th><th>適用</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>線性迴歸</td><td>輸入與輸出呈線性關係，最小化平方誤差</td><td>簡單、可解釋</td><td>只能建模線性、易受異常值影響</td><td>連續數值預測</td></tr>
+          <tr><td class="num">2</td><td>邏輯迴歸</td><td>Sigmoid 把線性組合轉成機率</td><td>高效、可解釋、輸出機率</td><td>線性邊界、對特徵尺度敏感</td><td>分類的基線模型</td></tr>
+          <tr><td class="num">3</td><td>KNN</td><td>最近 k 個樣本投票或平均</td><td>直觀、無訓練過程</td><td>預測慢、要存全部資料</td><td>小資料、非線性</td></tr>
+          <tr><td class="num">4</td><td>SVM</td><td>找最大間隔超平面；SVR 用 ε-不敏感損失</td><td>高維有效、核技巧處理非線性</td><td>訓練慢、要調 C、γ</td><td>中小型、高維資料</td></tr>
+          <tr><td class="num">5</td><td>決策樹</td><td>依特徵切分（資訊增益、Gini）</td><td>可解釋、不需特徵縮放</td><td>易過擬合、對小變動敏感</td><td>特徵型態多樣</td></tr>
+          <tr><td class="num">6</td><td>隨機森林</td><td>多棵樹 Bagging，降低變異</td><td>準確、抗過擬合、特徵重要性</td><td>模型大、較難解釋</td><td>大多數實務問題</td></tr>
+          <tr><td class="num">7</td><td>梯度提升樹</td><td>逐步加新樹擬合上一輪殘差</td><td>高準確度、支援正則化與缺值</td><td>超參數多、訓練較久</td><td>結構化資料競賽</td></tr>
+          <tr class="drop"><td class="num">8</td><td>人工神經網路</td><td>多層非線性變換 <span class="tag-drop">不考</span></td><td>表示能力強</td><td>需大量資料、難解釋</td><td>影像、語音、文字</td></tr>
+          <tr><td class="num">9</td><td>朴素貝氏</td><td>貝氏定理＋特徵條件獨立</td><td>訓練快、適合高維</td><td>獨立假設不一定成立</td><td>文字分類、垃圾郵件</td></tr>
+          <tr><td class="num">10</td><td>LDA</td><td>類間差異最大、類內差異最小的投影</td><td>降維＋分類、可解釋</td><td>假設高斯分布、相同共變異</td><td>類別可分性好的資料</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>評估指標與選擇建議</h3>
+      <ul>
+        <li><strong>分類：</strong>Accuracy、Precision、Recall、F1-score、ROC-AUC、Confusion Matrix</li>
+        <li><strong>回歸：</strong>MSE、RMSE、MAE、R²</li>
+      </ul>
+      <ol>
+        <li>先建立基線：線性迴歸／邏輯迴歸</li>
+        <li>資料量小：KNN、朴素貝氏、決策樹</li>
+        <li>資料量中等：SVM、隨機森林、LDA</li>
+        <li>追求高效能：XGBoost／LightGBM</li>
+        <li>需可解釋性：線性模型、決策樹、LDA、隨機森林</li>
+      </ol>
+      <p class="note">實務要點：資料前處理（缺值、編碼、標準化）、交叉驗證、超參數調整（Grid／Random／Bayesian Search）、處理類別不平衡與異常值。圖表底部的星等比較表字太小，沒有收錄。</p>
+
+      <h3>出題 Prompt</h3>
+      <blockquote><button class="copy" type="button">複製</button><p>list 100 problems for 1,2,3 topics , list the most important and popular for reasearch and INTERVIEW , 選擇題 with answers (選項粗體)</p></blockquote>
+      <blockquote><button class="copy" type="button">複製</button><p>USE cHINESE question item if answer , 粗體,</p></blockquote>
+      <blockquote><button class="copy" type="button">複製</button><p>for supervised learning algorithm essence , draw 資訊圖表 a4, 直式 高資訊密度</p></blockquote>
+      <p class="note">範例題：線性迴歸的主要目標？答案 B「最小化殘差平方和（SSE）」。頁面只放了 2 題當格式範例，沒有完整 100 題。</p>
+    </section>
+
+    <!-- ================= L07 ================= -->
+    <section class="lecture" id="l07">
+      <div class="lec-head">
+        <span class="lec-code">L07</span>
+        <h2>Logistic Regression（分類問題）</h2>
+        <div class="meta"><span class="chip">2026.10.14</span><span>講義：Scikit_Learn_Cheat_Sheet_Python.pdf、grade.csv、predict.csv、answer.csv</span><span><a href="https://hackmd.io/@shaoeChen/Sy-uqc39D">推導文章</a></span></div>
+      </div>
+
+      <h3>買 iPhone 的例子</h3>
+      <div class="chain">x 口袋的錢 → z = ax + b 買的慾望 → p = σ(z) 買的機率</div>
+      <p>線性回歸的 z 可以是任何實數；理想的分類器是階梯函數 u(x − c)，只輸出 0 或 1。Sigmoid 介於兩者之間：形狀像階梯，但平滑、可微分，所以能用梯度下降訓練。</p>
+      <div class="formula">σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span> &nbsp;&nbsp;&nbsp; h<sub>θ</sub>(x) = σ(θ<sup>T</sup>x)</div>
+      <ul>
+        <li>z → +∞ 時 σ → 1，z → −∞ 時 σ → 0，z = 0 時 σ = 0.5。</li>
+        <li>h(x) 是 y = 1 的機率；0.51 代表 51% 是 1、49% 是 0。</li>
+        <li>導數 σ′(z) = σ(z)(1 − σ(z))，在 z = 0 最大、兩端趨近 0，所以輸出接近 0 或 1 時收斂變慢。</li>
+        <li>Sigmoid 這類非線性轉換在深度學習裡叫 activation function。</li>
+      </ul>
+
+      <h3>Cost function：Cross-entropy</h3>
+      <div class="formula">J(θ) = −<span class="frac"><span>1</span><span>m</span></span> Σ<sub>i=1</sub><sup>m</sup> [ y<sub>i</sub> log h<sub>θ</sub>(x<sub>i</sub>) + (1 − y<sub>i</sub>) log(1 − h<sub>θ</sub>(x<sub>i</sub>)) ]</div>
+      <ul>
+        <li>y = 1 時後項消失，y = 0 時前項消失；由最大似然推得。</li>
+        <li>和線性回歸只差兩處：hypothesis 多了 sigmoid，loss 從 MSE 換成 cross-entropy。</li>
+        <li>鏈式法則：∂L/∂θ = ∂z/∂θ × ∂L/∂z。</li>
+        <li>Logistic 假設 y 服從伯努利分布，linear 假設高斯分布；兩者都是廣義線性模型。</li>
+      </ul>
+      <p class="note">公式依文章文字補寫為標準式；頁面上的公式是 LaTeX，文字抓取時遺失。</p>
+
+      <h3>Decision boundary</h3>
+      <p>θ<sup>T</sup>x ≥ 0 輸出 1，否則 0，所以邊界是 θ<sup>T</sup>x = 0 的超平面，只能做<strong>線性分割</strong>。Andrew Ng 的例子：θ = (−3, 1, 1)，邊界是 x<sub>1</sub> + x<sub>2</sub> = 3。不是線性可分時，換 SVM 或加多項式特徵，但要注意 overfitting。</p>
+
+      <h3>混淆矩陣</h3>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>預測 Positive</th><th>預測 Negative</th></tr></thead>
+        <tbody>
+          <tr><th>實際 Positive</th><td>True positive（TP）</td><td>False negative（FN）</td></tr>
+          <tr><th>實際 Negative</th><td>False positive（FP）</td><td>True negative（TN）</td></tr>
+        </tbody>
+      </table></div>
+      <div class="formula">Accuracy = <span class="frac"><span>TP + TN</span><span>TP + TN + FP + FN</span></span> &nbsp;&nbsp;&nbsp; Recall = <span class="frac"><span>TP</span><span>TP + FN</span></span></div>
+      <p class="note">頁面把 TP / (TP + FN) 標成 Selectivity，但這個式子一般叫 Recall（Sensitivity）；Wikipedia 的 Selectivity 是 TN / (TN + FP)。考前請對照上課說明。</p>
+
+      <h3>練習資料</h3>
+      <ul>
+        <li><strong>AIoT 班級：</strong><code>grade.csv</code>、<code>predict.csv</code>、<code>answer.csv</code></li>
+        <li><strong>垃圾郵件：</strong><a href="https://www.kaggle.com/datasets/venky73/spam-mails-dataset">Kaggle spam mails dataset</a></li>
+        <li><strong>Titanic：</strong><a href="https://raw.githubusercontent.com/agconti/kaggle-titanic/master/data/train.csv">train.csv</a>、<a href="https://raw.githubusercontent.com/agconti/kaggle-titanic/master/data/test.csv">test.csv</a></li>
+      </ul>
+
+      <h3>適合邏輯迴歸的資料集</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>問題</th><th>樣本數</th><th>特徵數</th><th>標籤（0／1）</th></tr></thead>
+        <tbody>
+          <tr><td>Titanic</td><td class="num">~891</td><td class="num">11</td><td>Survived</td></tr>
+          <tr><td>Heart Disease UCI</td><td class="num">303</td><td class="num">13</td><td>Heart disease</td></tr>
+          <tr><td>Bank Marketing</td><td class="num">41,188</td><td class="num">17</td><td>Subscription</td></tr>
+          <tr><td>Pima Indians Diabetes</td><td class="num">768</td><td class="num">8</td><td>Diabetes</td></tr>
+          <tr><td>Breast Cancer Wisconsin</td><td class="num">569</td><td class="num">30</td><td>Diagnosis</td></tr>
+          <tr><td>Loan Default Prediction</td><td class="num">~30,000</td><td class="num">~25</td><td>Default</td></tr>
+          <tr><td>Customer Churn Prediction</td><td class="num">~10,000</td><td class="num">21</td><td>Churn</td></tr>
+          <tr><td>Credit Card Fraud Detection</td><td class="num">284,807</td><td class="num">30</td><td>Fraud</td></tr>
+          <tr><td>Employee Attrition</td><td class="num">~30,000</td><td class="num">35</td><td>Attrition</td></tr>
+          <tr><td>Marketing Response Prediction</td><td class="num">~10,000</td><td class="num">10</td><td>Response</td></tr>
+        </tbody>
+      </table></div>
     </section>
   </main>
 
