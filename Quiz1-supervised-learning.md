@@ -1,6 +1,61 @@
 # Quiz 1 監督式學習演算法
 
-來源：AIoT-DA Quiz 1（Notion）。頁面內容是一段和 ChatGPT 的對話：先列出監督式學習十大演算法，再請它出題，最後畫成資訊圖表。
+來源：AIoT-DA「AIoT L8 Quiz 1 準備」（Notion，2026.10.28 版）。頁面內容是一段和 ChatGPT 的對話：先列出監督式學習十大演算法，再請它出題，最後畫成資訊圖表。
+
+## 考試範圍
+
+頁面開頭寫：**Supervised learning only, topics 8 and 10 are not included**（只考監督式學習，第 8、10 項不考）。
+
+| 位置 | 不考的項目 |
+|---|---|
+| 資訊圖表（「五個核心思維模式」下方的圖） | **#8 人工神經網路（MLP／DNN）**、**#10 線性判別分析（LDA）** |
+| Top 10 Algorithms 表格 | **#9 Neural Networks（MLP）** |
+
+兩邊的編號不一樣，但不考的其實都是 MLP，再加上資訊圖表裡的 LDA。
+
+## 會考的項目
+
+會考的演算法有 9 個：Top 10 表格和資訊圖表的項目合起來，扣掉 MLP 和 LDA。
+
+### 依任務類型分
+
+| 類型 | 演算法 | Python |
+|---|---|---|
+| **只能回歸**（預測連續值） | 線性迴歸（Linear Regression） | `LinearRegression` |
+| | Ridge／Lasso 迴歸 | `Ridge`、`Lasso` |
+| **只能分類**（預測類別） | 邏輯迴歸（Logistic Regression） | `LogisticRegression` |
+| | 朴素貝氏（Naive Bayes） | `GaussianNB`、`MultinomialNB` |
+| **回歸、分類都能做** | 決策樹（Decision Tree） | `DecisionTreeClassifier`、`DecisionTreeRegressor` |
+| | 隨機森林（Random Forest） | `RandomForestClassifier`、`RandomForestRegressor` |
+| | 支援向量機（SVM／SVR） | `SVC`、`SVR` |
+| | K 近鄰（KNN） | `KNeighborsClassifier`、`KNeighborsRegressor` |
+| | 梯度提升（XGBoost／LightGBM） | `XGBClassifier`、`XGBRegressor` |
+
+### 依方法原理分
+
+| 家族 | 演算法 | 核心思想 |
+|---|---|---|
+| **線性模型** | 線性迴歸 | 最小化平方誤差（OLS） |
+| | Ridge／Lasso | 線性迴歸加上正則化（Ridge 用 L2，Lasso 用 L1） |
+| | 邏輯迴歸 | 線性組合經過 Sigmoid 轉成機率 |
+| **距離／實例** | KNN | 取最近的 k 個樣本，分類用投票、回歸取平均，不需要訓練 |
+| **間隔最大化** | SVM | 找間隔最大的超平面，可用核技巧處理非線性 |
+| **機率模型** | 朴素貝氏 | 貝氏定理，假設特徵之間條件獨立 |
+| **樹模型** | 決策樹 | 依特徵切分資料，用資訊增益或 Gini 選切點 |
+| **集成（Ensemble）** | 隨機森林 | 很多棵樹做 Bagging，降低變異 |
+| | 梯度提升 | 用 Boosting 一棵一棵加樹，每棵擬合上一輪的殘差 |
+
+### 資訊圖表上的共通觀念（也可能考）
+
+- **評估指標**
+  - 分類：Accuracy、Precision、Recall、F1、ROC-AUC、Confusion Matrix
+  - 回歸：MSE、RMSE、MAE、R²
+- **學習流程**：帶標籤資料 → 選演算法並設定超參數 → 訓練 → 評估與預測
+- **實務要點**：資料前處理（缺值、編碼、標準化）、交叉驗證、超參數搜尋（Grid／Random／Bayesian）、類別不平衡
+
+### 不考
+
+人工神經網路（MLP／DNN）、線性判別分析（LDA）
 
 ## 單元重點
 
@@ -25,9 +80,29 @@
 
 - 這是教學用的排名，不是效能排名。
 - XGBoost 來自獨立的 `xgboost` 套件，不在 scikit-learn 裡。
-- **Neural Networks（MLP）不會考**：老師在頁面上把它劃掉了。
+- **#9 Neural Networks（MLP）不考**：老師在頁面上把它劃掉了。
 
 ## 題庫 prompt
+
+L8 新增的 prompt：
+
+````text
+List top 10 topics for machine learning supervised learning
+````
+
+````text
+List top 20 problems for <Linear Regression>, simple choice with answer emphasized and explanation
+````
+
+````text
+五個核心思維模式： 這個領域所有專家都認同的五個核心思維模式是什麼？
+````
+
+````text
+十個深度測驗問題： 生成 10 個問題以判斷一個人是真正深入了解，還是死記硬背。
+````
+
+原本的 prompt：
 
 ````text
 LIST top 10 algorithms of supervised learning
@@ -67,6 +142,8 @@ ChatGPT 確認的題目格式：題目與選項用繁體中文、英文術語放
 
 ## 資訊圖表：監督式學習演算法精華總覽
 
+位置：頁面上「五個核心思維模式」下方的圖。**#8 人工神經網路、#10 LDA 不考**。
+
 A4 直式圖表，由上而下：
 
 - **目標**：從帶標籤資料學習映射 X → y，用於分類或回歸
@@ -86,7 +163,7 @@ A4 直式圖表，由上而下：
 | 7 | 梯度提升樹（XGBoost／LightGBM） | 分類／回歸 | 逐步加入新樹擬合上一輪的殘差 | 高準確度、處理複雜資料、支援正則化與缺值 | 需調整較多超參數、訓練時間較長 | 結構化資料的競賽與實務 |
 | 8 | ~~人工神經網路（MLP／DNN）~~（不考） | 分類／回歸 | 多層非線性變換學習複雜特徵表示 | 表示能力強、可建模高度非線性 | 需大量資料、難以解釋、訓練成本高 | 大規模資料、影像語音文字 |
 | 9 | 朴素貝氏 | 分類 | 基於貝氏定理，假設特徵條件獨立（Gaussian／Multinomial／Bernoulli NB） | 訓練快、適合高維、小資料也有效 | 獨立假設不一定成立 | 文字分類、垃圾郵件過濾 |
-| 10 | 線性判別分析（LDA） | 分類 | 找使類間差異最大、類內差異最小的投影 | 降維＋分類、可解釋 | 假設高斯分布、相同共變異數 | 類別可分性較好的資料 |
+| 10 | ~~線性判別分析（LDA）~~（不考） | 分類 | 找使類間差異最大、類內差異最小的投影 | 降維＋分類、可解釋 | 假設高斯分布、相同共變異數 | 類別可分性較好的資料 |
 
 **實務選擇建議**（圖表右下）：
 
