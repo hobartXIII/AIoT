@@ -361,10 +361,12 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <h4>算一次看看</h4>
     <p>TP = 40、FP = 10、FN = 20、TN = 30（共 100 筆）：</p>
     <ul>
-      <li>Accuracy = 70 / 100 = <b>0.70</b></li>
-      <li>Precision = 40 / 50 = <b>0.80</b></li>
-      <li>Recall = 40 / 60 ≈ <b>0.667</b></li>
-      <li>F1 = 2 × 0.8 × 0.667 / (0.8 + 0.667) ≈ <b>0.727</b></li>
+      <li>先算三個分母：預測為正 TP + FP = 40 + 10 = 50；實際為正 TP + FN = 40 + 20 = 60；實際為負 TN + FP = 30 + 10 = 40</li>
+      <li>Accuracy = (TP + TN) / 全部 = (40 + 30) / 100 = <b>0.70</b></li>
+      <li>Precision = TP / (TP + FP) = 40 / 50 = <b>0.80</b></li>
+      <li>Recall = TP / (TP + FN) = 40 / 60 ≈ <b>0.667</b></li>
+      <li>Specificity = TN / (TN + FP) = 30 / 40 = <b>0.75</b>，所以 FPR = 1 − 0.75 = 0.25</li>
+      <li>F1 = 2PR / (P + R)：分子 2 × 0.8 × 0.667 ≈ 1.067，分母 0.8 + 0.667 = 1.467，F1 = 1.067 / 1.467 ≈ <b>0.727</b>（也可以用 2TP / (2TP + FP + FN) = 80 / 110 ≈ 0.727 驗算）</li>
     </ul>
     <ul class="trap">
       <li><span>95% 是負例的資料，模型全部猜負就有 95% Accuracy，但 Recall = 0。不平衡資料不要只看 Accuracy。</span></li>
@@ -379,9 +381,23 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
         <tr><td class="nw">MSE</td><td class="nw">(1/n) Σ (y − ŷ)²</td><td>平方放大大誤差，對離群值敏感；單位是 y²</td></tr>
         <tr><td class="nw">RMSE</td><td class="nw">√MSE</td><td>單位同 y，比較好解釋</td></tr>
         <tr><td class="nw">R²</td><td class="nw">1 − SS<sub>res</sub> / SS<sub>tot</sub></td><td>模型解釋了多少比例的變異。1 = 完美，0 = 跟猜平均一樣，<b>可以是負的</b>（比猜平均還差）</td></tr>
-        <tr><td class="nw">Adjusted R²</td><td>依特徵數調整的 R²</td><td>R² 加特徵一定不降；Adjusted R² 加了沒用的特徵會下降</td></tr>
+        <tr><td class="nw">Adjusted R²</td><td class="nw">1 − (1 − R²)(n − 1) / (n − p − 1)</td><td>n 是資料筆數、p 是特徵數。R² 加特徵一定不降；Adjusted R² 加了沒用的特徵會下降</td></tr>
       </tbody>
     </table></div>
+    <h4>算一次看看（回歸）</h4>
+    <p>沿用線性迴歸 ✅ 範例的 4 筆資料，直線 ŷ = 1.9x：</p>
+    <div class="tbl"><table>
+        <thead><tr><th>y</th><th>ŷ</th><th>誤差 y − ŷ</th><th>|y − ŷ|</th><th>(y − ŷ)²</th></tr></thead>
+        <tbody><tr><td>2</td><td>1.9</td><td>0.1</td><td>0.1</td><td>0.01</td></tr><tr><td>4</td><td>3.8</td><td>0.2</td><td>0.2</td><td>0.04</td></tr><tr><td>5</td><td>5.7</td><td>−0.7</td><td>0.7</td><td>0.49</td></tr><tr><td>8</td><td>7.6</td><td>0.4</td><td>0.4</td><td>0.16</td></tr><tr><td>合計</td><td></td><td></td><td>1.4</td><td>0.7</td></tr></tbody>
+      </table></div>
+    <ul>
+      <li>MAE = 1.4 / 4 = <b>0.35</b></li>
+      <li>MSE = 0.7 / 4 = <b>0.175</b></li>
+      <li>RMSE = √0.175 ≈ <b>0.418</b>（單位和 y 一樣）</li>
+      <li>R² = 1 − SS<sub>res</sub> / SS<sub>tot</sub> = 1 − 0.7 / 18.75 ≈ <b>0.963</b>（SS<sub>res</sub> 就是 SSE，SS<sub>tot</sub> 就是 SST = Σ(y − ȳ)² = 18.75）</li>
+      <li>Adjusted R²：n = 4 筆、p = 1 個特徵，1 − (1 − 0.963) × (4 − 1) / (4 − 1 − 1) = 1 − 0.037 × 1.5 ≈ <b>0.944</b></li>
+      <li>如果多加一個沒用的特徵（p = 2），R² 只從 0.963 升到 0.965：Adjusted R² = 1 − 0.035 × 3 / 1 = <b>0.895</b>，反而下降。這就是 Adjusted R² 會懲罰沒用特徵的原因。</li>
+    </ul>
   </section>
 
   <!-- ============ 線性迴歸 ============ -->
@@ -462,22 +478,39 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="ex ng">
       <div class="ex-h">❌ 解決不了 1：資料其實是曲線（y = x²）</div>
-      <p>5 筆資料：(1, 1)、(2, 4)、(3, 9)、(4, 16)、(5, 25)。照同樣步驟算：x̄ = 3、ȳ = 11、Σ(x − x̄)(y − ȳ) = 60、Σ(x − x̄)² = 10，所以 β<sub>1</sub> = 6、β<sub>0</sub> = 11 − 6 × 3 = −7，直線是 <b>ŷ = 6x − 7</b>。</p>
+      <p>5 筆資料：(1, 1)、(2, 4)、(3, 9)、(4, 16)、(5, 25)。照 ✅ 的步驟算：</p>
+      <p><span class="step">STEP 1</span>平均：x̄ = (1+2+3+4+5)/5 = <b>3</b>，ȳ = (1+4+9+16+25)/5 = 55/5 = <b>11</b></p>
+      <p><span class="step">STEP 2</span>每一點離平均多遠，再相乘（最後一欄順便算 SST）：</p>
       <div class="tbl"><table>
-        <thead><tr><th>x</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
-        <tbody>
-          <tr><td>y（實際）</td><td>1</td><td>4</td><td>9</td><td>16</td><td>25</td></tr>
-          <tr><td>ŷ = 6x − 7</td><td>−1</td><td>5</td><td>11</td><td>17</td><td>23</td></tr>
-          <tr><td>殘差 e</td><td class="hl">2</td><td class="hl">−1</td><td class="hl">−2</td><td class="hl">−1</td><td class="hl">2</td></tr>
-        </tbody>
+        <thead><tr><th>x</th><th>y</th><th>x − x̄</th><th>y − ȳ</th><th>(x − x̄)(y − ȳ)</th><th>(x − x̄)²</th><th>(y − ȳ)²</th></tr></thead>
+        <tbody><tr><td>1</td><td>1</td><td>−2</td><td>−10</td><td>20</td><td>4</td><td>100</td></tr><tr><td>2</td><td>4</td><td>−1</td><td>−7</td><td>7</td><td>1</td><td>49</td></tr><tr><td>3</td><td>9</td><td>0</td><td>−2</td><td>0</td><td>0</td><td>4</td></tr><tr><td>4</td><td>16</td><td>1</td><td>5</td><td>5</td><td>1</td><td>25</td></tr><tr><td>5</td><td>25</td><td>2</td><td>14</td><td>28</td><td>4</td><td>196</td></tr><tr><td>合計</td><td></td><td></td><td></td><td>60</td><td>10</td><td>SST = 374</td></tr></tbody>
       </table></div>
-      <p>SSE = 14、SST = 374，R² = 1 − 14 ÷ 374 = <b>0.963</b>，和上一個例子幾乎一樣高！但殘差是「兩端正、中間負」的 U 形，有規律，代表直線一直犯同一種錯。拿它去預測 x = 6：直線說 6 × 6 − 7 = <b>29</b>，實際是 <b>36</b>，差了 7，而且 x 越大差越多。</p>
+      <p><span class="step">STEP 3</span>β<sub>1</sub> = 60 ÷ 10 = <b>6</b>；β<sub>0</sub> = 11 − 6 × 3 = <b>−7</b>，直線是 <b>ŷ = 6x − 7</b>。</p>
+      <p><span class="step">STEP 4</span>檢查誤差：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>合計</th></tr></thead>
+        <tbody><tr><td>y（實際）</td><td>1</td><td>4</td><td>9</td><td>16</td><td>25</td><td></td></tr><tr><td>ŷ = 6x − 7</td><td>6 − 7 = −1</td><td>12 − 7 = 5</td><td>18 − 7 = 11</td><td>24 − 7 = 17</td><td>30 − 7 = 23</td><td></td></tr><tr><td>殘差 e = y − ŷ</td><td>2</td><td>−1</td><td>−2</td><td>−1</td><td>2</td><td></td></tr><tr><td>e²</td><td>4</td><td>1</td><td>4</td><td>1</td><td>4</td><td>SSE = 14</td></tr></tbody>
+      </table></div>
+      <p>SSE = 4 + 1 + 4 + 1 + 4 = 14、SST = 374（STEP 2 最後一欄），R² = 1 − 14 ÷ 374 = <b>0.963</b>，和上一個例子幾乎一樣高！但殘差是「兩端正、中間負」的 U 形，有規律，代表直線一直犯同一種錯。拿它去預測 x = 6：直線說 6 × 6 − 7 = <b>29</b>，實際是 <b>36</b>，差了 7，而且 x 越大差越多。</p>
       <p class="take"><b>為什麼解決不了</b>：模型只有「一條直線」這種形狀，資料彎曲時它只能找最不差的直線。<b>對策</b>：加一個特徵 x²（多項式迴歸），用 ŷ = β<sub>0</sub> + β<sub>1</sub>x + β<sub>2</sub>x² 擬合，會得到 β<sub>2</sub> = 1、其餘 0，誤差變成 0。對係數來說它仍然是線性的，所以還是線性迴歸。<b>考點</b>：R² 高不代表模型對，要看殘差有沒有規律。</p>
     </div>
 
     <div class="ex ng">
       <div class="ex-h">❌ 解決不了 2：一個離群值就把線拉歪</div>
-      <p>把第一個例子的最後一點 (4, 8) 改成 (4, <b>20</b>)，其他三點不變。重算：x̄ = 2.5、ȳ = 7.75、Σ(x − x̄)(y − ȳ) = 27.5、Σ(x − x̄)² = 5，所以 β<sub>1</sub> = <b>5.5</b>、β<sub>0</sub> = <b>−6</b>。</p>
+      <p>把第一個例子的最後一點 (4, 8) 改成 (4, <b>20</b>)，其他三點不變，照同樣步驟重算。</p>
+      <p><span class="step">STEP 1</span>平均：x̄ = 2.5（x 沒變），ȳ = (2+4+5+20)/4 = 31/4 = <b>7.75</b></p>
+      <p><span class="step">STEP 2</span>每一點離平均多遠，再相乘：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>y</th><th>x − x̄</th><th>y − ȳ</th><th>(x − x̄)(y − ȳ)</th><th>(x − x̄)²</th><th>(y − ȳ)²</th></tr></thead>
+        <tbody><tr><td>1</td><td>2</td><td>−1.5</td><td>−5.75</td><td>8.625</td><td>2.25</td><td>33.0625</td></tr><tr><td>2</td><td>4</td><td>−0.5</td><td>−3.75</td><td>1.875</td><td>0.25</td><td>14.0625</td></tr><tr><td>3</td><td>5</td><td>0.5</td><td>−2.75</td><td>−1.375</td><td>0.25</td><td>7.5625</td></tr><tr><td>4</td><td>20</td><td>1.5</td><td>12.25</td><td>18.375</td><td>2.25</td><td>150.0625</td></tr><tr><td>合計</td><td></td><td></td><td></td><td>27.5</td><td>5</td><td>SST = 204.75</td></tr></tbody>
+      </table></div>
+      <p><span class="step">STEP 3</span>β<sub>1</sub> = 27.5 ÷ 5 = <b>5.5</b>；β<sub>0</sub> = 7.75 − 5.5 × 2.5 = <b>−6</b>，直線是 <b>ŷ = 5.5x − 6</b>。</p>
+      <p><span class="step">STEP 4</span>檢查誤差：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>y</th><th>ŷ = 5.5x − 6</th><th>殘差 e</th><th>e²</th></tr></thead>
+        <tbody><tr><td>1</td><td>2</td><td>−0.5</td><td>2.5</td><td>6.25</td></tr><tr><td>2</td><td>4</td><td>5</td><td>−1</td><td>1</td></tr><tr><td>3</td><td>5</td><td>10.5</td><td>−5.5</td><td>30.25</td></tr><tr><td>4</td><td>20</td><td>16</td><td>4</td><td>16</td></tr><tr><td>合計</td><td></td><td></td><td></td><td>SSE = 53.5</td></tr></tbody>
+      </table></div>
+      <p>R² = 1 − 53.5 ÷ 204.75 ≈ <b>0.739</b>。和原本比較：</p>
       <div class="tbl"><table>
         <thead><tr><th></th><th>原本</th><th>加入離群值後</th></tr></thead>
         <tbody>
@@ -586,8 +619,24 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <div class="ex ok">
       <div class="ex-h">✅ 解決得了：把影響小的特徵縮小或刪掉</div>
       <p>4 筆資料、2 個特徵（已減去平均，而且兩個特徵互不相關：Σx<sub>1</sub>x<sub>2</sub> = 0）。x<sub>1</sub> 和 y 的關係比較強，x<sub>2</sub> 比較弱。</p>
-      <p><span class="step">STEP 1</span>算 S<sub>xy</sub>、S<sub>xx</sub>：x<sub>1</sub>：S<sub>xy</sub> = (−2)(−5) + (−1)(−1) + (1)(3) + (2)(3) = 20，S<sub>xx</sub> = 4 + 1 + 1 + 4 = 10。x<sub>2</sub>：S<sub>xy</sub> = −5 + 1 − 3 + 3 = −4，S<sub>xx</sub> = 4。</p>
-      <p><span class="step">STEP 2</span>代入公式（λ = 10）：</p>
+      <p><span class="step">STEP 0</span>先確認兩個特徵互不相關（單一特徵的公式只能用在這種情況）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>i</th><th>x<sub>1</sub></th><th>x<sub>2</sub></th><th>x<sub>1</sub> · x<sub>2</sub></th></tr></thead>
+        <tbody><tr><td>1</td><td>−2</td><td>1</td><td>−2</td></tr><tr><td>2</td><td>−1</td><td>−1</td><td>1</td></tr><tr><td>3</td><td>1</td><td>−1</td><td>−1</td></tr><tr><td>4</td><td>2</td><td>1</td><td>2</td></tr><tr><td>合計</td><td></td><td></td><td><b>0</b></td></tr></tbody>
+      </table></div>
+      <p>Σx<sub>1</sub>x<sub>2</sub> = 0，所以 β<sub>1</sub>、β<sub>2</sub> 可以各自用單一特徵的公式分開算，互不影響。</p>
+      <p><span class="step">STEP 1</span>算 S<sub>xy</sub>、S<sub>xx</sub>：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>i</th><th>x<sub>1</sub></th><th>x<sub>2</sub></th><th>y</th><th>x<sub>1</sub> · y</th><th>x<sub>2</sub> · y</th><th>x<sub>1</sub>²</th><th>x<sub>2</sub>²</th></tr></thead>
+        <tbody><tr><td>1</td><td>−2</td><td>1</td><td>−5</td><td>10</td><td>−5</td><td>4</td><td>1</td></tr><tr><td>2</td><td>−1</td><td>−1</td><td>−1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr><tr><td>3</td><td>1</td><td>−1</td><td>3</td><td>3</td><td>−3</td><td>1</td><td>1</td></tr><tr><td>4</td><td>2</td><td>1</td><td>3</td><td>6</td><td>3</td><td>4</td><td>1</td></tr><tr><td>合計</td><td></td><td></td><td></td><td><b>20</b></td><td><b>−4</b></td><td><b>10</b></td><td><b>4</b></td></tr></tbody>
+      </table></div>
+      <p>合計列就是 x<sub>1</sub>：S<sub>xy</sub> = 20、S<sub>xx</sub> = 10；x<sub>2</sub>：S<sub>xy</sub> = −4、S<sub>xx</sub> = 4。x<sub>1</sub> 和 y 一起變動得多，是強特徵；x<sub>2</sub> 的 S<sub>xy</sub> 只有 −4，是弱特徵，而且方向相反。</p>
+      <p><span class="step">STEP 2</span>代入公式（λ = 10，所以 λ/2 = 5）：</p>
+      <p><b>普通線性迴歸</b>：β = S<sub>xy</sub> ÷ S<sub>xx</sub>。β<sub>1</sub> = 20 ÷ 10 = 2；β<sub>2</sub> = −4 ÷ 4 = −1</p>
+      <p><b>Ridge</b>：分母加上 λ。β<sub>1</sub> = 20 ÷ (10 + 10) = 20 ÷ 20 = 1；β<sub>2</sub> = −4 ÷ (4 + 10) = −4 ÷ 14 ≈ −0.286</p>
+      <p><b>Lasso β<sub>1</sub></b>：|20| = 20 → 扣掉 λ/2：20 − 5 = 15 → max(15, 0) = 15 → 乘上 sign(20) = +1 → 除以 S<sub>xx</sub>：15 ÷ 10 = <b>1.5</b></p>
+      <p><b>Lasso β<sub>2</sub></b>：|−4| = 4 → 扣掉 λ/2：4 − 5 = −1 → max(−1, 0) = <b class="hl">0</b> → 不管正負號，0 ÷ 4 = 0。扣不過 λ/2 的特徵就被淘汰。</p>
+      <p>整理成表：</p>
       <div class="tbl"><table>
         <thead><tr><th></th><th>普通線性迴歸（λ = 0）</th><th>Ridge（λ = 10）</th><th>Lasso（λ = 10）</th></tr></thead>
         <tbody>
@@ -596,12 +645,24 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td>訓練誤差 SSE</td><td>0</td><td>12.04</td><td>6.5</td></tr>
         </tbody>
       </table></div>
-      <p class="take"><b>解讀</b>：普通線性迴歸把 4 筆資料完全擬合（SSE = 0），連影響很弱的 x<sub>2</sub> 也給了 −1。Ridge 把兩個係數都縮小，但 x<sub>2</sub> 仍然留著（−0.286）。Lasso 保留了重要的 x<sub>1</sub>（1.5），把 x<sub>2</sub> 直接設成 0，模型只剩一個特徵，更簡單。訓練誤差變大是預期中的代價：換來的是對新資料比較不會過擬合。</p>
+      <p><span class="step">STEP 3</span>算預測值 ŷ = β<sub>1</sub>x<sub>1</sub> + β<sub>2</sub>x<sub>2</sub>，再算殘差平方 e² = (y − ŷ)²，加總就是 SSE：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>i</th><th>y</th><th>普通 ŷ = 2x<sub>1</sub> − x<sub>2</sub></th><th>e²</th><th>Ridge ŷ = x<sub>1</sub> − 0.286x<sub>2</sub></th><th>e²</th><th>Lasso ŷ = 1.5x<sub>1</sub></th><th>e²</th></tr></thead>
+        <tbody><tr><td>1</td><td>−5</td><td>−5</td><td>0</td><td>−2.286</td><td>7.367</td><td>−3</td><td>4</td></tr><tr><td>2</td><td>−1</td><td>−1</td><td>0</td><td>−0.714</td><td>0.082</td><td>−1.5</td><td>0.25</td></tr><tr><td>3</td><td>3</td><td>3</td><td>0</td><td>1.286</td><td>2.939</td><td>1.5</td><td>2.25</td></tr><tr><td>4</td><td>3</td><td>3</td><td>0</td><td>1.714</td><td>1.653</td><td>3</td><td>0</td></tr><tr><td>SSE</td><td></td><td></td><td><b>0</b></td><td></td><td><b>≈ 12.04</b></td><td></td><td><b>6.5</b></td></tr></tbody>
+      </table></div>
+      <p>例：Ridge 第 1 筆 ŷ = (−2) − 0.286 × 1 = −2.286，e = −5 − (−2.286) = −2.714，e² = 7.367。Lasso 第 1 筆 ŷ = 1.5 × (−2) = −3，e = −5 − (−3) = −2，e² = 4。</p>
+      <p><span class="step">STEP 4</span>換算成 R²：y 已減去平均，所以 SST = Σy² = 25 + 1 + 9 + 9 = 44。普通線性迴歸 1 − 0 ÷ 44 = <b>1</b>；Ridge 1 − 12.04 ÷ 44 ≈ <b>0.726</b>；Lasso 1 − 6.5 ÷ 44 ≈ <b>0.852</b>。</p>
+      <p><b>補充：公式怎麼來、為什麼是 λ/2</b></p>
+      <p>只有一個係數 β 時，把損失對 β 微分、令它等於 0。<b>Ridge</b>：Loss = Σ(y<sub>i</sub> − βx<sub>i</sub>)² + λβ²，微分得 −2S<sub>xy</sub> + 2βS<sub>xx</sub> + 2λβ = 0，整理成 β = S<sub>xy</sub> ÷ (S<sub>xx</sub> + λ)。</p>
+      <p><b>Lasso</b>：Loss = Σ(y<sub>i</sub> − βx<sub>i</sub>)² + λ|β|，微分得 −2S<sub>xy</sub> + 2βS<sub>xx</sub> + λ · sign(β) = 0，兩邊除以 2：βS<sub>xx</sub> = S<sub>xy</sub> − (λ/2) · sign(β)。誤差項微分後帶一個 2，|β| 微分後只有 ±1，除以 2 就剩 λ/2。如果 |S<sub>xy</sub>| ≤ λ/2，找不到符號一致的非零解，最佳解就是 β = 0，這就是 max(…, 0) 的由來。</p>
+      <p><b>兩者的縮法不同</b>：Ridge 是「除」（分母加 λ），係數越大被縮掉的量越多，β<sub>1</sub> 從 2 縮成 1；Lasso 是「減」（固定扣 λ/2），強特徵只從 2 縮成 1.5，弱特徵直接歸零。所以這個例子裡 Lasso 的 SSE（6.5）反而比 Ridge（12.04）小。</p>
+      <p class="take"><b>解讀</b>：普通線性迴歸把 4 筆資料完全擬合（SSE = 0），連影響很弱的 x<sub>2</sub> 也給了 −1。Ridge 把兩個係數都縮小，但 x<sub>2</sub> 仍然留著（−0.286）。Lasso 保留了重要的 x<sub>1</sub>（1.5），把 x<sub>2</sub> 直接設成 0，模型只剩一個特徵，更簡單。訓練誤差變大（R² 從 1 降到 0.726、0.852）是預期中的代價：換來的是對新資料比較不會過擬合。</p>
     </div>
 
     <div class="ex ng">
       <div class="ex-h">❌ 解決不了 1：λ 太大，有用的特徵也被壓掉（欠擬合）</div>
       <p>同一份資料，λ 加到 40：</p>
+      <p>λ = 40，所以 λ/2 = 20。Ridge：β<sub>1</sub> = 20 ÷ (10 + 40) = 0.4，β<sub>2</sub> = −4 ÷ (4 + 40) ≈ −0.091。Lasso：β<sub>1</sub> 是 |20| − 20 = 0 → 0，β<sub>2</sub> 是 |−4| − 20 = −16 → max(−16, 0) = 0。</p>
       <div class="tbl"><table>
         <thead><tr><th></th><th>Ridge（λ = 40）</th><th>Lasso（λ = 40）</th></tr></thead>
         <tbody>
@@ -610,12 +671,20 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td>訓練誤差 SSE</td><td>28.9</td><td class="hl">44（等於什麼都不學）</td></tr>
         </tbody>
       </table></div>
+      <p>SSE 怎麼來：Ridge ŷ = 0.4x<sub>1</sub> − 0.091x<sub>2</sub>；Lasso 兩個係數都是 0，每一筆都預測 0（y 的平均）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>i</th><th>y</th><th>Ridge ŷ</th><th>e²</th><th>Lasso ŷ</th><th>e²</th></tr></thead>
+        <tbody><tr><td>1</td><td>−5</td><td>−0.891</td><td>16.885</td><td>0</td><td>25</td></tr><tr><td>2</td><td>−1</td><td>−0.309</td><td>0.477</td><td>0</td><td>1</td></tr><tr><td>3</td><td>3</td><td>0.491</td><td>6.296</td><td>0</td><td>9</td></tr><tr><td>4</td><td>3</td><td>0.709</td><td>5.248</td><td>0</td><td>9</td></tr><tr><td>SSE</td><td></td><td></td><td><b>≈ 28.9</b></td><td></td><td><b>44</b></td></tr></tbody>
+      </table></div>
       <p class="take"><b>為什麼解決不了</b>：懲罰太重時，模型「為了係數小」放棄了擬合資料。Lasso 把兩個特徵都刪光，所有預測都是平均值 0，SSE = 44，和完全不用模型（SST = 44）一樣差。<b>對策</b>：用交叉驗證試不同的 λ，挑驗證誤差最小的那個。</p>
     </div>
 
     <div class="ex ng">
       <div class="ex-h">❌ 解決不了 2：沒有標準化，懲罰變得不公平</div>
-      <p>把 x<sub>1</sub> 的單位從「公尺」改成「公寸」（數值 × 10），資料本身沒變。普通線性迴歸的係數會變成 0.2（因為 x 大了 10 倍），預測完全一樣。但 Ridge（λ = 10）：S<sub>xy</sub> = 200、S<sub>xx</sub> = 1000，β<sub>1</sub> = 200 ÷ 1010 = 0.198，換回公尺等於 1.98，幾乎沒被縮小；原本用公尺時卻被縮成 1。</p>
+      <p>把 x<sub>1</sub> 的單位從「公尺」改成「公寸」（數值 × 10），資料本身沒變：x<sub>1</sub> 變成 −20、−10、10、20。</p>
+      <p><span class="step">STEP 1</span>重算：S<sub>xy</sub> = Σ(10x<sub>1</sub>)y = 10 × 20 = <b>200</b>；S<sub>xx</sub> = Σ(10x<sub>1</sub>)² = 100 × 10 = <b>1000</b>。</p>
+      <p><span class="step">STEP 2</span>普通線性迴歸：β<sub>1</sub> = 200 ÷ 1000 = 0.2（每公寸）。換回每公尺要 × 10 = 2，和原本一樣，預測完全不變。</p>
+      <p><span class="step">STEP 3</span>Ridge（λ = 10）：β<sub>1</sub> = 200 ÷ (1000 + 10) = 200 ÷ 1010 ≈ <b>0.198</b>（每公寸），換回每公尺 ≈ <b>1.98</b>，幾乎沒被縮小；原本用公尺時是 20 ÷ (10 + 10) = <b>1</b>，被縮了一半。λ 一樣，只換了單位，縮小的程度就差這麼多。</p>
       <p class="take"><b>為什麼解決不了</b>：懲罰只看係數的大小，而係數大小取決於特徵的單位。單位大的特徵係數小、幾乎不被罰；單位小的特徵係數大、被罰很重。<b>對策</b>：使用 Ridge／Lasso 之前，先把所有特徵標準化（減平均、除以標準差），讓每個特徵在同一個尺度上公平地被懲罰。</p>
     </div>
 
@@ -729,6 +798,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><th>平均</th><th></th><th></th><th></th><th></th><th>全對</th><th>0.2483</th></tr>
         </tbody>
       </table></div>
+      <p>平均 log-loss = (0.0789 + 0.3133 + 0.4741 + 0.1269) ÷ 4 = 0.9932 ÷ 4 ≈ <b>0.2483</b>。以第 1 位為例：z = 1.5 × 1 − 4 = −2.5；e<sup>−z</sup> = e<sup>2.5</sup> ≈ 12.18；p = 1 ÷ (1 + 12.18) = 1 ÷ 13.18 ≈ 0.0759；他實際不及格（y = 0），所以 L = −ln(1 − p) = −ln(0.9241) ≈ 0.0789。</p>
       <p><span class="step">STEP 5</span>決策邊界：z = 0 → 1.5x − 4 = 0 → x = 4 ÷ 1.5 = <b>2.667 小時</b>。讀超過 2.667 小時就判及格。</p>
       <p>log-loss 的不對稱：如果有人及格（y = 1），模型給 p = 0.9，罰 −ln 0.9 = <b>0.105</b>；給 p = 0.01（很有把握地猜錯），罰 −ln 0.01 = <b>4.605</b>，重了 40 多倍。</p>
       <p class="take"><b>解讀</b>：4 筆全部判對。第 3 位（3 小時）的機率只有 0.62，靠近邊界、比較沒把握，所以罰分最大；第 1、4 位離邊界遠，罰分小。這就是邏輯迴歸比只給 0／1 更好用的地方：它還告訴你有多確定。</p>
@@ -747,6 +817,11 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
         </tbody>
       </table></div>
       <p>把中間兩個條件相加：w<sub>1</sub> + w<sub>2</sub> + 2b &gt; 0，也就是 w<sub>1</sub> + w<sub>2</sub> + b &gt; −b。因為 b &lt; 0，−b 是正數，所以 w<sub>1</sub> + w<sub>2</sub> + b 一定 &gt; 0，和最後一個條件矛盾。<b>不管 w、b 怎麼選，四點最多只能判對三點。</b></p>
+      <p>加入交互作用特徵 x<sub>1</sub>x<sub>2</sub> 後，用 z = x<sub>1</sub> + x<sub>2</sub> − 2x<sub>1</sub>x<sub>2</sub> − 0.5 逐點代入：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>點</th><th>x<sub>1</sub>x<sub>2</sub></th><th>z 算式</th><th>z</th><th>判定（z ≥ 0 判 1）</th><th>要判成</th></tr></thead>
+        <tbody><tr><td>(0, 0)</td><td>0</td><td>0 + 0 − 0 − 0.5</td><td>−0.5</td><td>0</td><td>0 ✓</td></tr><tr><td>(1, 1)</td><td>1</td><td>1 + 1 − 2 − 0.5</td><td>−0.5</td><td>0</td><td>0 ✓</td></tr><tr><td>(0, 1)</td><td>0</td><td>0 + 1 − 0 − 0.5</td><td>0.5</td><td>1</td><td>1 ✓</td></tr><tr><td>(1, 0)</td><td>0</td><td>1 + 0 − 0 − 0.5</td><td>0.5</td><td>1</td><td>1 ✓</td></tr></tbody>
+      </table></div>
       <p class="take"><b>為什麼解決不了</b>：邊界只能是直線，XOR 的兩類交錯在對角上。<b>對策</b>：加一個交互作用特徵 x<sub>1</sub>x<sub>2</sub>，例如 z = x<sub>1</sub> + x<sub>2</sub> − 2x<sub>1</sub>x<sub>2</sub> − 0.5，四點的 z 分別是 −0.5、−0.5、0.5、0.5，全部判對；或改用決策樹、核函數 SVM 這類能畫彎曲邊界的模型。</p>
     </div>
 
@@ -760,6 +835,12 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td>平均 log-loss</td><td>0.338</td><td>0.181</td><td>0.065</td><td class="hl">0.009</td></tr>
         </tbody>
       </table></div>
+      <p>以 w = 1、b = −2.5 為例，z = x − 2.5，逐點算：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>y</th><th>z</th><th>p = 1 ÷ (1 + e<sup>−z</sup>)</th><th>L</th></tr></thead>
+        <tbody><tr><td>1</td><td>0</td><td>−1.5</td><td>0.1824</td><td>−ln(1 − 0.1824) = 0.2014</td></tr><tr><td>2</td><td>0</td><td>−0.5</td><td>0.3775</td><td>−ln(1 − 0.3775) = 0.4741</td></tr><tr><td>3</td><td>1</td><td>0.5</td><td>0.6225</td><td>−ln(0.6225) = 0.4741</td></tr><tr><td>4</td><td>1</td><td>1.5</td><td>0.8176</td><td>−ln(0.8176) = 0.2014</td></tr><tr><td>平均</td><td></td><td></td><td></td><td>(0.2014 + 0.4741 + 0.4741 + 0.2014) ÷ 4 ≈ <b>0.338</b></td></tr></tbody>
+      </table></div>
+      <p>w = 2、4、8 用同樣方法算，z = w(x − 2.5)。例如 w = 8 時，第 3 位 z = 4，p ≈ 0.982，L ≈ 0.018；第 4 位 z = 12，p ≈ 0.999994，L ≈ 0.000006。機率被推到幾乎 0 或 1，罰分就趨近 0。</p>
       <p class="take"><b>為什麼解決不了</b>：w 越大，sigmoid 越陡，機率越接近 0 或 1，log-loss 就越小，所以「最小化 log-loss」會把 w 推向無限大，模型變得過度自信，也容易過擬合。<b>對策</b>：加正則化（和 Ridge 同樣的想法，懲罰太大的 w）。邏輯迴歸通常預設就有 L2 正則化，用 C 控制強度：C 越小、正則化越強。</p>
     </div>
 
@@ -896,16 +977,16 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <div class="ex ng">
       <div class="ex-h">❌ 解決不了 2：沒有標準化，數字大的特徵獨占距離</div>
       <p>預測會不會買某款遊戲，特徵是年齡（歲）和月收入（元）。訓練資料：買 (25 歲, 52000)、(30 歲, 40000)；不買 (55 歲, 60000)、(50 歲, 30000)。新客人 q = (26 歲, 58000)，k = 1。</p>
+      <p><b>原始距離</b>：q = (26, 58000) 到每一點，先算差、再平方相加、再開根號：</p>
       <div class="tbl"><table>
-        <thead><tr><th>點</th><th>類別</th><th>原始距離</th><th>標準化後距離</th></tr></thead>
-        <tbody>
-          <tr><td>(25, 52000)</td><td>買</td><td>√(1² + 6000²) = 6000</td><td><b>0.103</b>（最近）</td></tr>
-          <tr><td>(30, 40000)</td><td>買</td><td>18000</td><td>0.316</td></tr>
-          <tr><td>(55, 60000)</td><td>不買</td><td><b class="hl">2000.2（最近）</b></td><td>0.726</td></tr>
-          <tr><td>(50, 30000)</td><td>不買</td><td>28000</td><td>0.760</td></tr>
-        </tbody>
+        <thead><tr><th>點</th><th>類別</th><th>年齡差</th><th>收入差</th><th>年齡差²</th><th>收入差²</th><th>原始距離</th></tr></thead>
+        <tbody><tr><td>(25, 52000)</td><td>買</td><td>1</td><td>6000</td><td>1</td><td>36,000,000</td><td>√36,000,001 ≈ 6000</td></tr><tr><td>(30, 40000)</td><td>買</td><td>4</td><td>18000</td><td>16</td><td>324,000,000</td><td>√324,000,016 ≈ 18000</td></tr><tr><td>(55, 60000)</td><td>不買</td><td>29</td><td>2000</td><td>841</td><td>4,000,000</td><td>√4,000,841 ≈ <b class="hl">2000.2（最近）</b></td></tr><tr><td>(50, 30000)</td><td>不買</td><td>24</td><td>28000</td><td>576</td><td>784,000,000</td><td>√784,000,576 ≈ 28000</td></tr></tbody>
       </table></div>
-      <p>標準化：年齡範圍取 20～60（除以 40），收入範圍取 20000～80000（除以 60000）。例如 q 到 (55, 60000)：年齡差 29 ÷ 40 = 0.725，收入差 2000 ÷ 60000 = 0.033，距離 √(0.725² + 0.033²) = 0.726。</p>
+      <p><b>標準化後距離</b>：年齡範圍取 20～60（差除以 40），收入範圍取 20000～80000（差除以 60000）。Min-Max 把每個值變成 (x − min) ÷ (max − min)，兩點相減時 min 會消掉，所以「標準化後的差」就是「原始差 ÷ 範圍」：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>點</th><th>類別</th><th>年齡差 ÷ 40</th><th>收入差 ÷ 60000</th><th>平方相加</th><th>距離</th></tr></thead>
+        <tbody><tr><td>(25, 52000)</td><td>買</td><td>1 ÷ 40 = 0.025</td><td>6000 ÷ 60000 = 0.1</td><td>0.000625 + 0.01 = 0.010625</td><td>≈ <b class="hl">0.103（最近）</b></td></tr><tr><td>(30, 40000)</td><td>買</td><td>4 ÷ 40 = 0.1</td><td>18000 ÷ 60000 = 0.3</td><td>0.01 + 0.09 = 0.1</td><td>≈ 0.316</td></tr><tr><td>(55, 60000)</td><td>不買</td><td>29 ÷ 40 = 0.725</td><td>2000 ÷ 60000 ≈ 0.033</td><td>0.525625 + 0.001111 ≈ 0.5267</td><td>≈ 0.726</td></tr><tr><td>(50, 30000)</td><td>不買</td><td>24 ÷ 40 = 0.6</td><td>28000 ÷ 60000 ≈ 0.467</td><td>0.36 + 0.2178 ≈ 0.5778</td><td>≈ 0.760</td></tr></tbody>
+      </table></div>
       <p class="take"><b>為什麼解決不了</b>：原始距離裡，年齡差 29 歲只貢獻 29² = 841，收入差 2000 元卻貢獻 2000² = 4,000,000，年齡幾乎被忽略，於是 26 歲的客人被判成和 55 歲的人最像，預測「不買」。<b>對策</b>：計算距離前先把所有特徵標準化（Min-Max 或減平均除以標準差），標準化後最近的是 25 歲那位，預測「買」。</p>
     </div>
 
