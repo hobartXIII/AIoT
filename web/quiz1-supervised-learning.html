@@ -160,6 +160,9 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 .calc { background: var(--surface); border: 1px solid var(--accent); border-radius: 10px; padding: 12px 16px 14px; margin: 12px 0 18px; }
 .teach .formula { white-space: normal; }
 .teach .formula .fp { display: inline-block; white-space: nowrap; margin-right: 28px; }
+.key3 { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--mark); border-radius: 0 8px 8px 0; padding: 8px 16px; margin: 12px 0 16px; }
+.key3 > b { color: var(--mark); }
+.key3 ul { margin: 4px 0 0; }
 .calc .calc-h { font-weight: 700; color: var(--accent); margin-bottom: 6px; }
 .calc .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
 .calc label { font-size: 13.5px; color: var(--muted); display: block; }
@@ -239,17 +242,17 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <h3>依任務類型</h3>
     <div class="tbl"><table>
-      <thead><tr><th>類型</th><th>演算法</th><th>scikit-learn</th></tr></thead>
+      <thead><tr><th>類型</th><th>演算法</th></tr></thead>
       <tbody>
-        <tr><td class="nw" rowspan="2"><span class="chip reg">只能回歸</span></td><td>線性迴歸</td><td><code>LinearRegression</code></td></tr>
-        <tr><td>Ridge／Lasso</td><td><code>Ridge</code>、<code>Lasso</code></td></tr>
-        <tr><td class="nw" rowspan="2"><span class="chip cls">只能分類</span></td><td>邏輯迴歸</td><td><code>LogisticRegression</code></td></tr>
-        <tr><td>朴素貝氏</td><td><code>GaussianNB</code>、<code>MultinomialNB</code></td></tr>
-        <tr><td class="nw" rowspan="5"><span class="chip both">兩者都能</span></td><td>決策樹</td><td><code>DecisionTreeClassifier</code>／<code>Regressor</code></td></tr>
-        <tr><td>隨機森林</td><td><code>RandomForestClassifier</code>／<code>Regressor</code></td></tr>
-        <tr><td>SVM</td><td><code>SVC</code>、<code>SVR</code></td></tr>
-        <tr><td>KNN</td><td><code>KNeighborsClassifier</code>／<code>Regressor</code></td></tr>
-        <tr><td>梯度提升（XGBoost）</td><td><code>XGBClassifier</code>、<code>XGBRegressor</code>（<code>xgboost</code> 套件）</td></tr>
+        <tr><td class="nw" rowspan="2"><span class="chip reg">只能回歸</span></td><td>線性迴歸</td></tr>
+        <tr><td>Ridge／Lasso</td></tr>
+        <tr><td class="nw" rowspan="2"><span class="chip cls">只能分類</span></td><td>邏輯迴歸</td></tr>
+        <tr><td>朴素貝氏</td></tr>
+        <tr><td class="nw" rowspan="5"><span class="chip both">兩者都能</span></td><td>決策樹</td></tr>
+        <tr><td>隨機森林</td></tr>
+        <tr><td>SVM</td></tr>
+        <tr><td>KNN</td></tr>
+        <tr><td>梯度提升（XGBoost）</td></tr>
       </tbody>
     </table></div>
 
@@ -316,7 +319,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
         <tr><td class="nw">缺值</td><td>刪除，或用平均數／中位數／眾數補值</td></tr>
         <tr><td class="nw">類別特徵</td><td>One-Hot Encoding。線性迴歸要丟掉一欄，避免<b>虛擬變數陷阱</b>（Dummy Variable Trap，欄位完全共線）</td></tr>
         <tr><td class="nw">特徵尺度不同</td><td>標準化 StandardScaler（平均 0、標準差 1），或正規化 MinMaxScaler（縮到 0～1）</td></tr>
-        <tr><td class="nw">類別不平衡</td><td>過採樣（SMOTE）、欠採樣、<code>class_weight='balanced'</code>，改看 Recall／F1／AUC</td></tr>
+        <tr><td class="nw">類別不平衡</td><td>過採樣（SMOTE）、欠採樣、加重少數類別的權重，改看 Recall／F1／AUC</td></tr>
       </tbody>
     </table></div>
     <h4>哪些演算法需要特徵縮放？</h4>
@@ -326,7 +329,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <li>朴素貝氏也不需要，它是對每個特徵各自估計機率分布。</li>
     </ul>
     <ul class="trap">
-      <li><span><b>資料洩漏</b>（Data Leakage）：Scaler 要只用訓練集 <code>fit</code>，再對測試集 <code>transform</code>。用全部資料 fit 會讓測試分數偏高。</span></li>
+      <li><span><b>資料洩漏</b>（Data Leakage）：標準化的平均、標準差要只用訓練集算出，再套用到測試集。用全部資料算會讓測試分數偏高。</span></li>
     </ul>
   </section>
 
@@ -535,13 +538,10 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <ul class="trap">
       <li><span>多重共線性<b>不太影響預測能力</b>，但會讓係數忽大忽小、正負號亂跳，難以解釋。用 VIF 檢查，或改用 Ridge。</span></li>
       <li><span>非線性關係可以先做多項式特徵（Polynomial Features），模型對係數仍然是線性的，所以還是線性迴歸。</span></li>
-      <li><span>One-Hot 後要丟一欄（<code>drop_first=True</code>），否則虛擬變數完全共線。</span></li>
+      <li><span>One-Hot 後要丟掉一欄當基準，否則虛擬變數加總恆為 1，和截距完全共線。</span></li>
       <li><span>特徵選擇常用逐步法：Backward Elimination（從全部開始，逐一刪掉 p-value 最大的）。</span></li>
     </ul>
-<pre><code>from sklearn.linear_model import LinearRegression
-model = LinearRegression().fit(X_train, y_train)
-model.coef_, model.intercept_      # β1..βp、β0
-model.score(X_test, y_test)        # R²</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：預測連續數值；係數可以直接解讀成「x 增加 1，y 平均變化多少」，常拿來當基線模型。</li><li><b>和邏輯迴歸的差別</b>：線性迴歸輸出任意實數、最小化 SSE；邏輯迴歸多一個 sigmoid，輸出 0～1 的機率、最小化 log-loss，用來分類。</li><li><b>最常考</b>：R² 的意義、R² 高不代表模型對（要看殘差）、對離群值敏感、多重共線性讓係數不穩但不太影響預測。</li></ul></div>
   </section>
 
   <!-- ============ Ridge / Lasso ============ -->
@@ -563,7 +563,7 @@ model.score(X_test, y_test)        # R²</code></pre>
           <tr><td class="nw">y</td><td>目標值（也已減去平均）</td><td class="nw">−5、−1、3、3</td></tr>
           <tr><td class="nw">β<sub>j</sub></td><td>第 j 個特徵的係數；j 是特徵編號</td><td class="nw">β<sub>1</sub>、β<sub>2</sub></td></tr>
           <tr><td class="nw">Σ(y<sub>i</sub> − ŷ<sub>i</sub>)²</td><td>原本線性迴歸的誤差（SSE），希望它小</td><td class="nw">—</td></tr>
-          <tr><td class="nw">λ（讀作 lambda）</td><td>懲罰的強度，自己設定的超參數；0 = 不懲罰（等於普通線性迴歸），越大懲罰越重。scikit-learn 裡叫 <code>alpha</code></td><td class="nw">0、10、40</td></tr>
+          <tr><td class="nw">λ（讀作 lambda）</td><td>懲罰的強度，自己設定的超參數；0 = 不懲罰（等於普通線性迴歸），越大懲罰越重。有些教材寫成 α</td><td class="nw">0、10、40</td></tr>
           <tr><td class="nw">Σβ<sub>j</sub>²</td><td>L2 懲罰：所有係數平方加總；係數越大罰越多，而且大的係數被罰得特別重</td><td class="nw">—</td></tr>
           <tr><td class="nw">Σ|β<sub>j</sub>|</td><td>L1 懲罰：所有係數取絕對值加總；每個係數不論大小，每單位罰一樣多</td><td class="nw">—</td></tr>
           <tr><td class="nw">S<sub>xy</sub> = Σx<sub>i</sub>y<sub>i</sub></td><td>這個特徵和 y「一起變動」的量（資料已減去平均，所以就是乘積和）</td><td class="nw">x<sub>1</sub>：20；x<sub>2</sub>：−4</td></tr>
@@ -610,13 +610,13 @@ model.score(X_test, y_test)        # R²</code></pre>
           <tr><td>訓練誤差 SSE</td><td>28.9</td><td class="hl">44（等於什麼都不學）</td></tr>
         </tbody>
       </table></div>
-      <p class="take"><b>為什麼解決不了</b>：懲罰太重時，模型「為了係數小」放棄了擬合資料。Lasso 把兩個特徵都刪光，所有預測都是平均值 0，SSE = 44，和完全不用模型（SST = 44）一樣差。<b>對策</b>：用交叉驗證試不同的 λ（scikit-learn 有 <code>RidgeCV</code>、<code>LassoCV</code>），挑驗證誤差最小的那個。</p>
+      <p class="take"><b>為什麼解決不了</b>：懲罰太重時，模型「為了係數小」放棄了擬合資料。Lasso 把兩個特徵都刪光，所有預測都是平均值 0，SSE = 44，和完全不用模型（SST = 44）一樣差。<b>對策</b>：用交叉驗證試不同的 λ，挑驗證誤差最小的那個。</p>
     </div>
 
     <div class="ex ng">
       <div class="ex-h">❌ 解決不了 2：沒有標準化，懲罰變得不公平</div>
       <p>把 x<sub>1</sub> 的單位從「公尺」改成「公寸」（數值 × 10），資料本身沒變。普通線性迴歸的係數會變成 0.2（因為 x 大了 10 倍），預測完全一樣。但 Ridge（λ = 10）：S<sub>xy</sub> = 200、S<sub>xx</sub> = 1000，β<sub>1</sub> = 200 ÷ 1010 = 0.198，換回公尺等於 1.98，幾乎沒被縮小；原本用公尺時卻被縮成 1。</p>
-      <p class="take"><b>為什麼解決不了</b>：懲罰只看係數的大小，而係數大小取決於特徵的單位。單位大的特徵係數小、幾乎不被罰；單位小的特徵係數大、被罰很重。<b>對策</b>：使用 Ridge／Lasso 之前，先把所有特徵標準化（例如 <code>StandardScaler</code>），讓每個特徵在同一個尺度上公平地被懲罰。</p>
+      <p class="take"><b>為什麼解決不了</b>：懲罰只看係數的大小，而係數大小取決於特徵的單位。單位大的特徵係數小、幾乎不被罰；單位小的特徵係數大、被罰很重。<b>對策</b>：使用 Ridge／Lasso 之前，先把所有特徵標準化（減平均、除以標準差），讓每個特徵在同一個尺度上公平地被懲罰。</p>
     </div>
 
     <h4>動手算</h4>
@@ -637,7 +637,7 @@ model.score(X_test, y_test)        # R²</code></pre>
         <div class="out" aria-live="polite"></div>
         <svg viewBox="0 0 360 240" role="img" aria-label="係數隨 λ 變化的路徑"></svg>
       </div>
-      <p class="note">計算器會先把 x、y 減去平均（截距不受懲罰，β<sub>0</sub> = ȳ − βx̄）。圖是係數隨 λ 變化的路徑：橘線 Ridge 慢慢趨近 0；藍線 Lasso 在 λ = 2|S<sub>xy</sub>| 時剛好變成 0。注意這裡的 λ 用的是上面公式的定義，和 scikit-learn 的 <code>alpha</code> 數值換算方式不同（sklearn 的 Lasso 會先把誤差除以 2n）。</p>
+      <p class="note">計算器會先把 x、y 減去平均（截距不受懲罰，β<sub>0</sub> = ȳ − βx̄）。圖是係數隨 λ 變化的路徑：橘線 Ridge 慢慢趨近 0；藍線 Lasso 在 λ = 2|S<sub>xy</sub>| 時剛好變成 0。注意這裡的 λ 用的是上面公式的定義，有些教材會先把誤差除以 2n，同樣的 λ 數值效果會不同。</p>
     </div>
 
     <div class="formula"><span class="lbl">Ridge（L2）</span>Loss = Σ (y<sub>i</sub> − ŷ<sub>i</sub>)² + α Σ β<sub>j</sub>²</div>
@@ -654,8 +654,8 @@ model.score(X_test, y_test)        # R²</code></pre>
       </tbody>
     </table></div>
     <ul>
-      <li><b>α（alpha）</b>：懲罰強度。α = 0 就是普通線性迴歸；α 越大 → 係數越小 → 偏差升高、變異降低，太大會欠擬合。用交叉驗證挑（<code>RidgeCV</code>、<code>LassoCV</code>）。</li>
-      <li><b>Elastic Net</b> 同時加 L1 和 L2，用 <code>l1_ratio</code> 調比例。</li>
+      <li><b>α（alpha）</b>：懲罰強度。α = 0 就是普通線性迴歸；α 越大 → 係數越小 → 偏差升高、變異降低，太大會欠擬合。用交叉驗證挑。</li>
+      <li><b>Elastic Net</b> 同時加 L1 和 L2，用一個比例參數調整 L1 和 L2 的比重。</li>
       <li>截距 β<sub>0</sub> 不加懲罰。</li>
     </ul>
 
@@ -668,11 +668,9 @@ model.score(X_test, y_test)        # R²</code></pre>
     <ul class="trap">
       <li><span>懲罰的是係數大小，特徵尺度不同時懲罰不公平，所以<b>必須先標準化</b>。</span></li>
       <li><span>記法：L<b>1</b> → 一刀砍到 0（稀疏）；L<b>2</b> → 平方，大的係數罰更多，但只縮不砍。</span></li>
-      <li><span>sklearn 的 Ridge／Lasso 用 <code>alpha</code>，越大越強；邏輯迴歸用 <code>C</code>，是倒數，<b>越小越強</b>。</span></li>
+      <li><span>Ridge／Lasso 的 λ（α）越大正則化越強；邏輯迴歸、SVM 的 C 是倒數，<b>越小越強</b>。</span></li>
     </ul>
-<pre><code>from sklearn.linear_model import Ridge, Lasso
-Ridge(alpha=1.0).fit(X_train_scaled, y_train)
-Lasso(alpha=0.1).fit(X_train_scaled, y_train)   # coef_ 會有 0</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：特徵很多或彼此相關時，壓住過大的係數，降低過擬合。</li><li><b>Ridge vs Lasso</b>：L2 讓係數變小但不會等於 0；L1 能把係數壓成 0，等於自動挑特徵。兩者都要先標準化。</li><li><b>最常考</b>：λ 越大正則化越強（偏差上升、變異下降）；邏輯迴歸與 SVM 的 C 方向相反，C 越小正則化越強。</li></ul></div>
   </section>
 
   <!-- ============ 邏輯迴歸 ============ -->
@@ -762,7 +760,7 @@ Lasso(alpha=0.1).fit(X_train_scaled, y_train)   # coef_ 會有 0</code></pre>
           <tr><td>平均 log-loss</td><td>0.338</td><td>0.181</td><td>0.065</td><td class="hl">0.009</td></tr>
         </tbody>
       </table></div>
-      <p class="take"><b>為什麼解決不了</b>：w 越大，sigmoid 越陡，機率越接近 0 或 1，log-loss 就越小，所以「最小化 log-loss」會把 w 推向無限大，模型變得過度自信，也容易過擬合。<b>對策</b>：加正則化（和 Ridge 同樣的想法，懲罰太大的 w）。scikit-learn 的 <code>LogisticRegression</code> 預設就有 L2 正則化，參數 <code>C</code> 越小、正則化越強。</p>
+      <p class="take"><b>為什麼解決不了</b>：w 越大，sigmoid 越陡，機率越接近 0 或 1，log-loss 就越小，所以「最小化 log-loss」會把 w 推向無限大，模型變得過度自信，也容易過擬合。<b>對策</b>：加正則化（和 Ridge 同樣的想法，懲罰太大的 w）。邏輯迴歸通常預設就有 L2 正則化，用 C 控制強度：C 越小、正則化越強。</p>
     </div>
 
     <h4>動手算</h4>
@@ -802,9 +800,9 @@ Lasso(alpha=0.1).fit(X_train_scaled, y_train)   # coef_ 會有 0</code></pre>
     <h4>重要超參數</h4>
     <div class="tbl"><table>
       <tbody>
-        <tr><td class="nw"><code>C</code></td><td>正則化強度的<b>倒數</b>（C = 1/λ）。C 小 → 正則化強 → 模型簡單；C 大 → 容易過擬合</td></tr>
-        <tr><td class="nw"><code>penalty</code></td><td>預設 L2；也可用 L1（要搭配支援的 solver，如 <code>liblinear</code>、<code>saga</code>）</td></tr>
-        <tr><td class="nw"><code>class_weight</code></td><td>不平衡資料可設 <code>'balanced'</code></td></tr>
+        <tr><td class="nw">C</td><td>正則化強度的<b>倒數</b>（C = 1/λ）。C 小 → 正則化強 → 模型簡單；C 大 → 容易過擬合</td></tr>
+        <tr><td class="nw">正則化類型</td><td>通常預設 L2；也可用 L1，會把部分係數壓成 0</td></tr>
+        <tr><td class="nw">類別權重</td><td>不平衡資料可加重少數類別的權重</td></tr>
       </tbody>
     </table></div>
 
@@ -820,9 +818,7 @@ Lasso(alpha=0.1).fit(X_train_scaled, y_train)   # coef_ 會有 0</code></pre>
       <li><span>邏輯迴歸是<b>判別式模型</b>（直接學 P(y|x)），朴素貝氏是<b>生成式模型</b>（學 P(x|y) 和 P(y)）。</span></li>
       <li><span>門檻不一定要 0.5：要提高 Recall 就調低門檻。</span></li>
     </ul>
-<pre><code>from sklearn.linear_model import LogisticRegression
-clf = LogisticRegression(C=1.0).fit(X_train_scaled, y_train)
-clf.predict_proba(X_test_scaled)[:, 1]   # 屬於正類的機率</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：二元分類並輸出機率，例如會不會違約、會不會點擊；係數可以解讀成勝算比（x 增加 1，勝算變 e<sup>w</sup> 倍）。</li><li><b>和線性迴歸的差別</b>：多了 sigmoid 把分數壓到 0～1，損失改成 log-loss；但決策邊界仍是直線。</li><li><b>最常考</b>：σ(0) = 0.5、邊界 x = −b ÷ w；調門檻是在 Precision 與 Recall 之間取捨；C 越小正則化越強。</li></ul></div>
   </section>
 
   <!-- ============ KNN ============ -->
@@ -894,7 +890,7 @@ clf.predict_proba(X_test_scaled)[:, 1]   # 屬於正類的機率</code></pre>
           <tr><td>7（全部）</td><td>全部 7 點</td><td>A 3：B 4</td><td class="hl">B</td></tr>
         </tbody>
       </table></div>
-      <p class="take"><b>為什麼解決不了</b>：KNN 沒有一個「正確的 k」可以用公式算出來。k = 1 只看最近一點，一個雜訊點就能決定答案（過擬合）；k = 7 把所有資料都納入，答案永遠是資料最多的類別，完全忽略 q 的位置（欠擬合）。<b>對策</b>：用交叉驗證試不同的 k；也可以用距離加權（<code>weights="distance"</code>），讓近的鄰居票數比較重。</p>
+      <p class="take"><b>為什麼解決不了</b>：KNN 沒有一個「正確的 k」可以用公式算出來。k = 1 只看最近一點，一個雜訊點就能決定答案（過擬合）；k = 7 把所有資料都納入，答案永遠是資料最多的類別，完全忽略 q 的位置（欠擬合）。<b>對策</b>：用交叉驗證試不同的 k；也可以用距離加權，讓近的鄰居票數比較重。</p>
     </div>
 
     <div class="ex ng">
@@ -910,7 +906,7 @@ clf.predict_proba(X_test_scaled)[:, 1]   # 屬於正類的機率</code></pre>
         </tbody>
       </table></div>
       <p>標準化：年齡範圍取 20～60（除以 40），收入範圍取 20000～80000（除以 60000）。例如 q 到 (55, 60000)：年齡差 29 ÷ 40 = 0.725，收入差 2000 ÷ 60000 = 0.033，距離 √(0.725² + 0.033²) = 0.726。</p>
-      <p class="take"><b>為什麼解決不了</b>：原始距離裡，年齡差 29 歲只貢獻 29² = 841，收入差 2000 元卻貢獻 2000² = 4,000,000，年齡幾乎被忽略，於是 26 歲的客人被判成和 55 歲的人最像，預測「不買」。<b>對策</b>：計算距離前先把所有特徵標準化（<code>MinMaxScaler</code> 或 <code>StandardScaler</code>），標準化後最近的是 25 歲那位，預測「買」。</p>
+      <p class="take"><b>為什麼解決不了</b>：原始距離裡，年齡差 29 歲只貢獻 29² = 841，收入差 2000 元卻貢獻 2000² = 4,000,000，年齡幾乎被忽略，於是 26 歲的客人被判成和 55 歲的人最像，預測「不買」。<b>對策</b>：計算距離前先把所有特徵標準化（Min-Max 或減平均除以標準差），標準化後最近的是 25 歲那位，預測「買」。</p>
     </div>
 
     <h4>動手算</h4>
@@ -949,9 +945,9 @@ clf.predict_proba(X_test_scaled)[:, 1]   # 屬於正類的機率</code></pre>
     <div class="tbl"><table>
       <thead><tr><th>超參數</th><th>效果</th></tr></thead>
       <tbody>
-        <tr><td class="nw"><code>n_neighbors</code>（k）</td><td><b>k 小</b> → 邊界彎曲、受雜訊影響 → <b>過擬合</b>（k = 1 時訓練準確率 100%）。<b>k 大</b> → 邊界平滑 → 欠擬合。用交叉驗證挑；二元分類常取奇數避免平手</td></tr>
-        <tr><td class="nw"><code>weights</code></td><td><code>'uniform'</code> 每個鄰居一票；<code>'distance'</code> 越近的權重越大</td></tr>
-        <tr><td class="nw"><code>metric</code></td><td>距離定義：歐氏、曼哈頓、Minkowski（p=1 曼哈頓、p=2 歐氏）</td></tr>
+        <tr><td class="nw">k</td><td><b>k 小</b> → 邊界彎曲、受雜訊影響 → <b>過擬合</b>（k = 1 時訓練準確率 100%）。<b>k 大</b> → 邊界平滑 → 欠擬合。用交叉驗證挑；二元分類常取奇數避免平手</td></tr>
+        <tr><td class="nw">投票權重</td><td>每個鄰居一票，或距離加權（越近權重越大）</td></tr>
+        <tr><td class="nw">距離定義</td><td>距離定義：歐氏、曼哈頓、Minkowski（p=1 曼哈頓、p=2 歐氏）</td></tr>
       </tbody>
     </table></div>
 
@@ -966,8 +962,7 @@ clf.predict_proba(X_test_scaled)[:, 1]   # 屬於正類的機率</code></pre>
       <li><span><b>維度詛咒</b>（Curse of Dimensionality）：維度高時所有點之間的距離都差不多，「最近」就失去意義。</span></li>
       <li><span>KNN 的 k 是鄰居數；K-Means 的 k 是群數，而且 K-Means 是非監督式。不要搞混。</span></li>
     </ul>
-<pre><code>from sklearn.neighbors import KNeighborsClassifier
-KNeighborsClassifier(n_neighbors=5).fit(X_train_scaled, y_train)</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：資料量不大、邊界不規則時的簡單基線；分類取多數決，回歸取平均。</li><li><b>和其他模型的差別</b>：沒有訓練過程、不學參數（非參數、懶惰學習），所有計算都在預測時，所以預測慢。</li><li><b>最常考</b>：k 小過擬合、k 大欠擬合；一定要標準化；維度很高時距離失去意義（維度詛咒）。</li></ul></div>
   </section>
 
   <!-- ============ SVM ============ -->
@@ -1033,7 +1028,7 @@ KNeighborsClassifier(n_neighbors=5).fit(X_train_scaled, y_train)</code></pre>
       <div class="ex-h">❌ 解決不了 1：直線分不開的資料（XOR）</div>
       <p>4 點：+1 類 (1, 1)、(−1, −1)；−1 類 (1, −1)、(−1, 1)。兩類交錯在對角上，和邏輯迴歸的 XOR 一樣，任何直線最多分對 3 點。</p>
       <p>多加一個特徵 x<sub>3</sub> = x<sub>1</sub> × x<sub>2</sub>：(1, 1) → 1、(−1, −1) → 1、(1, −1) → −1、(−1, 1) → −1。在新特徵上 +1 類全是 1、−1 類全是 −1，用 f = x<sub>3</sub>（分隔在 x<sub>3</sub> = 0）就能全部分對。</p>
-      <p class="take"><b>為什麼解決不了</b>：線性 SVM 的邊界只能是直線（平面）。<b>對策</b>：用核函數（kernel），例如多項式核 <code>kernel="poly"</code> 或 RBF 核 <code>kernel="rbf"</code>，效果等於自動加入像 x<sub>1</sub>x<sub>2</sub> 這樣的新特徵，但不用真的把它們算出來（核技巧）。</p>
+      <p class="take"><b>為什麼解決不了</b>：線性 SVM 的邊界只能是直線（平面）。<b>對策</b>：用核函數（kernel），例如多項式核或 RBF 核，效果等於自動加入像 x<sub>1</sub>x<sub>2</sub> 這樣的新特徵，但不用真的把它們算出來（核技巧）。</p>
     </div>
 
     <div class="ex ng">
@@ -1088,9 +1083,9 @@ KNeighborsClassifier(n_neighbors=5).fit(X_train_scaled, y_train)</code></pre>
     <div class="tbl"><table>
       <thead><tr><th>kernel</th><th>形式</th><th>用途</th></tr></thead>
       <tbody>
-        <tr><td class="nw"><code>linear</code></td><td class="nw">xᵀx′</td><td>線性可分、特徵很多（如文字）</td></tr>
-        <tr><td class="nw"><code>poly</code></td><td class="nw">(γ xᵀx′ + r)<sup>d</sup></td><td>多項式邊界</td></tr>
-        <tr><td class="nw"><code>rbf</code>（預設）</td><td class="nw">exp(−γ ‖x − x′‖²)</td><td>最常用的非線性核</td></tr>
+        <tr><td class="nw">線性核</td><td class="nw">xᵀx′</td><td>線性可分、特徵很多（如文字）</td></tr>
+        <tr><td class="nw">多項式核</td><td class="nw">(γ xᵀx′ + r)<sup>d</sup></td><td>多項式邊界</td></tr>
+        <tr><td class="nw">RBF 核（預設）</td><td class="nw">exp(−γ ‖x − x′‖²)</td><td>最常用的非線性核</td></tr>
       </tbody>
     </table></div>
 
@@ -1098,9 +1093,9 @@ KNeighborsClassifier(n_neighbors=5).fit(X_train_scaled, y_train)</code></pre>
     <div class="tbl"><table>
       <thead><tr><th>超參數</th><th>變大會怎樣</th></tr></thead>
       <tbody>
-        <tr><td class="nw"><code>C</code></td><td>越不容忍錯誤 → <b>間隔變窄</b>、邊界貼著訓練資料 → 容易<b>過擬合</b>。C 小 → 間隔寬、容許錯分 → 較平滑</td></tr>
-        <tr><td class="nw"><code>gamma</code>（γ，RBF）</td><td>每個點的影響範圍變小 → 邊界彎曲、一個個小島 → <b>過擬合</b>。γ 小 → 邊界平滑</td></tr>
-        <tr><td class="nw"><code>epsilon</code>（SVR）</td><td>管子變寬 → 更多點不算誤差 → 模型更簡單</td></tr>
+        <tr><td class="nw">C</td><td>越不容忍錯誤 → <b>間隔變窄</b>、邊界貼著訓練資料 → 容易<b>過擬合</b>。C 小 → 間隔寬、容許錯分 → 較平滑</td></tr>
+        <tr><td class="nw">γ（γ，RBF）</td><td>每個點的影響範圍變小 → 邊界彎曲、一個個小島 → <b>過擬合</b>。γ 小 → 邊界平滑</td></tr>
+        <tr><td class="nw">ε（SVR）</td><td>管子變寬 → 更多點不算誤差 → 模型更簡單</td></tr>
       </tbody>
     </table></div>
 
@@ -1113,10 +1108,9 @@ KNeighborsClassifier(n_neighbors=5).fit(X_train_scaled, y_train)</code></pre>
     <ul class="trap">
       <li><span>C 和 γ <b>都是越大越容易過擬合</b>。</span></li>
       <li><span>SVM 的 C 是懲罰錯分的權重，跟邏輯迴歸的 C 一樣都是「越大正則化越弱」。</span></li>
-      <li><span>要機率要設 <code>probability=True</code>，內部用 Platt scaling 另外估，會變慢。</span></li>
+      <li><span>SVM 原生輸出的是到分隔線的距離，不是機率；要機率得另外校準（Platt scaling），會變慢。</span></li>
     </ul>
-<pre><code>from sklearn.svm import SVC
-SVC(kernel='rbf', C=1.0, gamma='scale').fit(X_train_scaled, y_train)</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：中小型、高維度資料的分類（例如文字），搭配核函數處理非線性邊界。</li><li><b>和邏輯迴歸的差別</b>：SVM 只由邊界附近的支援向量決定、追求最大間隔，原生輸出是距離而不是機率；邏輯迴歸用到所有點、輸出機率。</li><li><b>最常考</b>：margin = 2 ÷ ‖w‖；C 大 → 間隔窄、易過擬合；RBF 核的 γ 大 → 易過擬合；要先標準化。</li></ul></div>
   </section>
 
   <!-- ============ Naive Bayes ============ -->
@@ -1183,7 +1177,7 @@ SVC(kernel='rbf', C=1.0, gamma='scale').fit(X_train_scaled, y_train)</code></pre
           <tr><td>P(垃圾 | 免費, 會議)</td><td class="hl">0</td><td>0.0444 ÷ (0.0444 + 0.075) = 0.372</td></tr>
         </tbody>
       </table></div>
-      <p class="take"><b>為什麼解決不了</b>：連乘中只要有一項是 0，其他證據再強也沒用，結果永遠是 0。只因為訓練資料裡剛好沒有「含『會議』的垃圾信」，模型就斷定這種信絕不可能是垃圾信。<b>對策</b>：Laplace 平滑，每個計數都先加 α（通常 1），沒見過的情況也保留一點小機率。平滑後結論變成「37% 是垃圾信」，比較合理。scikit-learn 的 <code>MultinomialNB</code>、<code>BernoulliNB</code> 參數 <code>alpha</code> 預設就是 1。</p>
+      <p class="take"><b>為什麼解決不了</b>：連乘中只要有一項是 0，其他證據再強也沒用，結果永遠是 0。只因為訓練資料裡剛好沒有「含『會議』的垃圾信」，模型就斷定這種信絕不可能是垃圾信。<b>對策</b>：Laplace 平滑，每個計數都先加 α（通常 1），沒見過的情況也保留一點小機率。平滑後結論變成「37% 是垃圾信」，比較合理。平滑參數 α 通常預設就是 1。</p>
     </div>
 
     <div class="ex ng">
@@ -1226,17 +1220,17 @@ SVC(kernel='rbf', C=1.0, gamma='scale').fit(X_train_scaled, y_train)</code></pre
     <div class="tbl"><table>
       <thead><tr><th>類別</th><th>假設特徵是</th><th>典型用途</th></tr></thead>
       <tbody>
-        <tr><td class="nw"><code>GaussianNB</code></td><td>連續值，各類別下呈常態分布</td><td>一般數值資料（如鳶尾花）</td></tr>
-        <tr><td class="nw"><code>MultinomialNB</code></td><td>次數（字詞出現幾次）</td><td><b>文字分類</b>、垃圾郵件</td></tr>
-        <tr><td class="nw"><code>BernoulliNB</code></td><td>0／1（字詞有沒有出現）</td><td>短文本、二元特徵</td></tr>
+        <tr><td class="nw">高斯（Gaussian）</td><td>連續值，各類別下呈常態分布</td><td>一般數值資料（如鳶尾花）</td></tr>
+        <tr><td class="nw">多項式（Multinomial）</td><td>次數（字詞出現幾次）</td><td><b>文字分類</b>、垃圾郵件</td></tr>
+        <tr><td class="nw">伯努利（Bernoulli）</td><td>0／1（字詞有沒有出現）</td><td>短文本、二元特徵</td></tr>
       </tbody>
     </table></div>
 
     <h4>拉普拉斯平滑（Laplace Smoothing）</h4>
-    <p>如果某個字在訓練資料的某類別裡從沒出現，P(x<sub>j</sub>|y) = 0，整串連乘就變 0。解法是每個計數都加 α（預設 α = 1）。sklearn 參數是 <code>alpha</code>。</p>
+    <p>如果某個字在訓練資料的某類別裡從沒出現，P(x<sub>j</sub>|y) = 0，整串連乘就變 0。解法是每個計數都加 α（通常 α = 1）。</p>
 
     <div class="pc">
-      <div class="pro"><b>優點</b><ul><li>訓練和預測都極快</li><li>小資料、高維資料（文字）表現好</li><li>可以逐批更新（<code>partial_fit</code>）</li></ul></div>
+      <div class="pro"><b>優點</b><ul><li>訓練和預測都極快</li><li>小資料、高維資料（文字）表現好</li><li>新資料進來只要更新計數，可以逐批更新</li></ul></div>
       <div class="con"><b>缺點</b><ul><li>獨立假設通常不成立</li><li>輸出的機率值不準（太接近 0 或 1）</li><li>特徵相關性強時效果下降</li></ul></div>
     </div>
 
@@ -1246,8 +1240,7 @@ SVC(kernel='rbf', C=1.0, gamma='scale').fit(X_train_scaled, y_train)</code></pre
       <li><span>零機率問題 → 拉普拉斯平滑。</span></li>
       <li><span>它是<b>生成式模型</b>：先學每一類「長什麼樣」P(x|y)，再反推 P(y|x)。</span></li>
     </ul>
-<pre><code>from sklearn.naive_bayes import MultinomialNB
-MultinomialNB(alpha=1.0).fit(X_counts, y)   # X_counts 來自 CountVectorizer</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：文字分類（垃圾信、情緒分析）的快速基線，資料少也能用，訓練與預測都極快。</li><li><b>和邏輯迴歸的差別</b>：朴素貝氏是生成模型（學每一類怎麼產生特徵，P(x | C)），邏輯迴歸是判別模型（直接學分界）。</li><li><b>最常考</b>：條件獨立假設；零頻率問題用 Laplace 平滑；分類結果常常對，但給的機率偏極端、不可盡信。</li></ul></div>
   </section>
 
   <!-- ============ 決策樹 ============ -->
@@ -1320,7 +1313,7 @@ MultinomialNB(alpha=1.0).fit(X_counts, y)   # X_counts 來自 CountVectorizer</c
       <div class="ex-h">❌ 解決不了 1：不限制深度，連雜訊都背下來</div>
       <p>如果再找到一個切法 C：左 6 天（是 5、否 1）、右 4 天（是 0、否 4）。右邊完全純（Gini = 0），左邊 Gini = 1 − (5/6)² − (1/6)² = 0.278，切後 Gini = 6/10 × 0.278 + 0 = 0.167，增益 0.333，比切法 A 更好。</p>
       <p>樹會一直這樣切下去，直到每個葉節點都 100% 純。假設左邊那 1 天「否」其實只是那天剛好生病，樹還是會再問一題，專門把那一天切出來，形成「天氣晴、而且是 3 月 5 日 → 不去」這種只對那一天成立的規則。</p>
-      <p class="take"><b>為什麼解決不了</b>：「越純越好」的目標本身沒有停下來的理由，只要還能切就會切，最後訓練準確率 100%，但規則裡混進了雜訊，對新資料反而變差（過擬合）。<b>對策</b>：限制成長，例如 <code>max_depth</code>（最大深度）、<code>min_samples_leaf</code>（葉節點最少筆數）；或先長完再剪枝（<code>ccp_alpha</code>）；或改用隨機森林把很多棵樹平均。</p>
+      <p class="take"><b>為什麼解決不了</b>：「越純越好」的目標本身沒有停下來的理由，只要還能切就會切，最後訓練準確率 100%，但規則裡混進了雜訊，對新資料反而變差（過擬合）。<b>對策</b>：限制成長，例如限制最大深度、規定葉節點最少筆數；或先長完再剪枝；或改用隨機森林把很多棵樹平均。</p>
     </div>
 
     <div class="ex ng">
@@ -1361,7 +1354,7 @@ MultinomialNB(alpha=1.0).fit(X_counts, y)   # X_counts 來自 CountVectorizer</c
       </tbody>
     </table></div>
     <ul>
-      <li>選讓<b>不純度下降最多</b>（資訊增益最大）的切法。sklearn 預設 Gini（<code>criterion='gini'</code>），用 CART 演算法，每次切成兩支。</li>
+      <li>選讓<b>不純度下降最多</b>（資訊增益最大）的切法。常用 Gini；CART 演算法每次切成兩支。</li>
       <li><b>回歸樹</b>：切分標準改成讓子節點的 MSE（變異）最小，葉節點預測值 = 該葉樣本的平均。</li>
     </ul>
 
@@ -1369,10 +1362,10 @@ MultinomialNB(alpha=1.0).fit(X_counts, y)   # X_counts 來自 CountVectorizer</c
     <div class="tbl"><table>
       <thead><tr><th>超參數</th><th>效果</th></tr></thead>
       <tbody>
-        <tr><td class="nw"><code>max_depth</code></td><td>最大深度。不設限會一直長到每片葉子都純 → 過擬合</td></tr>
-        <tr><td class="nw"><code>min_samples_split</code></td><td>節點至少有幾筆才能再切</td></tr>
-        <tr><td class="nw"><code>min_samples_leaf</code></td><td>每片葉子至少幾筆</td></tr>
-        <tr><td class="nw"><code>ccp_alpha</code></td><td>後剪枝（成本複雜度剪枝），越大剪越多</td></tr>
+        <tr><td class="nw">最大深度</td><td>不設限會一直長到每片葉子都純 → 過擬合</td></tr>
+        <tr><td class="nw">節點至少幾筆才能再切</td><td>節點至少有幾筆才能再切</td></tr>
+        <tr><td class="nw">葉節點最少樣本數</td><td>每片葉子至少幾筆</td></tr>
+        <tr><td class="nw">剪枝強度</td><td>後剪枝（成本複雜度剪枝），越大剪越多</td></tr>
       </tbody>
     </table></div>
     <p class="note">預剪枝：長樹時就限制（前三個）。後剪枝：先長完再剪掉沒幫助的分支（ccp_alpha）。</p>
@@ -1388,9 +1381,7 @@ MultinomialNB(alpha=1.0).fit(X_counts, y)   # X_counts 來自 CountVectorizer</c
       <li><span>Gini 和 Entropy 結果通常差不多；Gini 不用算 log，比較快。</span></li>
       <li><span>樹越深 → 偏差越低、變異越高。</span></li>
     </ul>
-<pre><code>from sklearn.tree import DecisionTreeClassifier, plot_tree
-tree = DecisionTreeClassifier(max_depth=4, criterion='gini').fit(X_train, y_train)
-tree.feature_importances_</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：需要看得懂的規則時（例如信用審核），不用標準化，數值和類別特徵都能直接用。</li><li><b>和線性模型的差別</b>：邊界由一段段平行於座標軸的切線組成，能表達非線性與交互作用，但資料稍微變動樹就可能完全不同（不穩定）。</li><li><b>最常考</b>：Gini 與熵的計算（兩類最大分別是 0.5 和 1）；用資訊增益選切點；不限深度會過擬合。</li></ul></div>
   </section>
 
   <!-- ============ 隨機森林 ============ -->
@@ -1408,7 +1399,7 @@ tree.feature_importances_</code></pre>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
-          <tr><td class="nw">B</td><td>樹的棵數（scikit-learn 的 <code>n_estimators</code>）</td><td class="nw">1、5、10、100</td></tr>
+          <tr><td class="nw">B</td><td>樹的棵數</td><td class="nw">1、5、10、100</td></tr>
           <tr><td class="nw">ŷ<sub>b</sub></td><td>第 b 棵樹的預測</td><td class="nw">例如 1、1、0、1、0</td></tr>
           <tr><td class="nw">σ²（讀作 sigma 平方）</td><td>單一棵樹預測的變異數：換一批訓練資料，這棵樹的預測會晃動多少</td><td class="nw">1（當作基準）</td></tr>
           <tr><td class="nw">ρ（讀作 rho）</td><td>任兩棵樹預測之間的相關係數，0 = 完全不相關，1 = 完全一樣</td><td class="nw">0、0.5</td></tr>
@@ -1417,7 +1408,7 @@ tree.feature_importances_</code></pre>
           <tr><td class="nw">m</td><td>B 棵樹中判對的棵數；超過一半（m &gt; B/2）多數決就對</td><td class="nw">B = 5 時 m = 3、4、5</td></tr>
           <tr><td class="nw">C(B, m)</td><td>組合數：從 B 棵中選 m 棵判對的方法數</td><td class="nw">C(5, 3) = 10</td></tr>
           <tr><td class="nw">Bootstrap</td><td>每棵樹用「有放回抽樣」抽出的訓練資料；每棵看到的資料略有不同</td><td class="nw">—</td></tr>
-          <tr><td class="nw"><code>max_features</code></td><td>每次切分只從隨機挑出的部分特徵中選；讓樹之間更不像，降低 ρ</td><td class="nw">—</td></tr>
+          <tr><td class="nw">每次切分考慮的特徵數</td><td>每次切分只從隨機挑出的部分特徵中選；讓樹之間更不像，降低 ρ</td><td class="nw">—</td></tr>
         </tbody>
       </table></div>
       <p class="formal"><b>正式說明</b>：隨機森林訓練 B 棵決策樹，每棵用 bootstrap 抽樣的資料，並在每次切分時只考慮隨機選出的部分特徵。預測時分類用多數決、回歸取平均。平均能降低變異數，降低的幅度取決於樹之間的相關性 ρ。</p>
@@ -1458,7 +1449,7 @@ tree.feature_importances_</code></pre>
           <tr><td>ρ = 0.5 的 Var</td><td>1</td><td>0.6</td><td>0.55</td><td>0.505</td><td class="hl">0.5</td></tr>
         </tbody>
       </table></div>
-      <p class="take"><b>為什麼解決不了</b>：ρσ² = 0.5 這一項和 B 無關，樹再多變異數也降不到 0.5 以下。極端情況 ρ = 1（每棵樹都一樣），森林就等於一棵樹。<b>對策</b>：讓樹更不像：調小 <code>max_features</code>（每次切分看的特徵更少），保持 bootstrap 抽樣。這就是隨機森林比單純的 Bagging 多做「隨機選特徵」的原因。</p>
+      <p class="take"><b>為什麼解決不了</b>：ρσ² = 0.5 這一項和 B 無關，樹再多變異數也降不到 0.5 以下。極端情況 ρ = 1（每棵樹都一樣），森林就等於一棵樹。<b>對策</b>：讓樹更不像：減少每次切分考慮的特徵數，保持 bootstrap 抽樣。這就是隨機森林比單純的 Bagging 多做「隨機選特徵」的原因。</p>
     </div>
 
     <div class="ex ng">
@@ -1486,7 +1477,7 @@ tree.feature_importances_</code></pre>
     <h4>兩種隨機</h4>
     <ol>
       <li><b>資料隨機（Bootstrap）</b>：每棵樹從訓練集<b>有放回</b>地抽 n 筆。每次約有 63.2% 的不同樣本被抽到，剩下約 36.8% 沒被抽到，稱為 <b>OOB</b>（Out-of-Bag）樣本。</li>
-      <li><b>特徵隨機</b>：每次切分只從隨機挑的一部分特徵裡找最佳切點（<code>max_features</code>，分類常用 √p）。這讓樹之間的相關性降低，平均起來效果更好。</li>
+      <li><b>特徵隨機</b>：每次切分只從隨機挑的一部分特徵裡找最佳切點（分類常用 √p 個）。這讓樹之間的相關性降低，平均起來效果更好。</li>
     </ol>
     <div class="flow"><span>訓練集</span><i>→</i><span>Bootstrap 抽 B 份</span><i>→</i><span>每份長一棵樹（切分時隨機選特徵）</span><i>→</i><span>投票／平均</span></div>
     <p><b>Bagging</b> = <b>B</b>ootstrap <b>Agg</b>regat<b>ing</b>。隨機森林 = Bagging + 特徵隨機。</p>
@@ -1494,10 +1485,10 @@ tree.feature_importances_</code></pre>
     <h4>重要超參數</h4>
     <div class="tbl"><table>
       <tbody>
-        <tr><td class="nw"><code>n_estimators</code></td><td>樹的數量。越多越穩定，<b>通常不會因此過擬合</b>，只是變慢</td></tr>
-        <tr><td class="nw"><code>max_features</code></td><td>每次切分考慮幾個特徵。越小 → 樹之間越不相關</td></tr>
-        <tr><td class="nw"><code>max_depth</code> 等</td><td>同決策樹，限制單棵樹</td></tr>
-        <tr><td class="nw"><code>oob_score=True</code></td><td>用 OOB 樣本估泛化誤差，不必另切驗證集</td></tr>
+        <tr><td class="nw">樹的棵數</td><td>越多越穩定，<b>通常不會因此過擬合</b>，只是變慢</td></tr>
+        <tr><td class="nw">每次切分考慮的特徵數</td><td>每次切分考慮幾個特徵。越小 → 樹之間越不相關</td></tr>
+        <tr><td class="nw">最大深度等</td><td>同決策樹，限制單棵樹</td></tr>
+        <tr><td class="nw">袋外評估（OOB）</td><td>每棵樹約 36.8% 的資料沒被抽到，用它們估泛化誤差，不必另切驗證集</td></tr>
       </tbody>
     </table></div>
 
@@ -1511,9 +1502,7 @@ tree.feature_importances_</code></pre>
       <li><span>隨機森林主要降低<b>變異（Variance）</b>；梯度提升主要降低<b>偏差（Bias）</b>。</span></li>
       <li><span>Bootstrap 是<b>有放回</b>抽樣，同一筆資料可能被抽到好幾次。</span></li>
     </ul>
-<pre><code>from sklearn.ensemble import RandomForestClassifier
-rf = RandomForestClassifier(n_estimators=300, oob_score=True, n_jobs=-1).fit(X_train, y_train)
-rf.oob_score_, rf.feature_importances_</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：表格資料的穩健預設選擇，不太需要調參就有不錯表現，還能看特徵重要度。</li><li><b>和決策樹、梯度提升的差別</b>：比單棵樹穩定（降變異）；和梯度提升相比，各棵樹是平行、獨立訓練，不是一棵接一棵修正。</li><li><b>最常考</b>：bootstrap 加隨機選特徵；每棵樹約有 36.8% 資料沒抽到（OOB）；樹多不太會過擬合；樹之間太像（ρ 大）時加樹沒用。</li></ul></div>
   </section>
 
   <!-- ============ 梯度提升 ============ -->
@@ -1533,11 +1522,11 @@ rf.oob_score_, rf.feature_importances_</code></pre>
         <tbody>
           <tr><td class="nw">x<sub>i</sub>、y<sub>i</sub></td><td>第 i 筆資料的特徵與實際值</td><td class="nw">x：1～6；y：2、3、4、8、9、10</td></tr>
           <tr><td class="nw">ȳ</td><td>所有 y 的平均，當作第 0 輪的預測</td><td class="nw">6</td></tr>
-          <tr><td class="nw">m、M</td><td>第幾輪、總輪數（每輪加一棵樹；scikit-learn 的 <code>n_estimators</code>）</td><td class="nw">m = 1、2、3</td></tr>
+          <tr><td class="nw">m、M</td><td>第幾輪、總輪數（每輪加一棵樹，總輪數就是樹的棵數）</td><td class="nw">m = 1、2、3</td></tr>
           <tr><td class="nw">F<sub>m</sub>(x)</td><td>做完第 m 輪後，整個模型對 x 的預測（前面所有樹加起來）</td><td class="nw">F<sub>1</sub> = 4.5 或 7.5</td></tr>
           <tr><td class="nw">r<sub>i</sub></td><td>殘差：目前還差多少（正：預測太低；負：預測太高）</td><td class="nw">第 1 輪：−4、−3、−2、2、3、4</td></tr>
           <tr><td class="nw">h<sub>m</sub>(x)</td><td>第 m 棵小樹，專門學「殘差」；這裡用只切一刀的樹（stump），每邊輸出那一邊殘差的平均</td><td class="nw">第 1 棵：x &lt; 3.5 → −3，否則 +3</td></tr>
-          <tr><td class="nw">η（讀作 eta）</td><td>學習率：每棵樹的修正只採用幾成，介於 0～1，常用 0.05～0.3（scikit-learn 的 <code>learning_rate</code>）</td><td class="nw">0.5</td></tr>
+          <tr><td class="nw">η（讀作 eta）</td><td>學習率：每棵樹的修正只採用幾成，介於 0～1，常用 0.05～0.3</td><td class="nw">0.5</td></tr>
           <tr><td class="nw">SSE</td><td>訓練資料的殘差平方和，用來看模型離答案還有多遠</td><td class="nw">58 → 17.5 → 7.38 → 3.86</td></tr>
         </tbody>
       </table></div>
@@ -1594,7 +1583,7 @@ rf.oob_score_, rf.feature_importances_</code></pre>
     <div class="ex ng">
       <div class="ex-h">❌ 解決不了 2：輪數太多，把每一點都背下來</div>
       <p>同一份資料，η = 1，訓練 SSE 隨輪數：第 1 輪 4.0 → 第 5 輪 0.91 → 第 10 輪 0.20 → 第 20 輪 0.015 → 第 50 輪 <b class="hl">0</b>（每一點都預測得一模一樣）。</p>
-      <p class="take"><b>為什麼解決不了</b>：只要還有殘差，下一棵樹就會去擬合它，直到訓練資料完全沒有誤差。但資料本身有雜訊，例如 y 可能只是「x ≤ 3 時約 3、x ≥ 4 時約 9」加上一些隨機起伏，把起伏也背下來，對新資料反而變差（過擬合）。<b>對策</b>：用驗證資料決定輪數，驗證誤差不再下降就停止（early stopping，例如 XGBoost 的 <code>early_stopping_rounds</code>）；限制樹的深度、加入正則化、每棵樹只用部分資料（<code>subsample</code>）。</p>
+      <p class="take"><b>為什麼解決不了</b>：只要還有殘差，下一棵樹就會去擬合它，直到訓練資料完全沒有誤差。但資料本身有雜訊，例如 y 可能只是「x ≤ 3 時約 3、x ≥ 4 時約 9」加上一些隨機起伏，把起伏也背下來，對新資料反而變差（過擬合）。<b>對策</b>：用驗證資料決定輪數，驗證誤差不再下降就停止（早停，early stopping）；限制樹的深度、加入正則化、每棵樹只用部分資料。</p>
     </div>
 
     <h4>動手算</h4>
@@ -1632,11 +1621,11 @@ rf.oob_score_, rf.feature_importances_</code></pre>
     <h4>重要超參數</h4>
     <div class="tbl"><table>
       <tbody>
-        <tr><td class="nw"><code>n_estimators</code></td><td>樹的數量。<b>太多會過擬合</b>（和隨機森林不同），搭配 early stopping</td></tr>
-        <tr><td class="nw"><code>learning_rate</code></td><td>η。小學習率要配更多樹，通常泛化較好。兩者要一起調</td></tr>
-        <tr><td class="nw"><code>max_depth</code></td><td>單棵樹深度，通常小</td></tr>
-        <tr><td class="nw"><code>subsample</code>、<code>colsample_bytree</code></td><td>每棵樹抽部分樣本／特徵，增加隨機性、降過擬合</td></tr>
-        <tr><td class="nw"><code>reg_alpha</code>、<code>reg_lambda</code></td><td>XGBoost 對葉節點權重的 L1／L2 正則化</td></tr>
+        <tr><td class="nw">樹的棵數</td><td><b>太多會過擬合</b>（和隨機森林不同），搭配早停（early stopping）</td></tr>
+        <tr><td class="nw">學習率 η</td><td>小學習率要配更多樹，通常泛化較好。兩者要一起調</td></tr>
+        <tr><td class="nw">最大深度</td><td>單棵樹深度，通常小</td></tr>
+        <tr><td class="nw">樣本／特徵抽樣比例</td><td>每棵樹抽部分樣本／特徵，增加隨機性、降過擬合</td></tr>
+        <tr><td class="nw">L1／L2 正則化</td><td>XGBoost 對葉節點輸出值加的懲罰，越大越保守</td></tr>
       </tbody>
     </table></div>
 
@@ -1657,13 +1646,10 @@ rf.oob_score_, rf.feature_importances_</code></pre>
     <h4>常考陷阱</h4>
     <ul class="trap">
       <li><span>Boosting 是<b>循序</b>的，每棵樹依賴前一棵；Bagging 是<b>平行</b>的。</span></li>
-      <li><span>XGBoost 不在 scikit-learn 裡，要另外 <code>pip install xgboost</code>（sklearn 自己有 <code>GradientBoostingClassifier</code>、<code>HistGradientBoostingClassifier</code>）。</span></li>
+      <li><span>XGBoost、LightGBM 都是梯度提升的實作：加入正則化、抽樣、更快的切點搜尋，是表格資料常用的高分方法。</span></li>
       <li><span>AdaBoost 也是 Boosting，但它是調整<b>樣本權重</b>（加重錯分的點）；梯度提升是擬合<b>殘差／負梯度</b>。</span></li>
     </ul>
-<pre><code>from xgboost import XGBClassifier
-xgb = XGBClassifier(n_estimators=500, learning_rate=0.05, max_depth=4,
-                    subsample=0.8, colsample_bytree=0.8, early_stopping_rounds=50)
-xgb.fit(X_train, y_train, eval_set=[(X_val, y_val)])</code></pre>
+<div class="key3"><b>考前重點</b><ul><li><b>用途</b>：表格資料最常拿到最好成績的方法之一；XGBoost、LightGBM 都是它的高效實作。</li><li><b>和隨機森林的差別</b>：樹一棵接一棵訓練、每棵擬合前面的殘差，主要降低偏差；所以樹要淺、學習率要小。</li><li><b>最常考</b>：F<sub>m</sub> = F<sub>m−1</sub> + η · h<sub>m</sub>；η 太大會震盪、輪數太多會過擬合，用早停決定輪數；η 調小要配更多棵樹。</li></ul></div>
   </section>
 
   <!-- ============ 總比較 ============ -->
@@ -1676,14 +1662,14 @@ xgb.fit(X_train, y_train, eval_set=[(X_val, y_val)])</code></pre>
       <thead><tr><th>演算法</th><th>任務</th><th>非線性</th><th>需要縮放</th><th>可解釋</th><th>訓練</th><th>預測</th><th>主要超參數</th></tr></thead>
       <tbody>
         <tr><td class="nw">線性迴歸</td><td>回</td><td class="c">✗</td><td class="c">✗*</td><td class="c">高</td><td>快</td><td>快</td><td>—</td></tr>
-        <tr><td class="nw">Ridge／Lasso</td><td>回</td><td class="c">✗</td><td class="c">✓</td><td class="c">高</td><td>快</td><td>快</td><td><code>alpha</code></td></tr>
-        <tr><td class="nw">邏輯迴歸</td><td>分</td><td class="c">✗</td><td class="c">✓</td><td class="c">高</td><td>快</td><td>快</td><td><code>C</code>、<code>penalty</code></td></tr>
-        <tr><td class="nw">KNN</td><td>兩者</td><td class="c">✓</td><td class="c">✓</td><td class="c">中</td><td>不用</td><td><b>慢</b></td><td><code>k</code>、距離</td></tr>
-        <tr><td class="nw">SVM</td><td>兩者</td><td class="c">✓（核）</td><td class="c">✓</td><td class="c">低</td><td><b>慢</b></td><td>中</td><td><code>C</code>、<code>gamma</code>、<code>kernel</code></td></tr>
-        <tr><td class="nw">朴素貝氏</td><td>分</td><td class="c">部分</td><td class="c">✗</td><td class="c">中</td><td>極快</td><td>極快</td><td><code>alpha</code>（平滑）</td></tr>
-        <tr><td class="nw">決策樹</td><td>兩者</td><td class="c">✓</td><td class="c">✗</td><td class="c">高</td><td>快</td><td>快</td><td><code>max_depth</code>、<code>min_samples_leaf</code></td></tr>
-        <tr><td class="nw">隨機森林</td><td>兩者</td><td class="c">✓</td><td class="c">✗</td><td class="c">中</td><td>中（可平行）</td><td>中</td><td><code>n_estimators</code>、<code>max_features</code></td></tr>
-        <tr><td class="nw">梯度提升</td><td>兩者</td><td class="c">✓</td><td class="c">✗</td><td class="c">中</td><td>中～慢（循序）</td><td>中</td><td><code>learning_rate</code>、<code>n_estimators</code>、<code>max_depth</code></td></tr>
+        <tr><td class="nw">Ridge／Lasso</td><td>回</td><td class="c">✗</td><td class="c">✓</td><td class="c">高</td><td>快</td><td>快</td><td>λ（α）</td></tr>
+        <tr><td class="nw">邏輯迴歸</td><td>分</td><td class="c">✗</td><td class="c">✓</td><td class="c">高</td><td>快</td><td>快</td><td>C、正則化類型</td></tr>
+        <tr><td class="nw">KNN</td><td>兩者</td><td class="c">✓</td><td class="c">✓</td><td class="c">中</td><td>不用</td><td><b>慢</b></td><td>k、距離</td></tr>
+        <tr><td class="nw">SVM</td><td>兩者</td><td class="c">✓（核）</td><td class="c">✓</td><td class="c">低</td><td><b>慢</b></td><td>中</td><td>C、γ、核函數</td></tr>
+        <tr><td class="nw">朴素貝氏</td><td>分</td><td class="c">部分</td><td class="c">✗</td><td class="c">中</td><td>極快</td><td>極快</td><td>α（平滑）</td></tr>
+        <tr><td class="nw">決策樹</td><td>兩者</td><td class="c">✓</td><td class="c">✗</td><td class="c">高</td><td>快</td><td>快</td><td>最大深度、葉節點最少樣本數</td></tr>
+        <tr><td class="nw">隨機森林</td><td>兩者</td><td class="c">✓</td><td class="c">✗</td><td class="c">中</td><td>中（可平行）</td><td>中</td><td>樹的棵數、每次切分考慮的特徵數</td></tr>
+        <tr><td class="nw">梯度提升</td><td>兩者</td><td class="c">✓</td><td class="c">✗</td><td class="c">中</td><td>中～慢（循序）</td><td>中</td><td>學習率 η、樹的棵數、最大深度</td></tr>
       </tbody>
     </table></div>
     <p class="note">* 線性迴歸用解析解時不縮放也能得到相同預測，但用梯度下降訓練或要比較係數大小時建議標準化。</p>

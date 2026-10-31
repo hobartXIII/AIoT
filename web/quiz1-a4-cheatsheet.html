@@ -76,7 +76,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">β<sub>L</sub> = sign·max(|S<sub>xy</sub>| − λ/2, 0) ÷ S<sub>xx</sub></div>
       <ul>
         <li>Ridge 縮小但<span class="k">不會 = 0</span>；Lasso 可 = 0 → 特徵選擇</li>
-        <li>λ（sklearn <code>alpha</code>）<span class="k">越大越強</span>：太大 → 欠擬合</li>
+        <li>λ（也寫 α）<span class="k">越大越強</span>：偏差 ↑、變異 ↓，太大 → 欠擬合</li>
         <li><span class="k">要先標準化</span>（懲罰看係數大小）</li>
       </ul>
     </div>
@@ -90,7 +90,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li><span class="k">σ(0) = 0.5</span>；z 大的正數 → 1，大的負數 → 0</li>
         <li>邊界 z = 0 → <span class="k">x = −b ÷ w</span>，是直線（XOR 不行）</li>
         <li>y = 1 只看 −ln p；越有把握地錯罰越重</li>
-        <li>可分資料 w → ∞；<code>C</code> <span class="k">越小正則化越強</span></li>
+        <li>可分資料 w → ∞；C <span class="k">越小正則化越強</span></li><li><span class="k">勝算比</span>：x 增加 1，勝算 p/(1−p) 變 e<sup>w</sup> 倍</li>
       </ul>
     </div>
 
@@ -103,7 +103,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>不訓練（懶惰學習），<span class="k">預測慢</span></li>
         <li><span class="k">k 小 → 過擬合</span>（雜訊）；k 大 → 欠擬合（多數類）</li>
         <li><span class="k">必須標準化</span>；兩類時 k 取奇數；高維度效果差</li>
-        <li><code>weights="distance"</code>：越近票越重</li>
+        <li>距離加權：越近票越重</li>
       </ul>
     </div>
 
@@ -128,7 +128,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <ul>
         <li>先驗 P(C)、似然 P(x|C)、後驗 P(C|x)</li>
         <li>假設：給定類別下特徵<span class="k">條件獨立</span></li>
-        <li>零頻率 → 整個乘積 = 0 → 平滑（<code>alpha=1</code>）</li>
+        <li>零頻率 → 整個乘積 = 0 → Laplace 平滑（α = 1）</li>
         <li>相關特徵重複計算 → 機率過度自信；取 log 防下溢</li>
         <li>Gaussian（連續）、Multinomial（次數）、Bernoulli（有無）</li>
       </ul>
@@ -142,7 +142,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <ul>
         <li>選增益最大的切法；純節點 = 0</li>
         <li><span class="k">不需標準化</span>；可解釋（if-else）</li>
-        <li>易過擬合 → <code>max_depth</code>、<code>min_samples_leaf</code>、剪枝 <code>ccp_alpha</code></li>
+        <li>易過擬合 → 最大深度、葉節點最少樣本數、剪枝 剪枝強度</li>
         <li>切線平行座標軸，斜線邊界要很多階</li>
       </ul>
     </div>
@@ -154,9 +154,9 @@ sub, sup { font-size: 70%; line-height: 0; }
       <ul>
         <li>bootstrap（有放回抽樣）＋每次切分隨機選特徵</li>
         <li>主要<span class="k">降變異</span>；樹平行訓練</li>
-        <li>ρσ² 降不掉 → <code>max_features</code> 小 → 樹更不像</li>
-        <li>樹多（<code>n_estimators</code>）不太會過擬合，只是變慢</li>
-        <li>OOB 誤差、特徵重要度；單棵比亂猜差時越投越錯</li>
+        <li>ρσ² 降不掉 → 每次切分的特徵數 小 → 樹更不像</li>
+        <li>樹多（樹的棵數）不太會過擬合，只是變慢</li>
+        <li>沒抽到的 <span class="k">OOB ≈ 36.8%</span>（(1−1/n)<sup>n</sup> → e<sup>−1</sup>）可估誤差；單棵比亂猜差時越投越錯</li>
       </ul>
     </div>
 
@@ -166,9 +166,9 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">F<sub>m</sub> = F<sub>m−1</sub> + η·h<sub>m</sub>（h<sub>m</sub> 擬合殘差）</div>
       <ul>
         <li>樹<span class="k">依序</span>訓練，主要<span class="k">降偏差</span></li>
-        <li>η（<code>learning_rate</code>）小＋輪數多較好；<span class="k">η 太大震盪</span></li>
+        <li>學習率 η 小＋輪數多較好；<span class="k">η 太大震盪</span></li>
         <li>輪數太多 → 背下雜訊 → early stopping</li>
-        <li><code>max_depth</code> 淺（3～8）、<code>subsample</code>；XGBoost／LightGBM</li>
+        <li>最大深度 淺（3～8）、樣本抽樣比例；XGBoost／LightGBM</li>
       </ul>
     </div>
 
@@ -202,14 +202,14 @@ sub, sup { font-size: 70%; line-height: 0; }
     <thead><tr><th>演算法</th><th>任務</th><th>標準化</th><th>參數模型</th><th>可解釋</th><th>過擬合時往哪調</th><th>主要用途／優點</th><th>主要弱點</th></tr></thead>
     <tbody>
       <tr><td><b>線性迴歸</b></td><td>回歸</td><td>不必（係數比較時要）</td><td>是</td><td>高</td><td>加 L1/L2、減特徵</td><td>基線、係數可解釋</td><td>只能線性、怕離群值、共線性</td></tr>
-      <tr><td><b>Ridge／Lasso</b></td><td>回歸</td><td><span class="k">要</span></td><td>是</td><td>高</td><td><span class="k">alpha ↑</span></td><td>特徵多、共線；Lasso 選特徵</td><td>alpha 太大欠擬合</td></tr>
+      <tr><td><b>Ridge／Lasso</b></td><td>回歸</td><td><span class="k">要</span></td><td>是</td><td>高</td><td><span class="k">λ ↑</span></td><td>特徵多、共線；Lasso 選特徵</td><td>λ 太大欠擬合</td></tr>
       <tr><td><b>邏輯迴歸</b></td><td>分類</td><td><span class="k">要</span>（有正則化）</td><td>是</td><td>高</td><td><span class="k">C ↓</span></td><td>輸出機率、快、基線</td><td>邊界只能直線</td></tr>
       <tr><td><b>KNN</b></td><td>兩者</td><td><span class="k">必須</span></td><td>否</td><td>中</td><td><span class="k">k ↑</span></td><td>簡單、不用訓練</td><td>預測慢、高維差、怕尺度</td></tr>
       <tr><td><b>SVM</b></td><td>兩者</td><td><span class="k">要</span></td><td>線性是；核否</td><td>低（核）</td><td><span class="k">C ↓、γ ↓</span></td><td>中小資料、高維、核處理非線性</td><td>大資料慢、要調參</td></tr>
-      <tr><td><b>朴素貝氏</b></td><td>分類</td><td>不必</td><td>是</td><td>中</td><td>（不太會過擬合）alpha ↑</td><td>文字分類、快、資料少也行</td><td>獨立假設、機率不準</td></tr>
-      <tr><td><b>決策樹</b></td><td>兩者</td><td>不必</td><td>否</td><td><span class="k">最高</span></td><td><span class="k">max_depth ↓、min_samples_leaf ↑</span></td><td>規則易懂、混合型特徵</td><td>高變異、易過擬合</td></tr>
-      <tr><td><b>隨機森林</b></td><td>兩者</td><td>不必</td><td>否</td><td>中（特徵重要度）</td><td>max_depth ↓、max_features ↓</td><td>穩、少調參、表格資料強</td><td>模型大、比單樹難解釋</td></tr>
-      <tr><td><b>梯度提升</b></td><td>兩者</td><td>不必</td><td>否</td><td>中</td><td><span class="k">η ↓、輪數 ↓</span>、max_depth ↓、subsample ↓</td><td>表格資料常最準</td><td>易過擬合、要調參、依序訓練較慢</td></tr>
+      <tr><td><b>朴素貝氏</b></td><td>分類</td><td>不必</td><td>是</td><td>中</td><td>（不太會過擬合）α ↑</td><td>文字分類、快、資料少也行</td><td>獨立假設、機率不準</td></tr>
+      <tr><td><b>決策樹</b></td><td>兩者</td><td>不必</td><td>否</td><td><span class="k">最高</span></td><td><span class="k">最大深度 ↓、葉節點最少樣本數 ↑</span></td><td>規則易懂、混合型特徵</td><td>高變異、易過擬合</td></tr>
+      <tr><td><b>隨機森林</b></td><td>兩者</td><td>不必</td><td>否</td><td>中（特徵重要度）</td><td>最大深度 ↓、每次切分的特徵數 ↓</td><td>穩、少調參、表格資料強</td><td>模型大、比單樹難解釋</td></tr>
+      <tr><td><b>梯度提升</b></td><td>兩者</td><td>不必</td><td>否</td><td>中</td><td><span class="k">η ↓、輪數 ↓</span>、最大深度 ↓、抽樣比例 ↓</td><td>表格資料常最準</td><td>易過擬合、要調參、依序訓練較慢</td></tr>
     </tbody>
   </table>
 
@@ -232,17 +232,17 @@ sub, sup { font-size: 70%; line-height: 0; }
       <h2>超參數方向（最常考）</h2>
       <table>
         <tr><th>參數</th><th>變大會…</th></tr>
-        <tr><td>Ridge/Lasso <code>alpha</code></td><td>正則化<span class="k">變強</span> → 欠擬合</td></tr>
-        <tr><td>邏輯迴歸／SVM <code>C</code></td><td>正則化<span class="k">變弱</span> → 過擬合（C 是倒數）</td></tr>
-        <tr><td>SVM rbf <code>gamma</code></td><td>邊界更彎 → 過擬合</td></tr>
-        <tr><td>KNN <code>k</code></td><td>更平滑 → 欠擬合</td></tr>
-        <tr><td>樹 <code>max_depth</code></td><td>更複雜 → 過擬合</td></tr>
-        <tr><td><code>min_samples_leaf</code></td><td>更簡單 → 欠擬合</td></tr>
-        <tr><td>RF <code>n_estimators</code></td><td>更穩，<span class="k">不太會</span>過擬合</td></tr>
-        <tr><td>RF <code>max_features</code></td><td>樹更像（ρ ↑）</td></tr>
-        <tr><td>GB <code>learning_rate</code> η</td><td>學更快，太大震盪、過擬合</td></tr>
-        <tr><td>GB <code>n_estimators</code></td><td>訓練誤差 ↓，太多過擬合</td></tr>
-        <tr><td>朴素貝氏 <code>alpha</code></td><td>平滑更強</td></tr>
+        <tr><td>Ridge/Lasso λ（α）</td><td>正則化<span class="k">變強</span> → 欠擬合</td></tr>
+        <tr><td>邏輯迴歸／SVM C</td><td>正則化<span class="k">變弱</span> → 過擬合（C 是倒數）</td></tr>
+        <tr><td>SVM rbf γ</td><td>邊界更彎 → 過擬合</td></tr>
+        <tr><td>KNN k</td><td>更平滑 → 欠擬合</td></tr>
+        <tr><td>樹 最大深度</td><td>更複雜 → 過擬合</td></tr>
+        <tr><td>葉節點最少樣本數</td><td>更簡單 → 欠擬合</td></tr>
+        <tr><td>RF 樹的棵數</td><td>更穩，<span class="k">不太會</span>過擬合</td></tr>
+        <tr><td>RF 每次切分的特徵數</td><td>樹更像（ρ ↑）</td></tr>
+        <tr><td>GB 學習率 η</td><td>學更快，太大震盪、過擬合</td></tr>
+        <tr><td>GB 樹的棵數</td><td>訓練誤差 ↓，太多過擬合</td></tr>
+        <tr><td>朴素貝氏 α</td><td>平滑更強</td></tr>
       </table>
     </div>
 
@@ -281,12 +281,12 @@ sub, sup { font-size: 70%; line-height: 0; }
         <ul>
           <li><b>需標準化</b>：KNN、SVM、Ridge/Lasso、邏輯迴歸（看距離或係數大小）</li>
           <li><b>不需要</b>：樹、RF、GB（只比大小找切點）、朴素貝氏</li>
-          <li><b>類別特徵</b>：One-Hot（線性模型 <code>drop_first</code> 避免共線）</li>
+          <li><b>類別特徵</b>：One-Hot（線性模型丟一欄當基準，避免共線）</li>
         </ul>
         <ul>
           <li><b>過擬合對策</b>：更多資料、正則化、簡化模型、早停、集成</li>
           <li><b>欠擬合對策</b>：更複雜模型、加特徵（多項式、交互項）、減正則化</li>
-          <li><b>不平衡</b>：<code>class_weight</code>、重抽樣、調門檻、看 F1／AUC</li>
+          <li><b>不平衡</b>：加重少數類權重、重抽樣、調門檻、看 F1／AUC</li>
         </ul>
       </div>
     </div>
