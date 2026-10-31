@@ -4,8 +4,10 @@
 
 ## 網頁版
 
-- L04-1 ～ L07：https://claude.ai/artifact/5VDco6BDRHD4AGkbkFwMKK （私人，需從頁面 Share 選單分享才看得到）
-- 原始檔：[`web/aiot-da-notes.html`](web/aiot-da-notes.html)
+GitHub Pages：https://hobartxiii.github.io/AIoT/
+
+- L04-1 ～ L07：https://hobartxiii.github.io/AIoT/web/aiot-da-notes.html （原始檔 [`web/aiot-da-notes.html`](web/aiot-da-notes.html)）
+- Quiz 1 監督式學習：https://hobartxiii.github.io/AIoT/web/quiz1-supervised-learning.html （原始檔 [`web/quiz1-supervised-learning.html`](web/quiz1-supervised-learning.html)）
 
 ## 目錄
 
