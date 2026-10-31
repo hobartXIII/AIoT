@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz 1 計算題練習</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one column of multiple-choice cards grouped by topic; answer reveals a worked solution */
+:root {
+  --bg: #f4f6f8; --surface: #ffffff; --fg: #17212b; --muted: #5a6876; --line: #d9e0e7;
+  --accent: #1c6b86; --accent-soft: #e2eff4; --code-bg: #eef2f5; --mark: #b4541f;
+  --good: #2f7a4a; --good-soft: #e3f2e8; --bad: #b23b3b; --bad-soft: #f8e4e4;
+  --font-display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1317; --surface: #151c22; --fg: #e2e8ee; --muted: #94a2af; --line: #263139;
+    --accent: #63b5d2; --accent-soft: #15303a; --code-bg: #1a232b; --mark: #e39a6c;
+    --good: #7cc89a; --good-soft: #17301f; --bad: #ec8b8b; --bad-soft: #3a1c1c;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.75; margin: 0; padding: 0 16px 64px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+.wrap { max-width: 820px; margin: 0 auto; }
+.mast { padding-block: 40px 8px; border-bottom: 1px solid var(--line); }
+.mast .eyebrow { font-size: 13px; letter-spacing: .12em; color: var(--muted); }
+.mast h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 4.5vw, 40px); line-height: 1.25; margin: 6px 0 10px; }
+.mast p { margin: 0 0 14px; color: var(--muted); }
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar .score { font-weight: 700; margin-right: auto; font-variant-numeric: tabular-nums; }
+button.btn { font: inherit; font-size: 14px; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 12px; cursor: pointer; }
+button.btn:hover { border-color: var(--accent); }
+h2 { font-family: var(--font-display); font-size: 22px; margin: 34px 0 6px; }
+h2 .tag { font-family: var(--font-mono); font-size: 13px; color: var(--accent); margin-right: 8px; }
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 12px 0; }
+.q .stem { margin: 0 0 8px; }
+.q .stem .no { font-family: var(--font-mono); font-weight: 600; color: var(--accent); margin-right: 6px; }
+.q .opts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 560px) { .q .opts { grid-template-columns: minmax(0, 1fr); } }
+.q .opt { width: 100%; text-align: left; font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 7px; padding: 6px 12px; cursor: pointer; }
+.q .opt:hover:not(:disabled) { border-color: var(--accent); }
+.q .opt:disabled { cursor: default; }
+.q .opt .key { font-family: var(--font-mono); font-weight: 600; margin-right: 6px; }
+.q .opt.right { border-color: var(--good); background: var(--good-soft); }
+.q .opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.q .sol { margin-top: 10px; padding: 10px 14px; border-radius: 8px; background: var(--code-bg); font-size: 15px; }
+.q .sol .v { font-weight: 700; }
+.q .sol .v.ok { color: var(--good); }
+.q .sol .v.ng { color: var(--bad); }
+.q .sol ol { margin: 4px 0; padding-left: 1.4em; }
+.q .sol .trap { color: var(--mark); }
+footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="eyebrow">AIoT-DA 2026・Quiz 1</div>
+    <h1>計算題練習</h1>
+    <p>選擇題會考的「代入一次」計算，每種各 1～3 題。作答後顯示正確答案、計算步驟，以及錯誤選項常見的算錯原因。公式與符號的說明見<a href="quiz1-supervised-learning.html">監督式學習：會考的 9 個演算法</a>，考前整理見 <a href="quiz1-a4-cheatsheet.html">A4 筆記草稿</a>。</p>
+  </header>
+  <div class="bar"><span class="score"></span><button class="btn" type="button" data-act="reset">↺ 重新作答</button></div>
+  <main id="quiz"></main>
+  <footer>所有答案都用 Python 驗算過。數字取到小數點後 2～4 位。</footer>
+</div>
+
+<script>
+const QUIZ = [
+  { tag: 'LR', title: '線性迴歸', items: [
+    { q: '資料 (1, 2)、(2, 4)、(3, 9)，用最小平方法求斜率 β<sub>1</sub>。', o: ['3.5', '7', '3', '2.33'], a: 0,
+      s: ['x̄ = 2、ȳ = 5', '離差：x − x̄ = −1、0、1；y − ȳ = −3、−1、4', 'Σ(x − x̄)(y − ȳ) = 3 + 0 + 4 = 7；Σ(x − x̄)² = 1 + 0 + 1 = 2', 'β<sub>1</sub> = 7 ÷ 2 = <b>3.5</b>'],
+      t: '7 是忘了除以 Σ(x − x̄)²；3 是用 (9 − 2) ÷ (3 − 1) 只看頭尾兩點；2.33 是 7 ÷ 3，誤把分母當成資料筆數 n。' },
+    { q: '承上題（β<sub>1</sub> = 3.5），截距 β<sub>0</sub> 是多少？', o: ['5', '−2', '2', '−1.5'], a: 1,
+      s: ['β<sub>0</sub> = ȳ − β<sub>1</sub>x̄ = 5 − 3.5 × 2 = <b>−2</b>', '直線一定通過平均點 (x̄, ȳ) = (2, 5)，可以代回檢查：−2 + 3.5 × 2 = 5 ✓'],
+      t: '5 是直接拿 ȳ；2 是正負號弄反。' },
+    { q: '某模型 SSE = 2、SST = 10，R² 是多少？', o: ['0.2', '0.8', '5', '1.25'], a: 1,
+      s: ['R² = 1 − SSE ÷ SST = 1 − 2 ÷ 10 = <b>0.8</b>', '意思：比起只猜平均值，模型把誤差減少了 80%'],
+      t: '0.2 是只算 SSE ÷ SST、忘了用 1 去減；5 和 1.25 是分子分母顛倒。' },
+  ] },
+  { tag: 'RL', title: 'Ridge／Lasso', items: [
+    { q: '單一特徵（已減去平均），S<sub>xy</sub> = Σxy = 12、S<sub>xx</sub> = Σx² = 4，λ = 4。Ridge 的係數是？', o: ['3', '1.5', '2.5', '0'], a: 1,
+      s: ['β<sub>Ridge</sub> = S<sub>xy</sub> ÷ (S<sub>xx</sub> + λ) = 12 ÷ (4 + 4) = <b>1.5</b>', '對照：普通線性迴歸是 12 ÷ 4 = 3，Ridge 把它縮小了'],
+      t: '3 是沒加 λ（普通線性迴歸）；2.5 是 Lasso 的答案；Ridge 不會剛好變成 0。' },
+    { q: '同上（S<sub>xy</sub> = 12、S<sub>xx</sub> = 4、λ = 4），Lasso 的係數是？', o: ['2', '1.5', '2.5', '0'], a: 2,
+      s: ['β<sub>Lasso</sub> = sign(S<sub>xy</sub>) × max(|S<sub>xy</sub>| − λ/2, 0) ÷ S<sub>xx</sub>', '= max(12 − 2, 0) ÷ 4 = 10 ÷ 4 = <b>2.5</b>'],
+      t: '2 是用 12 − λ = 8 再除以 4，忘了 λ 要先除以 2（這是本頁公式的定義）。' },
+    { q: '單一特徵，S<sub>xy</sub> = 3。λ 至少要多大，Lasso 才會把係數壓成 0？', o: ['3', '1.5', '6', '9'], a: 2,
+      s: ['Lasso 係數變 0 的條件：|S<sub>xy</sub>| − λ/2 ≤ 0', '→ λ ≥ 2|S<sub>xy</sub>| = 2 × 3 = <b>6</b>'],
+      t: '注意 Ridge 不管 λ 多大都不會剛好是 0，只會越來越接近 0。' },
+  ] },
+  { tag: 'LG', title: '邏輯迴歸', items: [
+    { q: 'w = 2、b = −6，x = 3 時，預測為正類的機率 p 是？', o: ['0', '0.5', '1', '0.73'], a: 1,
+      s: ['z = wx + b = 2 × 3 − 6 = 0', 'p = σ(0) = 1 ÷ (1 + e<sup>0</sup>) = 1 ÷ 2 = <b>0.5</b>', '剛好在決策邊界上；門檻 0.5、規則「p ≥ 0.5 判 1」時判正類'],
+      t: 'z = 0 不代表機率 0；記住 σ(0) = 0.5。0.73 是 σ(1)。' },
+    { q: '實際 y = 1，模型給 p = 0.8，這一筆的 log-loss 是？（ln 0.8 ≈ −0.223）', o: ['0.2', '0.223', '1.609', '0.8'], a: 1,
+      s: ['y = 1 時 L = −ln p = −ln 0.8 = <b>0.223</b>'],
+      t: '1.609 是 −ln 0.2，也就是誤用了 −ln(1 − p)（那是 y = 0 時的公式）；0.2 是 1 − p。' },
+    { q: 'w = 0.5、b = −2，決策邊界（p = 0.5）在 x = ？', o: ['−4', '1', '4', '0.25'], a: 2,
+      s: ['p = 0.5 ⇔ z = 0 ⇔ 0.5x − 2 = 0', 'x = 2 ÷ 0.5 = <b>4</b>（公式 x = −b ÷ w）'],
+      t: '−4 是漏了負號；1 是算成 −b × w = 2 × 0.5，應該是除法 −b ÷ w。' },
+  ] },
+  { tag: 'KN', title: 'KNN', items: [
+    { q: '點 (1, 2) 和 (4, 6) 的歐氏距離是？', o: ['7', '25', '5', '3.5'], a: 2,
+      s: ['差：(4 − 1, 6 − 2) = (3, 4)', '√(3² + 4²) = √25 = <b>5</b>'],
+      t: '7 是曼哈頓距離 3 + 4；25 是忘了開根號。' },
+    { q: '新點到 5 筆訓練資料的距離與類別：1.2（A）、0.8（B）、2.5（A）、1.0（B）、3.0（A）。k = 3 時預測？', o: ['A', 'B', '平手', '無法判斷'], a: 1,
+      s: ['由近到遠：0.8（B）、1.0（B）、1.2（A）、2.5（A）、3.0（A）', '前 3 名：B、B、A → B 2 票、A 1 票 → <b>B</b>'],
+      t: '如果 k = 5，A 3 票、B 2 票會變成 A，這就是 k 會改變答案的例子。' },
+  ] },
+  { tag: 'SV', title: 'SVM', items: [
+    { q: 'SVM 的 w = (3, 4)，間隔（margin）是？', o: ['5', '0.2', '0.4', '2.5'], a: 2,
+      s: ['‖w‖ = √(3² + 4²) = 5', 'margin = 2 ÷ ‖w‖ = 2 ÷ 5 = <b>0.4</b>'],
+      t: '0.2 是 1 ÷ ‖w‖（那是分隔線到單側邊界的距離）；5 是 ‖w‖ 本身。' },
+    { q: '某點 y = −1，f(x) = 0.5，hinge loss = max(0, 1 − y·f(x)) 是？', o: ['0', '0.5', '1.5', '−0.5'], a: 2,
+      s: ['y · f(x) = (−1)(0.5) = −0.5（小於 0：判錯）', 'hinge = max(0, 1 − (−0.5)) = <b>1.5</b>'],
+      t: '0.5 是把 y 當成 +1 算；hinge loss 不會是負數。' },
+  ] },
+  { tag: 'NB', title: '朴素貝氏', items: [
+    { q: 'P(垃圾) = 0.3、P(字 | 垃圾) = 0.6、P(字 | 正常) = 0.1。信中出現這個字，是垃圾信的機率？', o: ['0.18', '0.6', '0.72', '0.86'], a: 2,
+      s: ['垃圾分數 = 0.3 × 0.6 = 0.18', '正常分數 = 0.7 × 0.1 = 0.07（P(正常) = 1 − 0.3）', 'P(垃圾 | 字) = 0.18 ÷ (0.18 + 0.07) = <b>0.72</b>'],
+      t: '0.18 是忘了除以總和；0.6 是把 P(字 | 垃圾) 當成答案（方向反了）；0.86 是先驗用了 0.5。' },
+    { q: '某字在 8 封垃圾信中都沒出現。用 Laplace 平滑（α = 1，出現／不出現兩種情況），P(字 | 垃圾) 是？', o: ['0', '0.1', '0.125', '0.111'], a: 1,
+      s: ['P = (count + α) ÷ (N + 2α) = (0 + 1) ÷ (8 + 2) = <b>0.1</b>'],
+      t: '0.125 是分母只加 0（1 ÷ 8）；0.111 是分母只加 1（1 ÷ 9）。' },
+  ] },
+  { tag: 'DT', title: '決策樹', items: [
+    { q: '節點中「是」6 筆、「否」2 筆，Gini 不純度是？', o: ['0.25', '0.375', '0.625', '0.811'], a: 1,
+      s: ['p = (6/8, 2/8) = (0.75, 0.25)', 'Gini = 1 − (0.75² + 0.25²) = 1 − (0.5625 + 0.0625) = <b>0.375</b>'],
+      t: '0.625 是忘了用 1 去減；0.811 是熵。' },
+    { q: '父節點 (4, 4)。切成左 (3, 1)、右 (1, 3)，Gini 增益是？', o: ['0.375', '0.5', '0.125', '0'], a: 2,
+      s: ['父：Gini = 1 − (0.5² + 0.5²) = 0.5', '左、右：各 1 − (0.75² + 0.25²) = 0.375', '加權：4/8 × 0.375 + 4/8 × 0.375 = 0.375', '增益 = 0.5 − 0.375 = <b>0.125</b>'],
+      t: '0.375 是切後的不純度，不是增益。' },
+    { q: '父節點 (4, 4)，切成左 (4, 0)、右 (0, 4)。資訊增益（用熵）是？', o: ['0', '0.5', '1', '2'], a: 2,
+      s: ['父：兩類各半，熵 = 1（兩類時的最大值）', '左、右都是純的，熵 = 0', '資訊增益 = 1 − 0 = <b>1</b>'],
+      t: '記住兩個數字：兩類各半時 Gini = 0.5、熵 = 1；全部同類時兩者都是 0。' },
+  ] },
+  { tag: 'RF', title: '隨機森林', items: [
+    { q: 'σ² = 1、樹之間相關係數 ρ = 0.2、B = 4 棵，平均後的變異數 ρσ² + (1 − ρ)σ²/B 是？', o: ['0.25', '0.4', '0.2', '0.05'], a: 1,
+      s: ['ρσ² = 0.2', '(1 − ρ)σ² ÷ B = 0.8 ÷ 4 = 0.2', '合計 <b>0.4</b>'],
+      t: '0.25 是當成樹之間獨立（1 ÷ 4）；0.2 是只算其中一項。' },
+    { q: '3 棵互相獨立的樹，每棵判對機率 0.8，多數決（至少 2 棵對）判對的機率是？', o: ['0.8', '0.896', '0.512', '0.96'], a: 1,
+      s: ['3 棵都對：0.8³ = 0.512', '剛好 2 棵對：C(3, 2) × 0.8² × 0.2 = 3 × 0.64 × 0.2 = 0.384', '合計 <b>0.896</b>，比單棵的 0.8 高'],
+      t: '0.512 只算了 3 棵都對；0.96 是 1 − 0.2²（以為只要 1 棵對）。' },
+  ] },
+  { tag: 'GB', title: '梯度提升', items: [
+    { q: 'y = 3、5、10，F<sub>0</sub> = 平均 = 6。第一筆的殘差是？', o: ['3', '−3', '6', '−1'], a: 1,
+      s: ['殘差 r = y − F<sub>0</sub> = 3 − 6 = <b>−3</b>（負：目前預測太高）'],
+      t: '殘差是「實際 − 預測」，順序反了會變成 3。' },
+    { q: '承上，第一棵樹對第一筆輸出 h<sub>1</sub> = −3，學習率 η = 0.1，F<sub>1</sub> 是？', o: ['3', '5.7', '6.3', '5.9'], a: 1,
+      s: ['F<sub>1</sub> = F<sub>0</sub> + η × h<sub>1</sub> = 6 + 0.1 × (−3) = <b>5.7</b>', '只往正確方向走一小步（從 6 往 3 移動 0.3）'],
+      t: '3 是 η = 1（一次修到底）；6.3 是正負號弄反。' },
+  ] },
+  { tag: 'MT', title: '評估指標', items: [
+    { q: '混淆矩陣 TP = 40、FP = 10、FN = 20、TN = 30。Precision 是？', o: ['0.8', '0.667', '0.7', '0.571'], a: 0,
+      s: ['Precision = TP ÷ (TP + FP) = 40 ÷ 50 = <b>0.8</b>（預測為正的裡面，真的是正的比例）'],
+      t: '0.667 是 Recall；0.7 是 Accuracy。' },
+    { q: '同上，Recall 是？', o: ['0.8', '0.667', '0.75', '0.571'], a: 1,
+      s: ['Recall = TP ÷ (TP + FN) = 40 ÷ 60 = <b>0.667</b>（真的是正的裡面，被抓到的比例）'],
+      t: '0.75 是 Specificity = TN ÷ (TN + FP) = 30 ÷ 40；0.571 是 TP ÷ (TP + TN)，沒有這種指標。' },
+    { q: '同上，F1 分數是？', o: ['0.733', '0.727', '0.7', '0.533'], a: 1,
+      s: ['F1 = 2 × P × R ÷ (P + R) = 2 × 0.8 × 0.667 ÷ (0.8 + 0.667)', '= 1.067 ÷ 1.467 = <b>0.727</b>（調和平均，會偏向比較小的那個）'],
+      t: '0.733 是算術平均 (0.8 + 0.667) ÷ 2；F1 是調和平均，一定 ≤ 算術平均。' },
+    { q: '同上，Accuracy 是？', o: ['0.4', '0.7', '0.8', '0.6'], a: 1,
+      s: ['Accuracy = (TP + TN) ÷ 全部 = (40 + 30) ÷ 100 = <b>0.7</b>'],
+      t: '0.4 只算了 TP ÷ 全部。' },
+    { q: '4 筆預測的誤差（y − ŷ）為 2、−1、−3、0。MAE、MSE 分別是？', o: ['1.5、3.5', '−0.5、3.5', '1.5、1.87', '1.5、14'], a: 0,
+      s: ['MAE = (|2| + |−1| + |−3| + 0) ÷ 4 = 6 ÷ 4 = <b>1.5</b>', 'MSE = (4 + 1 + 9 + 0) ÷ 4 = 14 ÷ 4 = <b>3.5</b>', 'RMSE = √3.5 ≈ 1.87'],
+      t: '−0.5 是沒取絕對值；1.87 是 RMSE；14 是平方和忘了除以 n。' },
+  ] },
+];
+
+(() => {
+  const host = document.getElementById('quiz'), score = document.querySelector('.bar .score');
+  const KEYS = 'ABCD';
+  let total = 0, done = 0, right = 0, no = 0;
+  const update = () => { score.textContent = `已作答 ${done} / ${total}・答對 ${right}`; };
+  QUIZ.forEach(sec => {
+    const h = document.createElement('h2');
+    h.innerHTML = `<span class="tag">${sec.tag}</span>${sec.title}`;
+    host.append(h);
+    sec.items.forEach(raw => {
+      total++; no++;
+      // 旋轉選項，讓正確答案平均落在 A～D（題目資料裡答案多半寫在前面）
+      const target = [2, 0, 3, 1][no % 4], shift = (raw.a - target + 4) % 4;
+      const it = { ...raw, o: raw.o.slice(shift).concat(raw.o.slice(0, shift)), a: target };
+      const box = document.createElement('div');
+      box.className = 'q';
+      box.innerHTML = `<p class="stem"><span class="no">${no}.</span>${it.q}</p><ul class="opts">` +
+        it.o.map((o, i) => `<li><button class="opt" type="button" data-i="${i}"><span class="key">(${KEYS[i]})</span>${o}</button></li>`).join('') + '</ul>';
+      box.querySelectorAll('.opt').forEach(btn => btn.addEventListener('click', () => {
+        const pick = +btn.dataset.i, ok = pick === it.a;
+        box.querySelectorAll('.opt').forEach((b, i) => { b.disabled = true; if (i === it.a) b.classList.add('right'); else if (i === pick) b.classList.add('wrong'); });
+        const sol = document.createElement('div');
+        sol.className = 'sol';
+        sol.innerHTML = `<p class="v ${ok ? 'ok' : 'ng'}">${ok ? '✓ 答對' : `✗ 答錯（你選 ${KEYS[pick]}）`}・正確答案 (${KEYS[it.a]}) ${it.o[it.a]}</p>` +
+          '<ol>' + it.s.map(x => `<li>${x}</li>`).join('') + '</ol>' + (it.t ? `<p class="trap">常見錯誤：${it.t}</p>` : '');
+        box.append(sol);
+        done++; if (ok) right++; update();
+      }));
+      host.append(box);
+    });
+  });
+  document.querySelector('[data-act="reset"]').addEventListener('click', () => location.reload());
+  update();
+})();
+</script>
+</body>
+</html>
