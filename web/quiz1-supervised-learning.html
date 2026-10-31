@@ -137,6 +137,52 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 }
 @media (max-width: 560px) { .pc { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+/* 教學、計算範例、互動計算器（每個演算法共用） */
+.teach { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 4px 18px 14px; margin: 14px 0 18px; }
+.teach > h4:first-child { margin-top: 14px; }
+.teach .formal { max-width: 68ch; }
+.plain { background: var(--accent-soft); border-radius: 8px; padding: 10px 16px; margin: 10px 0 14px; }
+.plain > b:first-child { display: block; color: var(--accent); margin-bottom: 2px; }
+.plain p { margin: .45em 0; }
+.ex { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 0 8px 8px 0; padding: 4px 16px 10px; margin: 12px 0 16px; }
+.ex.ok { border-left-color: var(--good); }
+.ex.ng { border-left-color: var(--bad); }
+.ex > .ex-h { font-weight: 700; margin: 10px 0 4px; }
+.ex.ok > .ex-h { color: var(--good); }
+.ex.ng > .ex-h { color: var(--bad); }
+.ex .step { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); font-weight: 600; margin-right: 6px; }
+.ex .tbl { margin: 8px 0 10px; }
+.ex td, .ex th { text-align: right; font-variant-numeric: tabular-nums; }
+.ex td:first-child, .ex th:first-child { text-align: left; }
+.ex .take { margin: 8px 0 2px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.hl { color: var(--mark); font-weight: 700; }
+.calc { background: var(--surface); border: 1px solid var(--accent); border-radius: 10px; padding: 12px 16px 14px; margin: 12px 0 18px; }
+.teach .formula { white-space: normal; }
+.teach .formula .fp { display: inline-block; white-space: nowrap; margin-right: 28px; }
+.calc .calc-h { font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+.calc .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.calc label { font-size: 13.5px; color: var(--muted); display: block; }
+.calc label > input:not([type="checkbox"]), .calc label > textarea { display: block; margin-top: 3px; }
+.calc textarea, .calc input[type="number"] { font: 14px var(--font-mono); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+.calc textarea { width: 150px; height: 140px; resize: vertical; }
+.calc input[type="number"] { width: 90px; }
+.calc input[type="range"] { width: 220px; }
+.calc .btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.calc button { font: inherit; font-size: 13.5px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.calc button:hover { border-color: var(--accent); }
+.calc .row > div[style*="grid"] { flex: 0 0 210px; }
+.calc .out { font-size: 14.5px; min-width: 0; flex: 1 1 360px; }
+.calc .row > svg { flex: 1 1 300px; max-width: 360px; }
+.calc .out td, .calc .out th { white-space: nowrap; }
+.calc .out .k { font-family: var(--font-mono); }
+.calc .err { color: var(--bad); }
+.calc svg { width: 100%; max-width: 360px; height: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+.calc svg .ax { stroke: var(--muted); stroke-width: 1; }
+.calc svg .pt { fill: var(--accent); }
+.calc svg .fit { stroke: var(--mark); stroke-width: 2; }
+.calc svg .res { stroke: var(--bad); stroke-width: 1.2; stroke-dasharray: 3 2; }
+.calc svg text { fill: var(--muted); font-size: 11px; font-family: var(--font-mono); }
 </style>
 
 <div class="wrap">
@@ -343,6 +389,122 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     </div>
     <p class="gist">假設 y 和特徵呈線性關係，找出讓「實際值與預測值差的平方和」最小的係數。</p>
 
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">斜率</span>β<sub>1</sub> = <span class="frac"><span>Σ(x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ)</span><span>Σ(x<sub>i</sub> − x̄)²</span></span></span><span class="fp"><span class="lbl">截距</span>β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</span><span class="fp"><span class="lbl">解釋力</span>R² = 1 − <span class="frac"><span>SSE</span><span>SST</span></span></span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">n</td><td>資料筆數</td><td class="nw">4</td></tr>
+          <tr><td class="nw">i</td><td>第幾筆資料，從 1 數到 n</td><td class="nw">1、2、3、4</td></tr>
+          <tr><td class="nw">x<sub>i</sub></td><td>第 i 筆資料的輸入（特徵），例如坪數</td><td class="nw">1、2、3、4</td></tr>
+          <tr><td class="nw">y<sub>i</sub></td><td>第 i 筆資料的實際答案（目標），例如房價</td><td class="nw">2、4、5、8</td></tr>
+          <tr><td class="nw">ŷ<sub>i</sub>（讀作 y hat）</td><td>模型對第 i 筆的預測值；頭上的 ^ 表示「估計出來的」</td><td class="nw">1.9、3.8、5.7、7.6</td></tr>
+          <tr><td class="nw">x̄（讀作 x bar）</td><td>所有 x 的平均；頭上的橫線表示平均</td><td class="nw">2.5</td></tr>
+          <tr><td class="nw">ȳ（讀作 y bar）</td><td>所有 y 的平均</td><td class="nw">4.75</td></tr>
+          <tr><td class="nw">Σ（讀作 sigma）</td><td>加總符號：把後面的式子對每一筆 i = 1…n 算出來再全部加起來</td><td class="nw">—</td></tr>
+          <tr><td class="nw">β<sub>1</sub>（斜率）</td><td>x 每增加 1，ŷ 平均增加多少；要求的未知數之一</td><td class="nw">1.9</td></tr>
+          <tr><td class="nw">β<sub>0</sub>（截距）</td><td>x = 0 時的預測值；讓直線通過平均點 (x̄, ȳ)；要求的未知數之一</td><td class="nw">0</td></tr>
+          <tr><td class="nw">e<sub>i</sub> = y<sub>i</sub> − ŷ<sub>i</sub></td><td>殘差：第 i 筆被預測錯多少（正：低估；負：高估）</td><td class="nw">0.1、0.2、−0.7、0.4</td></tr>
+          <tr><td class="nw">x<sub>i</sub> − x̄、y<sub>i</sub> − ȳ</td><td>這一筆離平均有多遠（比平均大為正、小為負）</td><td class="nw">見 STEP 2 表格</td></tr>
+          <tr><td class="nw">Σ(x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ)</td><td>x 和 y 是否「一起變大、一起變小」；正數表示正相關</td><td class="nw">9.5</td></tr>
+          <tr><td class="nw">Σ(x<sub>i</sub> − x̄)²</td><td>x 本身的變動量，用來把上一項換算成「每 1 單位 x」</td><td class="nw">5</td></tr>
+          <tr><td class="nw">SSE = Σe<sub>i</sub>²</td><td>殘差平方和（Sum of Squared Errors）：模型還沒解釋掉的誤差，線性迴歸要讓它最小</td><td class="nw">0.7</td></tr>
+          <tr><td class="nw">SST = Σ(y<sub>i</sub> − ȳ)²</td><td>總平方和（Total Sum of Squares）：只用平均值 ȳ 猜所有點時的誤差，當作比較基準</td><td class="nw">18.75</td></tr>
+          <tr><td class="nw">R²</td><td>決定係數：比起只猜平均值，直線把誤差減少了幾成（0～1，越接近 1 越好）</td><td class="nw">0.963</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：給定 n 筆資料 (x<sub>i</sub>, y<sub>i</sub>)，找一條直線 ŷ = β<sub>0</sub> + β<sub>1</sub>x，讓所有點的殘差平方和 SSE = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² 最小。這是在「預測連續數值」的問題裡，最簡單、可以直接解出答案的模型。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>假設你蒐集了幾間房子的坪數和房價，畫在圖上是一堆散開的點。你想要一個「看坪數就能估房價」的規則。最簡單的規則就是一條直線：<b>房價 = 起始價 + 每坪單價 × 坪數</b>。起始價就是截距 β<sub>0</sub>，每坪單價就是斜率 β<sub>1</sub>。</p>
+        <p>麻煩的是，點不會剛好排成一直線，你可以畫出無數條線，到底哪一條「最好」？線性迴歸的回答是：任何一條線都會和每個點有落差（叫做<b>殘差</b>，實際值減預測值）。把每個落差平方、全部加起來，<b>總和最小的那條線就是最好的線</b>，這就是「最小平方法」名字的由來。</p>
+        <p>為什麼要平方，不直接相加？① 落差有正有負，直接相加會互相抵銷，看起來總誤差很小其實很差；平方後全部變成正數。② 平方會讓大錯被罰得特別重（差 2 罰 4、差 10 罰 100），所以直線會盡量不離任何一個點太遠。這也正是它的弱點：一個離得很遠的點，平方後的罰分會大到把整條線拉過去（見下面「解決不了 2」）。</p>
+        <p>好消息是，這個「最小」不用一條一條線去試，可以直接算出來：<b>斜率 = x 和 y「一起變動」的程度 ÷ x「自己變動」的程度</b>。截距則保證這條線一定會通過所有資料的平均點 (x̄, ȳ)。</p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：資料大致排成一直線</div>
+      <p>4 筆資料：(1, 2)、(2, 4)、(3, 5)、(4, 8)。</p>
+      <p><span class="step">STEP 1</span>平均：x̄ = (1+2+3+4)/4 = <b>2.5</b>，ȳ = (2+4+5+8)/4 = <b>4.75</b></p>
+      <p><span class="step">STEP 2</span>每一點離平均多遠，再相乘：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>y</th><th>x − x̄</th><th>y − ȳ</th><th>(x − x̄)(y − ȳ)</th><th>(x − x̄)²</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>2</td><td>−1.5</td><td>−2.75</td><td>4.125</td><td>2.25</td></tr>
+          <tr><td>2</td><td>4</td><td>−0.5</td><td>−0.75</td><td>0.375</td><td>0.25</td></tr>
+          <tr><td>3</td><td>5</td><td>0.5</td><td>0.25</td><td>0.125</td><td>0.25</td></tr>
+          <tr><td>4</td><td>8</td><td>1.5</td><td>3.25</td><td>4.875</td><td>2.25</td></tr>
+          <tr><th>合計</th><th></th><th></th><th></th><th>9.5</th><th>5</th></tr>
+        </tbody>
+      </table></div>
+      <p><span class="step">STEP 3</span>β<sub>1</sub> = 9.5 ÷ 5 = <b>1.9</b>；β<sub>0</sub> = 4.75 − 1.9 × 2.5 = <b>0</b>。直線是 <b>ŷ = 1.9x</b>。</p>
+      <p><span class="step">STEP 4</span>檢查誤差：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>y</th><th>ŷ = 1.9x</th><th>殘差 e</th><th>e²</th><th>(y − ȳ)²</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>2</td><td>1.9</td><td>0.1</td><td>0.01</td><td>7.5625</td></tr>
+          <tr><td>2</td><td>4</td><td>3.8</td><td>0.2</td><td>0.04</td><td>0.5625</td></tr>
+          <tr><td>3</td><td>5</td><td>5.7</td><td>−0.7</td><td>0.49</td><td>0.0625</td></tr>
+          <tr><td>4</td><td>8</td><td>7.6</td><td>0.4</td><td>0.16</td><td>10.5625</td></tr>
+          <tr><th>合計</th><th></th><th></th><th></th><th>SSE = 0.7</th><th>SST = 18.75</th></tr>
+        </tbody>
+      </table></div>
+      <p>R² = 1 − 0.7 ÷ 18.75 = <b>0.963</b></p>
+      <p class="take"><b>解讀</b>：x 每多 1，y 平均多 1.9。直線把「只猜平均值」的誤差減少了 96%。殘差有正有負、大小沒有規律，表示直線的形狀是對的。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：資料其實是曲線（y = x²）</div>
+      <p>5 筆資料：(1, 1)、(2, 4)、(3, 9)、(4, 16)、(5, 25)。照同樣步驟算：x̄ = 3、ȳ = 11、Σ(x − x̄)(y − ȳ) = 60、Σ(x − x̄)² = 10，所以 β<sub>1</sub> = 6、β<sub>0</sub> = 11 − 6 × 3 = −7，直線是 <b>ŷ = 6x − 7</b>。</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+        <tbody>
+          <tr><td>y（實際）</td><td>1</td><td>4</td><td>9</td><td>16</td><td>25</td></tr>
+          <tr><td>ŷ = 6x − 7</td><td>−1</td><td>5</td><td>11</td><td>17</td><td>23</td></tr>
+          <tr><td>殘差 e</td><td class="hl">2</td><td class="hl">−1</td><td class="hl">−2</td><td class="hl">−1</td><td class="hl">2</td></tr>
+        </tbody>
+      </table></div>
+      <p>SSE = 14、SST = 374，R² = 1 − 14 ÷ 374 = <b>0.963</b>，和上一個例子幾乎一樣高！但殘差是「兩端正、中間負」的 U 形，有規律，代表直線一直犯同一種錯。拿它去預測 x = 6：直線說 6 × 6 − 7 = <b>29</b>，實際是 <b>36</b>，差了 7，而且 x 越大差越多。</p>
+      <p class="take"><b>為什麼解決不了</b>：模型只有「一條直線」這種形狀，資料彎曲時它只能找最不差的直線。<b>對策</b>：加一個特徵 x²（多項式迴歸），用 ŷ = β<sub>0</sub> + β<sub>1</sub>x + β<sub>2</sub>x² 擬合，會得到 β<sub>2</sub> = 1、其餘 0，誤差變成 0。對係數來說它仍然是線性的，所以還是線性迴歸。<b>考點</b>：R² 高不代表模型對，要看殘差有沒有規律。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：一個離群值就把線拉歪</div>
+      <p>把第一個例子的最後一點 (4, 8) 改成 (4, <b>20</b>)，其他三點不變。重算：x̄ = 2.5、ȳ = 7.75、Σ(x − x̄)(y − ȳ) = 27.5、Σ(x − x̄)² = 5，所以 β<sub>1</sub> = <b>5.5</b>、β<sub>0</sub> = <b>−6</b>。</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>原本</th><th>加入離群值後</th></tr></thead>
+        <tbody>
+          <tr><td>直線</td><td>ŷ = 1.9x</td><td>ŷ = 5.5x − 6</td></tr>
+          <tr><td>x = 1 的預測（實際 2）</td><td>1.9</td><td class="hl">−0.5</td></tr>
+          <tr><td>殘差</td><td>0.1, 0.2, −0.7, 0.4</td><td>2.5, −1, −5.5, 4</td></tr>
+          <tr><td>R²</td><td>0.963</td><td>0.739</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：只動了一個點，斜率就從 1.9 變成 5.5，連完全沒變的 (1, 2) 都被預測成負數。因為平方讓「離很遠的那一點」的罰分特別大，直線只好往它靠。<b>對策</b>：先畫圖找出並確認離群值（輸入錯誤就修正或刪除），或改用對離群值較不敏感的方法，例如用絕對誤差（MAE）或 Huber 損失的迴歸。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-linreg">
+      <div class="calc-h">線性迴歸計算器：輸入資料點，算出 β<sub>0</sub>、β<sub>1</sub>、R²</div>
+      <div class="btns">
+        <button type="button" data-preset="1,2&#10;2,4&#10;3,5&#10;4,8">範例：直線</button>
+        <button type="button" data-preset="1,1&#10;2,4&#10;3,9&#10;4,16&#10;5,25">範例：曲線 y = x²</button>
+        <button type="button" data-preset="1,2&#10;2,4&#10;3,5&#10;4,20">範例：離群值</button>
+      </div>
+      <div class="row">
+        <label>每行一點「x, y」<textarea spellcheck="false">1,2
+2,4
+3,5
+4,8</textarea></label>
+        <div class="out" aria-live="polite"></div>
+        <svg viewBox="0 0 360 240" role="img" aria-label="散布圖、迴歸直線與殘差"></svg>
+      </div>
+      <p class="note">改動資料會立即重算。紅色虛線是每一點的殘差（實際值到直線的垂直距離）。試著把其中一點的 y 改大，看斜率和 R² 怎麼變。</p>
+    </div>
+
     <h4>模型與目標</h4>
     <div class="formula"><span class="lbl">模型</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x<sub>1</sub> + β<sub>2</sub>x<sub>2</sub> + ⋯ + β<sub>p</sub>x<sub>p</sub></div>
     <div class="formula"><span class="lbl">OLS 目標</span>β* = arg min<sub>β</sub> Σ<sub>i</sub> (y<sub>i</sub> − ŷ<sub>i</sub>)²<span class="lbl" style="margin-left:24px">解析解</span>β = (XᵀX)<sup>−1</sup>Xᵀy</div>
@@ -390,6 +552,93 @@ model.score(X_test, y_test)        # R²</code></pre>
     </div>
     <p class="gist">在線性迴歸的損失函數加上「係數太大的懲罰」，用一點偏差換更低的變異，減少過擬合。</p>
 
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">Ridge</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σβ<sub>j</sub>²</span><span class="fp"><span class="lbl">Lasso</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ|β<sub>j</sub>|</span><span class="fp"><span class="lbl">單一特徵時的解</span>β<sub>Ridge</sub> = <span class="frac"><span>S<sub>xy</sub></span><span>S<sub>xx</sub> + λ</span></span></span><span class="fp">β<sub>Lasso</sub> = <span class="frac"><span>sign(S<sub>xy</sub>) · max(|S<sub>xy</sub>| − λ/2, 0)</span><span>S<sub>xx</sub></span></span></span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">x<sub>1</sub>、x<sub>2</sub></td><td>兩個特徵（已減去平均，所以平均是 0）</td><td class="nw">x<sub>1</sub>：−2、−1、1、2<br>x<sub>2</sub>：1、−1、−1、1</td></tr>
+          <tr><td class="nw">y</td><td>目標值（也已減去平均）</td><td class="nw">−5、−1、3、3</td></tr>
+          <tr><td class="nw">β<sub>j</sub></td><td>第 j 個特徵的係數；j 是特徵編號</td><td class="nw">β<sub>1</sub>、β<sub>2</sub></td></tr>
+          <tr><td class="nw">Σ(y<sub>i</sub> − ŷ<sub>i</sub>)²</td><td>原本線性迴歸的誤差（SSE），希望它小</td><td class="nw">—</td></tr>
+          <tr><td class="nw">λ（讀作 lambda）</td><td>懲罰的強度，自己設定的超參數；0 = 不懲罰（等於普通線性迴歸），越大懲罰越重。scikit-learn 裡叫 <code>alpha</code></td><td class="nw">0、10、40</td></tr>
+          <tr><td class="nw">Σβ<sub>j</sub>²</td><td>L2 懲罰：所有係數平方加總；係數越大罰越多，而且大的係數被罰得特別重</td><td class="nw">—</td></tr>
+          <tr><td class="nw">Σ|β<sub>j</sub>|</td><td>L1 懲罰：所有係數取絕對值加總；每個係數不論大小，每單位罰一樣多</td><td class="nw">—</td></tr>
+          <tr><td class="nw">S<sub>xy</sub> = Σx<sub>i</sub>y<sub>i</sub></td><td>這個特徵和 y「一起變動」的量（資料已減去平均，所以就是乘積和）</td><td class="nw">x<sub>1</sub>：20；x<sub>2</sub>：−4</td></tr>
+          <tr><td class="nw">S<sub>xx</sub> = Σx<sub>i</sub>²</td><td>這個特徵本身的變動量</td><td class="nw">x<sub>1</sub>：10；x<sub>2</sub>：4</td></tr>
+          <tr><td class="nw">sign(·)</td><td>取正負號：正數得 +1、負數得 −1</td><td class="nw">x<sub>2</sub>：−1</td></tr>
+          <tr><td class="nw">max(a, 0)</td><td>a 是負數就變成 0，否則保留 a；Lasso 把係數變成剛好 0 就是靠它</td><td class="nw">—</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：在線性迴歸的誤差後面加一個「係數大小的懲罰項」。Ridge 用係數平方（L2），會把所有係數往 0 縮但不會等於 0；Lasso 用係數絕對值（L1），會把影響小的係數直接壓成 0，等於自動做特徵選擇。λ 控制懲罰多強。上面的「單一特徵時的解」適用於特徵彼此不相關（正交）的情況，每個係數可以分開算。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>普通的線性迴歸只在乎「誤差最小」，為了把訓練資料的每一點都擬合好，它可能給某些特徵很誇張的係數，例如 +500、−480 互相抵銷。在訓練資料上看起來很準，換一批新資料就失準，這就是過擬合。特徵很多、或特徵彼此高度相關時特別容易發生。</p>
+        <p>Ridge／Lasso 的想法是：<b>誤差要小，但係數也不能太誇張</b>。所以在誤差後面加一個「係數越大罰越多」的項，讓模型在兩者之間取捨。λ 就是你有多在意「係數不要太大」：λ = 0 時完全不在意，就是普通線性迴歸；λ 很大時非常在意，係數會被壓得很小。</p>
+        <p>兩者的差別在罰法：Ridge 罰「係數的平方」，係數越接近 0，平方越小，罰分幾乎消失，所以它會把係數縮小，但不會縮到剛好 0。Lasso 罰「係數的絕對值」，係數從 0.1 降到 0 一樣可以少罰 0.1 × λ，所以對影響不大的特徵，它乾脆把係數設成 0，等於把那個特徵刪掉。</p>
+        <p>用一句話記：<b>Ridge 是「大家都瘦一點」，Lasso 是「不重要的直接淘汰」。</b></p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：把影響小的特徵縮小或刪掉</div>
+      <p>4 筆資料、2 個特徵（已減去平均，而且兩個特徵互不相關：Σx<sub>1</sub>x<sub>2</sub> = 0）。x<sub>1</sub> 和 y 的關係比較強，x<sub>2</sub> 比較弱。</p>
+      <p><span class="step">STEP 1</span>算 S<sub>xy</sub>、S<sub>xx</sub>：x<sub>1</sub>：S<sub>xy</sub> = (−2)(−5) + (−1)(−1) + (1)(3) + (2)(3) = 20，S<sub>xx</sub> = 4 + 1 + 1 + 4 = 10。x<sub>2</sub>：S<sub>xy</sub> = −5 + 1 − 3 + 3 = −4，S<sub>xx</sub> = 4。</p>
+      <p><span class="step">STEP 2</span>代入公式（λ = 10）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>普通線性迴歸（λ = 0）</th><th>Ridge（λ = 10）</th><th>Lasso（λ = 10）</th></tr></thead>
+        <tbody>
+          <tr><td>β<sub>1</sub></td><td>20 ÷ 10 = 2</td><td>20 ÷ (10 + 10) = 1</td><td>(20 − 5) ÷ 10 = 1.5</td></tr>
+          <tr><td>β<sub>2</sub></td><td>−4 ÷ 4 = −1</td><td>−4 ÷ (4 + 10) = −0.286</td><td>|−4| − 5 &lt; 0 → <b class="hl">0</b></td></tr>
+          <tr><td>訓練誤差 SSE</td><td>0</td><td>12.04</td><td>6.5</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>解讀</b>：普通線性迴歸把 4 筆資料完全擬合（SSE = 0），連影響很弱的 x<sub>2</sub> 也給了 −1。Ridge 把兩個係數都縮小，但 x<sub>2</sub> 仍然留著（−0.286）。Lasso 保留了重要的 x<sub>1</sub>（1.5），把 x<sub>2</sub> 直接設成 0，模型只剩一個特徵，更簡單。訓練誤差變大是預期中的代價：換來的是對新資料比較不會過擬合。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：λ 太大，有用的特徵也被壓掉（欠擬合）</div>
+      <p>同一份資料，λ 加到 40：</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Ridge（λ = 40）</th><th>Lasso（λ = 40）</th></tr></thead>
+        <tbody>
+          <tr><td>β<sub>1</sub></td><td>20 ÷ 50 = 0.4</td><td>|20| − 20 = 0 → <b class="hl">0</b></td></tr>
+          <tr><td>β<sub>2</sub></td><td>−4 ÷ 44 = −0.091</td><td>0</td></tr>
+          <tr><td>訓練誤差 SSE</td><td>28.9</td><td class="hl">44（等於什麼都不學）</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：懲罰太重時，模型「為了係數小」放棄了擬合資料。Lasso 把兩個特徵都刪光，所有預測都是平均值 0，SSE = 44，和完全不用模型（SST = 44）一樣差。<b>對策</b>：用交叉驗證試不同的 λ（scikit-learn 有 <code>RidgeCV</code>、<code>LassoCV</code>），挑驗證誤差最小的那個。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：沒有標準化，懲罰變得不公平</div>
+      <p>把 x<sub>1</sub> 的單位從「公尺」改成「公寸」（數值 × 10），資料本身沒變。普通線性迴歸的係數會變成 0.2（因為 x 大了 10 倍），預測完全一樣。但 Ridge（λ = 10）：S<sub>xy</sub> = 200、S<sub>xx</sub> = 1000，β<sub>1</sub> = 200 ÷ 1010 = 0.198，換回公尺等於 1.98，幾乎沒被縮小；原本用公尺時卻被縮成 1。</p>
+      <p class="take"><b>為什麼解決不了</b>：懲罰只看係數的大小，而係數大小取決於特徵的單位。單位大的特徵係數小、幾乎不被罰；單位小的特徵係數大、被罰很重。<b>對策</b>：使用 Ridge／Lasso 之前，先把所有特徵標準化（例如 <code>StandardScaler</code>），讓每個特徵在同一個尺度上公平地被懲罰。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-ridge">
+      <div class="calc-h">Ridge／Lasso 計算器：單一特徵，拖動 λ 看係數怎麼縮小</div>
+      <div class="btns">
+        <button type="button" data-preset="-2,-5&#10;-1,-1&#10;1,3&#10;2,3">範例：x<sub>1</sub></button>
+        <button type="button" data-preset="1,-5&#10;-1,-1&#10;-1,3&#10;1,3">範例：x<sub>2</sub>（影響較弱）</button>
+      </div>
+      <div class="row">
+        <div style="display:grid;gap:8px">
+          <label>λ = <span data-show="lam">10</span><input type="range" min="0" max="60" step="1" value="10" data-k="lam"></label>
+          <label>每行一點「x, y」<textarea spellcheck="false">-2,-5
+-1,-1
+1,3
+2,3</textarea></label>
+        </div>
+        <div class="out" aria-live="polite"></div>
+        <svg viewBox="0 0 360 240" role="img" aria-label="係數隨 λ 變化的路徑"></svg>
+      </div>
+      <p class="note">計算器會先把 x、y 減去平均（截距不受懲罰，β<sub>0</sub> = ȳ − βx̄）。圖是係數隨 λ 變化的路徑：橘線 Ridge 慢慢趨近 0；藍線 Lasso 在 λ = 2|S<sub>xy</sub>| 時剛好變成 0。注意這裡的 λ 用的是上面公式的定義，和 scikit-learn 的 <code>alpha</code> 數值換算方式不同（sklearn 的 Lasso 會先把誤差除以 2n）。</p>
+    </div>
+
     <div class="formula"><span class="lbl">Ridge（L2）</span>Loss = Σ (y<sub>i</sub> − ŷ<sub>i</sub>)² + α Σ β<sub>j</sub>²</div>
     <div class="formula"><span class="lbl">Lasso（L1）</span>Loss = Σ (y<sub>i</sub> − ŷ<sub>i</sub>)² + α Σ |β<sub>j</sub>|</div>
 
@@ -433,6 +682,111 @@ Lasso(alpha=0.1).fit(X_train_scaled, y_train)   # coef_ 會有 0</code></pre>
       <div class="meta"><span class="chip cls">分類</span><span class="chip">輸出機率</span><span class="chip">線性決策邊界</span></div>
     </div>
     <p class="gist">名字有「迴歸」但做的是<b>分類</b>：把線性組合丟進 Sigmoid，得到屬於正類的機率，再用門檻（通常 0.5）決定類別。</p>
+
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">分數</span>z = wx + b</span><span class="fp"><span class="lbl">機率</span>p = σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span></span><span class="fp"><span class="lbl">判定</span>ŷ = 1 若 p ≥ 0.5</span><span class="fp"><span class="lbl">損失</span>L = −[ y ln p + (1 − y) ln(1 − p) ]</span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">x</td><td>輸入特徵，例如讀書時數</td><td class="nw">1、2、3、4</td></tr>
+          <tr><td class="nw">y</td><td>實際類別，只會是 0 或 1（1 = 正類，例如及格）</td><td class="nw">0、0、1、1</td></tr>
+          <tr><td class="nw">w（權重）</td><td>x 每增加 1，分數 z 增加多少；正數表示 x 越大越可能是正類</td><td class="nw">1.5</td></tr>
+          <tr><td class="nw">b（偏差）</td><td>x = 0 時的分數，用來左右移動邊界</td><td class="nw">−4</td></tr>
+          <tr><td class="nw">z（分數、logit）</td><td>線性組合 wx + b，可以是任何實數；z = ln(p ÷ (1 − p))，也叫 log-odds</td><td class="nw">−2.5、−1、0.5、2</td></tr>
+          <tr><td class="nw">e</td><td>自然常數，約 2.718；e<sup>−z</sup> 在 z 是大的正數時趨近 0（例如 e<sup>−10</sup> ≈ 0.00005），在 z 是大的負數時變得很大（例如 e<sup>10</sup> ≈ 22026）</td><td class="nw">—</td></tr>
+          <tr><td class="nw">σ(z)（讀作 sigma）</td><td>Sigmoid 函數，把任何實數壓到 0～1 之間：z 是大的正數 → 接近 1；z 是大的負數 → 接近 0；z = 0 → 1 ÷ (1 + e<sup>0</sup>) = 0.5</td><td class="nw">—</td></tr>
+          <tr><td class="nw">p</td><td>模型認為「屬於正類」的機率</td><td class="nw">0.076、0.269、0.623、0.881</td></tr>
+          <tr><td class="nw">門檻 0.5</td><td>p 大於等於它就判正類；可以依需求調整（例如寧可多抓的疾病篩檢會調低）</td><td class="nw">0.5</td></tr>
+          <tr><td class="nw">ŷ</td><td>最後判定的類別（0 或 1）</td><td class="nw">0、0、1、1</td></tr>
+          <tr><td class="nw">決策邊界 x = −b ÷ w</td><td>z = 0、p = 0.5 的位置；這一側判 1、另一側判 0</td><td class="nw">2.667</td></tr>
+          <tr><td class="nw">ln</td><td>自然對數；ln 1 = 0；數字越接近 0，ln 的值越負（例如 ln 0.01 = −4.6），所以 −ln p 在 p 接近 0 時會變得很大</td><td class="nw">—</td></tr>
+          <tr><td class="nw">L（log-loss）</td><td>單一筆的罰分；y = 1 時只看 −ln p，y = 0 時只看 −ln(1 − p)；預測越有把握地錯，罰分越大</td><td class="nw">0.079、0.313、0.474、0.127</td></tr>
+          <tr><td class="nw">平均 log-loss</td><td>所有資料罰分的平均，訓練要讓它最小</td><td class="nw">0.248</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：在二元分類問題中，給定特徵 x，估計它屬於正類（y = 1）的機率 p = σ(wx + b)，再用門檻（通常 0.5）決定類別。參數 w、b 由最小化平均 log-loss 求得。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>假設你想用「讀書時數」預測「考試會不會及格」。答案只有兩種：及格（1）或不及格（0）。如果直接用線性迴歸畫一條線，讀很少的人會被預測成 −0.3、讀很多的人變成 1.4，這些數字既不是 0／1，也不是機率，很難解釋。</p>
+        <p>邏輯迴歸分兩步：<b>第一步</b>和線性迴歸一樣，算一個「分數」z = w × 讀書時數 + b，分數可以是任何數。<b>第二步</b>把分數丟進 sigmoid 函數，它像一個「壓縮器」：分數是很大的<b>正數</b>（例如 z = 10）會被壓到接近 1（0.99995）；分數是很大的<b>負數</b>（例如 z = −10）會被壓到接近 0（0.00005）；分數剛好是 0 時，e<sup>0</sup> = 1，所以 p = 1 ÷ (1 + 1) = 0.5，表示「一半一半、沒有把握」。分數離 0 越遠，模型越有把握。這樣輸出就變成「及格的機率」。機率 ≥ 0.5 就判及格。</p>
+        <p>那 w、b 怎麼決定？用 <b>log-loss</b> 打分數：真的及格的人，模型給的及格機率越高，罰得越少；模型很有把握說「會及格（p = 0.99）」結果不及格，罰得非常重。訓練就是調 w、b，讓所有人的平均罰分最小。</p>
+        <p>因為「機率 = 0.5」剛好等於「分數 z = 0」，而 z = wx + b = 0 是一條直線，所以邏輯迴歸切開兩類的邊界一定是直線（多個特徵時是平面）。這是它的優點（簡單、可解釋），也是它的限制（見下面「解決不了 1」）。</p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：用讀書時數判斷及格與否</div>
+      <p>4 位學生，讀書 1、2、3、4 小時，前兩位不及格（y = 0），後兩位及格（y = 1）。假設已經訓練出 w = 1.5、b = −4。</p>
+      <p><span class="step">STEP 1</span>算分數 z = 1.5x − 4。<span class="step">STEP 2</span>算機率 p = 1 ÷ (1 + e<sup>−z</sup>)。<span class="step">STEP 3</span>p ≥ 0.5 判 1。<span class="step">STEP 4</span>算 log-loss。</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x（時數）</th><th>y（實際）</th><th>z = 1.5x − 4</th><th>e<sup>−z</sup></th><th>p = 1 ÷ (1 + e<sup>−z</sup>)</th><th>ŷ</th><th>L</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>0</td><td>−2.5</td><td>12.18</td><td>0.0759</td><td>0</td><td>−ln(1 − 0.0759) = 0.0789</td></tr>
+          <tr><td>2</td><td>0</td><td>−1</td><td>2.718</td><td>0.2689</td><td>0</td><td>−ln(1 − 0.2689) = 0.3133</td></tr>
+          <tr><td>3</td><td>1</td><td>0.5</td><td>0.6065</td><td>0.6225</td><td>1</td><td>−ln(0.6225) = 0.4741</td></tr>
+          <tr><td>4</td><td>1</td><td>2</td><td>0.1353</td><td>0.8808</td><td>1</td><td>−ln(0.8808) = 0.1269</td></tr>
+          <tr><th>平均</th><th></th><th></th><th></th><th></th><th>全對</th><th>0.2483</th></tr>
+        </tbody>
+      </table></div>
+      <p><span class="step">STEP 5</span>決策邊界：z = 0 → 1.5x − 4 = 0 → x = 4 ÷ 1.5 = <b>2.667 小時</b>。讀超過 2.667 小時就判及格。</p>
+      <p>log-loss 的不對稱：如果有人及格（y = 1），模型給 p = 0.9，罰 −ln 0.9 = <b>0.105</b>；給 p = 0.01（很有把握地猜錯），罰 −ln 0.01 = <b>4.605</b>，重了 40 多倍。</p>
+      <p class="take"><b>解讀</b>：4 筆全部判對。第 3 位（3 小時）的機率只有 0.62，靠近邊界、比較沒把握，所以罰分最大；第 1、4 位離邊界遠，罰分小。這就是邏輯迴歸比只給 0／1 更好用的地方：它還告訴你有多確定。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：XOR，一條直線切不開</div>
+      <p>兩個特徵 (x<sub>1</sub>, x<sub>2</sub>)：(0, 0) → 0、(1, 1) → 0、(0, 1) → 1、(1, 0) → 1（兩個特徵「不一樣」時才是 1）。邏輯迴歸的邊界是 w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + b = 0 這條直線，要全部判對需要：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>點</th><th>要判成</th><th>需要的條件</th></tr></thead>
+        <tbody>
+          <tr><td>(0, 0)</td><td>0</td><td>b &lt; 0</td></tr>
+          <tr><td>(0, 1)</td><td>1</td><td>w<sub>2</sub> + b &gt; 0</td></tr>
+          <tr><td>(1, 0)</td><td>1</td><td>w<sub>1</sub> + b &gt; 0</td></tr>
+          <tr><td>(1, 1)</td><td>0</td><td>w<sub>1</sub> + w<sub>2</sub> + b &lt; 0</td></tr>
+        </tbody>
+      </table></div>
+      <p>把中間兩個條件相加：w<sub>1</sub> + w<sub>2</sub> + 2b &gt; 0，也就是 w<sub>1</sub> + w<sub>2</sub> + b &gt; −b。因為 b &lt; 0，−b 是正數，所以 w<sub>1</sub> + w<sub>2</sub> + b 一定 &gt; 0，和最後一個條件矛盾。<b>不管 w、b 怎麼選，四點最多只能判對三點。</b></p>
+      <p class="take"><b>為什麼解決不了</b>：邊界只能是直線，XOR 的兩類交錯在對角上。<b>對策</b>：加一個交互作用特徵 x<sub>1</sub>x<sub>2</sub>，例如 z = x<sub>1</sub> + x<sub>2</sub> − 2x<sub>1</sub>x<sub>2</sub> − 0.5，四點的 z 分別是 −0.5、−0.5、0.5、0.5，全部判對；或改用決策樹、核函數 SVM 這類能畫彎曲邊界的模型。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：資料完全分得開時，w 會一直變大</div>
+      <p>同樣 4 位學生（2.5 小時以下都不及格、以上都及格，完全分得開）。把邊界固定在 x = 2.5，讓 w 越來越大（b = −2.5w）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>w</th><th>1</th><th>2</th><th>4</th><th>8</th></tr></thead>
+        <tbody>
+          <tr><td>b</td><td>−2.5</td><td>−5</td><td>−10</td><td>−20</td></tr>
+          <tr><td>平均 log-loss</td><td>0.338</td><td>0.181</td><td>0.065</td><td class="hl">0.009</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：w 越大，sigmoid 越陡，機率越接近 0 或 1，log-loss 就越小，所以「最小化 log-loss」會把 w 推向無限大，模型變得過度自信，也容易過擬合。<b>對策</b>：加正則化（和 Ridge 同樣的想法，懲罰太大的 w）。scikit-learn 的 <code>LogisticRegression</code> 預設就有 L2 正則化，參數 <code>C</code> 越小、正則化越強。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-logreg">
+      <div class="calc-h">邏輯迴歸計算器：輸入 w、b 和資料，算出每一筆的 z、p、判定與 log-loss</div>
+      <div class="btns">
+        <button type="button" data-w="1.5" data-b="-4">範例：w = 1.5、b = −4</button>
+        <button type="button" data-w="8" data-b="-20">w 放大到 8（過度自信）</button>
+        <button type="button" data-w="-1.5" data-b="4">w 變負號（方向相反）</button>
+      </div>
+      <div class="row">
+        <div style="display:grid;gap:8px">
+          <label>w（權重）<input type="number" step="0.1" value="1.5" data-k="w"></label>
+          <label>b（偏差）<input type="number" step="0.1" value="-4" data-k="b"></label>
+          <label>門檻<input type="number" step="0.05" min="0.01" max="0.99" value="0.5" data-k="t"></label>
+          <label>每行一筆「x, y」（y 為 0 或 1）<textarea spellcheck="false">1,0
+2,0
+3,1
+4,1</textarea></label>
+        </div>
+        <div class="out" aria-live="polite"></div>
+        <svg viewBox="0 0 360 240" role="img" aria-label="sigmoid 曲線與資料點"></svg>
+      </div>
+      <p class="note">曲線是 p = σ(wx + b)，虛線是門檻與決策邊界；圓點是資料（y = 1 在上、y = 0 在下），判錯的點以紅色標示。</p>
+    </div>
 
     <div class="formula"><span class="lbl">線性部分</span>z = wᵀx + b<span class="lbl" style="margin-left:24px">Sigmoid</span>p = σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span></div>
     <div class="formula"><span class="lbl">Log-odds</span>ln <span class="frac"><span>p</span><span>1 − p</span></span> = wᵀx + b</div>
@@ -479,6 +833,111 @@ clf.predict_proba(X_test_scaled)[:, 1]   # 屬於正類的機率</code></pre>
     </div>
     <p class="gist">新資料進來時，找訓練集中距離最近的 k 筆。分類用多數決，回歸取平均。</p>
 
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">歐氏距離</span>d(p, q) = √[ (p<sub>1</sub> − q<sub>1</sub>)² + (p<sub>2</sub> − q<sub>2</sub>)² + ⋯ ]</span><span class="fp"><span class="lbl">分類</span>ŷ = 最近 k 筆中最多的類別</span><span class="fp"><span class="lbl">回歸</span>ŷ = 最近 k 筆 y 的平均</span><span class="fp"><span class="lbl">Min-Max 標準化</span>x′ = <span class="frac"><span>x − min</span><span>max − min</span></span></span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">q</td><td>要預測的新資料點（query）</td><td class="nw">(2, 2)</td></tr>
+          <tr><td class="nw">p</td><td>訓練資料中的某一點</td><td class="nw">例如 (3, 2)</td></tr>
+          <tr><td class="nw">p<sub>1</sub>、q<sub>1</sub></td><td>兩點的第 1 個特徵；下標是第幾個特徵</td><td class="nw">3、2</td></tr>
+          <tr><td class="nw">d(p, q)</td><td>兩點之間的直線距離；越小表示越像</td><td class="nw">(3, 2) 到 (2, 2) 是 1</td></tr>
+          <tr><td class="nw">√</td><td>開根號</td><td class="nw">√2 = 1.414</td></tr>
+          <tr><td class="nw">k</td><td>要看幾個最近的鄰居，自己設定的超參數；兩個類別時常取奇數，避免票數平手</td><td class="nw">1、3、7</td></tr>
+          <tr><td class="nw">ŷ</td><td>預測結果：分類取多數類別、回歸取平均</td><td class="nw">k = 3 時為 A</td></tr>
+          <tr><td class="nw">min、max</td><td>這個特徵在訓練資料中的最小值、最大值</td><td class="nw">見「解決不了 2」</td></tr>
+          <tr><td class="nw">x′</td><td>標準化後的值，落在 0～1 之間，讓不同單位的特徵可以公平比較</td><td class="nw">見「解決不了 2」</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：KNN 不學參數。預測時計算新資料點到每一筆訓練資料的距離，取距離最小的 k 筆，分類用多數決、回歸取平均。它假設「特徵相近的資料，答案也相近」。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>想像你搬到新社區，想知道某家餐廳好不好吃，最直覺的做法是問住最近的幾個鄰居：3 個人裡 2 個說好吃，你就猜好吃。KNN 就是這樣：<b>新資料進來，找訓練資料裡最像它的 k 筆，看它們的答案</b>。</p>
+        <p>「最像」用距離衡量。每筆資料是一串數字（特徵），可以想成空間中的一個點，兩點的直線距離越短就越像。距離公式就是國中學過的畢氏定理：每個特徵相減、平方、加總、開根號。</p>
+        <p>KNN 沒有「訓練」這一步，只是把資料存起來（所以又叫懶惰學習），所有計算都在預測時才做。代價是預測很慢：每來一筆新資料，都要和所有訓練資料算一次距離。</p>
+        <p>它有兩個關鍵要調：<b>k 要多大</b>（太小會被單一個怪點誤導，太大會被數量多的類別淹沒），以及<b>特徵要先標準化</b>（否則數字大的特徵會獨占距離）。下面兩個「解決不了」就是這兩件事。</p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：k = 3，用鄰居投票分類</div>
+      <p>訓練資料 7 點：A 類 (1, 1)、(2, 4)、(0, 3)；B 類 (3, 2)、(5, 4)、(5, 5)、(6, 3)。新點 q = (2, 2) 是哪一類？</p>
+      <p><span class="step">STEP 1</span>算 q 到每一點的距離，<span class="step">STEP 2</span>由近到遠排序：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>排名</th><th>點</th><th>類別</th><th>距離算式</th><th>d</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>(3, 2)</td><td>B</td><td>√[(3−2)² + (2−2)²] = √1</td><td>1</td></tr>
+          <tr><td>2</td><td>(1, 1)</td><td>A</td><td>√[(1−2)² + (1−2)²] = √2</td><td>1.414</td></tr>
+          <tr><td>3</td><td>(2, 4)</td><td>A</td><td>√[0² + 2²] = √4</td><td>2</td></tr>
+          <tr><td>4</td><td>(0, 3)</td><td>A</td><td>√[2² + 1²] = √5</td><td>2.236</td></tr>
+          <tr><td>5</td><td>(5, 4)</td><td>B</td><td>√[3² + 2²] = √13</td><td>3.606</td></tr>
+          <tr><td>6</td><td>(6, 3)</td><td>B</td><td>√[4² + 1²] = √17</td><td>4.123</td></tr>
+          <tr><td>7</td><td>(5, 5)</td><td>B</td><td>√[3² + 3²] = √18</td><td>4.243</td></tr>
+        </tbody>
+      </table></div>
+      <p><span class="step">STEP 3</span>取前 3 名：B、A、A，A 有 2 票、B 有 1 票，預測 <b>A</b>。</p>
+      <p class="take"><b>解讀</b>：(3, 2) 雖然最近，但它是 B 類裡唯一靠近 A 群的點，比較像雜訊。看 3 個鄰居時，旁邊 A 的多數意見蓋過了它，預測比較穩。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：k 太小被雜訊誤導，k 太大被多數類淹沒</div>
+      <p>同一個 q = (2, 2)，只改 k：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>k</th><th>鄰居類別</th><th>票數</th><th>預測</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>B</td><td>A 0：B 1</td><td class="hl">B</td></tr>
+          <tr><td>3</td><td>B、A、A</td><td>A 2：B 1</td><td>A</td></tr>
+          <tr><td>5</td><td>B、A、A、A、B</td><td>A 3：B 2</td><td>A</td></tr>
+          <tr><td>7（全部）</td><td>全部 7 點</td><td>A 3：B 4</td><td class="hl">B</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：KNN 沒有一個「正確的 k」可以用公式算出來。k = 1 只看最近一點，一個雜訊點就能決定答案（過擬合）；k = 7 把所有資料都納入，答案永遠是資料最多的類別，完全忽略 q 的位置（欠擬合）。<b>對策</b>：用交叉驗證試不同的 k；也可以用距離加權（<code>weights="distance"</code>），讓近的鄰居票數比較重。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：沒有標準化，數字大的特徵獨占距離</div>
+      <p>預測會不會買某款遊戲，特徵是年齡（歲）和月收入（元）。訓練資料：買 (25 歲, 52000)、(30 歲, 40000)；不買 (55 歲, 60000)、(50 歲, 30000)。新客人 q = (26 歲, 58000)，k = 1。</p>
+      <div class="tbl"><table>
+        <thead><tr><th>點</th><th>類別</th><th>原始距離</th><th>標準化後距離</th></tr></thead>
+        <tbody>
+          <tr><td>(25, 52000)</td><td>買</td><td>√(1² + 6000²) = 6000</td><td><b>0.103</b>（最近）</td></tr>
+          <tr><td>(30, 40000)</td><td>買</td><td>18000</td><td>0.316</td></tr>
+          <tr><td>(55, 60000)</td><td>不買</td><td><b class="hl">2000.2（最近）</b></td><td>0.726</td></tr>
+          <tr><td>(50, 30000)</td><td>不買</td><td>28000</td><td>0.760</td></tr>
+        </tbody>
+      </table></div>
+      <p>標準化：年齡範圍取 20～60（除以 40），收入範圍取 20000～80000（除以 60000）。例如 q 到 (55, 60000)：年齡差 29 ÷ 40 = 0.725，收入差 2000 ÷ 60000 = 0.033，距離 √(0.725² + 0.033²) = 0.726。</p>
+      <p class="take"><b>為什麼解決不了</b>：原始距離裡，年齡差 29 歲只貢獻 29² = 841，收入差 2000 元卻貢獻 2000² = 4,000,000，年齡幾乎被忽略，於是 26 歲的客人被判成和 55 歲的人最像，預測「不買」。<b>對策</b>：計算距離前先把所有特徵標準化（<code>MinMaxScaler</code> 或 <code>StandardScaler</code>），標準化後最近的是 25 歲那位，預測「買」。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-knn">
+      <div class="calc-h">KNN 計算器：輸入訓練資料和新點，看距離排序與投票</div>
+      <div class="btns">
+        <button type="button" data-preset="1,1,A&#10;2,4,A&#10;0,3,A&#10;3,2,B&#10;5,4,B&#10;5,5,B&#10;6,3,B" data-q="2,2" data-k="3">範例：k 的影響</button>
+        <button type="button" data-preset="25,52000,買&#10;30,40000,買&#10;55,60000,不買&#10;50,30000,不買" data-q="26,58000" data-k="1">範例：要不要標準化</button>
+      </div>
+      <div class="row">
+        <div style="display:grid;gap:8px">
+          <label>新點 q（x<sub>1</sub>, x<sub>2</sub>）<input type="text" value="2,2" data-k="q" style="font:14px var(--font-mono);width:150px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)"></label>
+          <label>k<input type="number" min="1" step="1" value="3" data-k="k"></label>
+          <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-k="scale">先做 Min-Max 標準化</label>
+          <label>每行一筆「x<sub>1</sub>, x<sub>2</sub>, 類別」<textarea spellcheck="false">1,1,A
+2,4,A
+0,3,A
+3,2,B
+5,4,B
+5,5,B
+6,3,B</textarea></label>
+        </div>
+        <div class="out" aria-live="polite"></div>
+        <svg viewBox="0 0 360 240" role="img" aria-label="訓練資料、新點與 k 個鄰居"></svg>
+      </div>
+      <p class="note">計算器的標準化用「訓練資料 ＋ 新點」各特徵實際的最小值、最大值，所以數字會和上面範例（固定用 20～60 歲、20000～80000 元）不同，但最近的鄰居一樣是 25 歲那位。圖中空心圓是新點 q，虛線連到被選中的 k 個鄰居；圖用的是計算距離時的座標（勾選標準化時就是 0～1）。</p>
+    </div>
+
     <div class="formula"><span class="lbl">歐氏距離</span>d(x, x′) = √Σ (x<sub>j</sub> − x′<sub>j</sub>)²<span class="lbl" style="margin-left:24px">曼哈頓距離</span>d = Σ |x<sub>j</sub> − x′<sub>j</sub>|</div>
     <ul>
       <li><b>懶惰學習</b>（Lazy Learning）：訓練階段只是把資料存起來，沒有學參數；計算都在預測時做，所以<b>訓練快、預測慢</b>。</li>
@@ -518,6 +977,103 @@ KNeighborsClassifier(n_neighbors=5).fit(X_train_scaled, y_train)</code></pre>
       <div class="meta"><span class="chip both">分類（SVC）／回歸（SVR）</span><span class="chip">核技巧</span><span class="chip">需要標準化</span></div>
     </div>
     <p class="gist">在兩類之間找一條「離兩邊最近的點都最遠」的分隔超平面，也就是間隔（margin）最大的那條。</p>
+
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">分隔線</span>f(x) = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + b</span><span class="fp"><span class="lbl">判定</span>ŷ = sign(f(x))</span><span class="fp"><span class="lbl">間隔</span>margin = <span class="frac"><span>2</span><span>‖w‖</span></span>，‖w‖ = √(w<sub>1</sub>² + w<sub>2</sub>²)</span><span class="fp"><span class="lbl">目標（軟間隔）</span>min ½‖w‖² + C Σ max(0, 1 − y<sub>i</sub> f(x<sub>i</sub>))</span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">x = (x<sub>1</sub>, x<sub>2</sub>)</td><td>一筆資料的兩個特徵</td><td class="nw">例如 (2, 2)</td></tr>
+          <tr><td class="nw">y</td><td>類別，SVM 習慣用 +1 和 −1（不是 1 和 0）</td><td class="nw">+1 或 −1</td></tr>
+          <tr><td class="nw">w = (w<sub>1</sub>, w<sub>2</sub>)</td><td>權重向量，決定分隔線的方向（它和分隔線垂直）</td><td class="nw">(1, 1)</td></tr>
+          <tr><td class="nw">b</td><td>偏差，決定分隔線的位置</td><td class="nw">−3</td></tr>
+          <tr><td class="nw">f(x)</td><td>分數：正的那一側判 +1，負的判 −1；f(x) = 0 的地方就是分隔線</td><td class="nw">(2, 2) 的分數是 1</td></tr>
+          <tr><td class="nw">sign(·)</td><td>取正負號：正數得 +1、負數得 −1</td><td class="nw">—</td></tr>
+          <tr><td class="nw">y · f(x)</td><td>判對且有把握的程度：&gt; 0 表示判對；≥ 1 表示判對而且在間隔外；&lt; 0 表示判錯</td><td class="nw">支援向量是 1</td></tr>
+          <tr><td class="nw">‖w‖</td><td>w 的長度；越短，間隔越寬</td><td class="nw">√2 = 1.414</td></tr>
+          <tr><td class="nw">margin</td><td>間隔：f(x) = +1 與 f(x) = −1 兩條邊界線之間的寬度，SVM 要讓它最大</td><td class="nw">2 ÷ 1.414 = 1.414</td></tr>
+          <tr><td class="nw">支援向量</td><td>剛好落在邊界線上（y · f(x) = 1）的點；分隔線只由它們決定</td><td class="nw">(2, 2)、(1, 1)</td></tr>
+          <tr><td class="nw">max(0, 1 − y f(x))</td><td>hinge loss：在間隔外判對 → 0；進到間隔裡或判錯 → 正數，越錯越大</td><td class="nw">全部 0</td></tr>
+          <tr><td class="nw">C</td><td>對違規點的懲罰強度，自己設定的超參數；C 大 → 盡量不違規（間隔窄）；C 小 → 容許違規（間隔寬）</td><td class="nw">見「解決不了 2」</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：在能把兩類分開的所有直線（超平面）中，SVM 選間隔最大的一條。把 f(x) 縮放成「最近的點剛好 y · f(x) = 1」之後，間隔等於 2 ÷ ‖w‖，所以「間隔最大」等於「‖w‖ 最小」。資料分不乾淨時，加上 hinge loss 容許少數點違規（軟間隔），由 C 控制取捨。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>想像桌上有紅豆和綠豆兩堆，你要放一根筷子把它們分開。能分開的擺法通常有很多種，有的筷子緊貼著紅豆、有的緊貼著綠豆。哪一種最好？SVM 的答案是：<b>放在正中間、離兩堆最近的豆子都最遠的那一種</b>。這樣新的豆子即使位置稍微偏一點，也比較不會被分錯。</p>
+        <p>想像那根筷子變成一條「馬路」：中線是分隔線，兩邊路緣碰到最近的豆子。SVM 要找「最寬的馬路」。剛好碰到路緣的那幾顆豆子叫<b>支援向量</b>，馬路的位置完全由它們決定，其他離得遠的豆子移動一點也不會改變答案。</p>
+        <p>數學上，馬路寬度 = 2 ÷ ‖w‖，所以要馬路最寬，就是要 w 最短。真實資料常常有幾顆豆子混到對方那堆，不可能完全分開，這時允許少數豆子「踩進馬路或越線」，但每違規一顆就罰分（hinge loss），C 決定罰多重。</p>
+        <p>如果兩堆豆子交錯得根本無法用直線分開，SVM 還有一招：<b>核函數</b>。把資料「抬」到更高維度，例如多加一個特徵 x<sub>1</sub> × x<sub>2</sub>，原本交錯的資料就可能變得用一個平面就分得開（見「解決不了 1」）。</p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：在可分開的資料中找最寬的間隔</div>
+      <p>6 點：+1 類 (2, 2)、(3, 3)、(3, 2)；−1 類 (1, 1)、(0, 0)、(1, 0)。比較兩條都能分開資料的線（都已縮放成最近的點 y · f = 1）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>點</th><th>y</th><th>線 A：f = x<sub>1</sub> + x<sub>2</sub> − 3</th><th>y · f</th><th>線 B：f = 2x<sub>1</sub> − 3</th><th>y · f</th></tr></thead>
+        <tbody>
+          <tr><td>(2, 2)</td><td>+1</td><td>1</td><td><b>1</b></td><td>1</td><td><b>1</b></td></tr>
+          <tr><td>(3, 3)</td><td>+1</td><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+          <tr><td>(3, 2)</td><td>+1</td><td>2</td><td>2</td><td>3</td><td>3</td></tr>
+          <tr><td>(1, 1)</td><td>−1</td><td>−1</td><td><b>1</b></td><td>−1</td><td><b>1</b></td></tr>
+          <tr><td>(0, 0)</td><td>−1</td><td>−3</td><td>3</td><td>−3</td><td>3</td></tr>
+          <tr><td>(1, 0)</td><td>−1</td><td>−2</td><td>2</td><td>−1</td><td><b>1</b></td></tr>
+          <tr><th>‖w‖</th><th></th><th>√(1² + 1²) = 1.414</th><th></th><th>√(2² + 0²) = 2</th><th></th></tr>
+          <tr><th>margin</th><th></th><th><b>2 ÷ 1.414 = 1.414</b></th><th></th><th>2 ÷ 2 = 1</th><th></th></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>解讀</b>：兩條線都把 6 點全部分對（y · f 都 &gt; 0）。線 A 的間隔 1.414 比線 B 的 1 寬，SVM 會選線 A。線 A 的支援向量是 (2, 2) 和 (1, 1)（y · f = 1），兩點的距離正好是 √2 = 1.414，等於間隔寬度。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：直線分不開的資料（XOR）</div>
+      <p>4 點：+1 類 (1, 1)、(−1, −1)；−1 類 (1, −1)、(−1, 1)。兩類交錯在對角上，和邏輯迴歸的 XOR 一樣，任何直線最多分對 3 點。</p>
+      <p>多加一個特徵 x<sub>3</sub> = x<sub>1</sub> × x<sub>2</sub>：(1, 1) → 1、(−1, −1) → 1、(1, −1) → −1、(−1, 1) → −1。在新特徵上 +1 類全是 1、−1 類全是 −1，用 f = x<sub>3</sub>（分隔在 x<sub>3</sub> = 0）就能全部分對。</p>
+      <p class="take"><b>為什麼解決不了</b>：線性 SVM 的邊界只能是直線（平面）。<b>對策</b>：用核函數（kernel），例如多項式核 <code>kernel="poly"</code> 或 RBF 核 <code>kernel="rbf"</code>，效果等於自動加入像 x<sub>1</sub>x<sub>2</sub> 這樣的新特徵，但不用真的把它們算出來（核技巧）。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：一個混進對面的點，C 決定要不要遷就它</div>
+      <p>在 ✅ 的資料中加一個 −1 類的點 (2.5, 2.5)，它跑進了 +1 類那一堆。用線 A 計算：f = 2.5 + 2.5 − 3 = 2，y · f = −2（判錯），hinge loss = max(0, 1 − (−2)) = <b>3</b>。</p>
+      <p>這時不可能有一條直線完全分開。目標函數 ½‖w‖² + C × Σhinge 中，線 A 的 ½‖w‖² = ½ × 2 = 1，加上 C × 3：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>C</th><th>0.1</th><th>1</th><th>10</th></tr></thead>
+        <tbody>
+          <tr><td>線 A 的目標值 1 + 3C</td><td>1.3</td><td>4</td><td class="hl">31</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：SVM 沒辦法自己判斷這個點是「雜訊」還是「真的有一小群資料在那裡」。C 小時違規的罰分不重，線 A 仍是好選擇（容許它錯，間隔寬、比較不過擬合）；C 大時這一個點的罰分 30 就壓過一切，SVM 會把線扭過去遷就它，間隔變窄、容易過擬合。<b>對策</b>：用交叉驗證選 C；資料要先標準化，因為 ‖w‖ 和間隔都受特徵尺度影響。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-svm">
+      <div class="calc-h">SVM 計算器：輸入一條線（w、b）和資料，看間隔、支援向量與 hinge loss</div>
+      <div class="btns">
+        <button type="button" data-w1="1" data-w2="1" data-b="-3">線 A：w = (1, 1)、b = −3</button>
+        <button type="button" data-w1="2" data-w2="0" data-b="-3">線 B：w = (2, 0)、b = −3</button>
+        <button type="button" data-w1="1" data-w2="1" data-b="-3" data-add="2.5,2.5,-1">加入混進來的點 (2.5, 2.5)</button>
+      </div>
+      <div class="row">
+        <div style="display:grid;gap:8px">
+          <label>w<sub>1</sub><input type="number" step="0.1" value="1" data-k="w1"></label>
+          <label>w<sub>2</sub><input type="number" step="0.1" value="1" data-k="w2"></label>
+          <label>b<input type="number" step="0.1" value="-3" data-k="b"></label>
+          <label>C<input type="number" step="0.1" min="0" value="1" data-k="C"></label>
+          <label>每行一筆「x<sub>1</sub>, x<sub>2</sub>, y」（y 為 1 或 −1）<textarea spellcheck="false">2,2,1
+3,3,1
+3,2,1
+1,1,-1
+0,0,-1
+1,0,-1</textarea></label>
+        </div>
+        <div class="out" aria-live="polite"></div>
+        <svg viewBox="0 0 360 240" role="img" aria-label="資料點、分隔線與間隔"></svg>
+      </div>
+      <p class="note">實線是分隔線 f = 0，兩條虛線是間隔邊界 f = ±1。藍點為 +1 類、橘點為 −1 類；支援向量加粗外框，違規的點（y · f &lt; 1）以紅框標示。這個計算器是讓你檢查「給定一條線」的結果，不會自動幫你找最佳的線。</p>
+    </div>
 
     <div class="formula"><span class="lbl">超平面</span>wᵀx + b = 0<span class="lbl" style="margin-left:24px">間隔寬度</span><span class="frac"><span>2</span><span>‖w‖</span></span><span class="lbl" style="margin-left:24px">Hinge Loss</span>max(0, 1 − y·f(x))</div>
     <ul>
@@ -571,12 +1127,98 @@ SVC(kernel='rbf', C=1.0, gamma='scale').fit(X_train_scaled, y_train)</code></pre
     </div>
     <p class="gist">用貝氏定理算「看到這些特徵時，屬於每一類的機率」，取最大的。「朴素」是指假設特徵之間在給定類別下<b>互相獨立</b>。</p>
 
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">貝氏定理</span>P(C | x) = <span class="frac"><span>P(C) · P(x | C)</span><span>P(x)</span></span></span><span class="fp"><span class="lbl">朴素假設</span>P(x | C) = P(x<sub>1</sub> | C) · P(x<sub>2</sub> | C) ⋯</span><span class="fp"><span class="lbl">比較用的分數</span>score(C) = P(C) · ∏ P(x<sub>j</sub> | C)</span><span class="fp"><span class="lbl">Laplace 平滑</span>P(x<sub>j</sub> | C) = <span class="frac"><span>count + α</span><span>N<sub>C</sub> + 2α</span></span></span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">C</td><td>類別（class），例如「垃圾信」或「正常信」</td><td class="nw">垃圾、正常</td></tr>
+          <tr><td class="nw">x = (x<sub>1</sub>, x<sub>2</sub>, …)</td><td>觀察到的特徵，例如信裡出現了哪些字</td><td class="nw">出現「免費」</td></tr>
+          <tr><td class="nw">P(A | B)</td><td>條件機率，讀作「在 B 的條件下 A 的機率」</td><td class="nw">—</td></tr>
+          <tr><td class="nw">P(C)</td><td>先驗機率：還沒看信的內容前，這一類有多常見</td><td class="nw">垃圾 4/10 = 0.4，正常 6/10 = 0.6</td></tr>
+          <tr><td class="nw">P(x<sub>j</sub> | C)</td><td>似然：在這一類的信裡，有幾成會出現第 j 個字</td><td class="nw">P(免費 | 垃圾) = 3/4</td></tr>
+          <tr><td class="nw">P(C | x)</td><td>後驗機率：看了信的內容之後，它屬於這一類的機率；我們要的答案</td><td class="nw">P(垃圾 | 免費) = 0.75</td></tr>
+          <tr><td class="nw">P(x)</td><td>不分類別時看到這些特徵的機率；每一類都除以同一個數，比較大小時可以先忽略，最後再把各類分數加總來換算</td><td class="nw">0.3 + 0.1 = 0.4</td></tr>
+          <tr><td class="nw">∏（讀作 pi）</td><td>連乘符號：把後面每一項乘起來（Σ 是連加）</td><td class="nw">—</td></tr>
+          <tr><td class="nw">count</td><td>在類別 C 的訓練信中，出現這個字的封數</td><td class="nw">垃圾信中「免費」3 封</td></tr>
+          <tr><td class="nw">N<sub>C</sub></td><td>類別 C 的訓練信總數</td><td class="nw">垃圾 4、正常 6</td></tr>
+          <tr><td class="nw">α（讀作 alpha）</td><td>平滑參數，通常取 1；給每個字「預設先出現 α 次」，避免機率變成 0。分母的 2α 是因為每個字只有「出現／沒出現」兩種情況</td><td class="nw">0（不平滑）或 1</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：用貝氏定理，從「每一類會產生什麼樣的特徵」反推「看到這些特徵時是哪一類」。為了好算，假設在類別已知的情況下，各特徵彼此獨立，於是 P(x | C) 可以拆成每個特徵機率的連乘。取後驗機率最大的類別作為預測。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>你收到一封信，裡面有「免費」兩個字，它是垃圾信嗎？直接回答很難，但反過來的問題很好查：翻翻以前的信，<b>垃圾信裡有幾成出現「免費」？正常信裡又有幾成？</b>貝氏定理就是把這個「反方向」的資訊轉回你要的答案。</p>
+        <p>計算分兩部分相乘：<b>這一類本來就有多常見</b>（先驗，例如 10 封信裡 4 封是垃圾信），乘上<b>這一類的信出現這個字的比例</b>（似然）。哪一類乘出來比較大，就猜哪一類。把各類的乘積加總、再各自除以總和，就換算成機率。</p>
+        <p>信裡通常不只一個字。嚴格來說要知道「同時出現這些字」的機率，但字的組合太多，資料根本不夠估。朴素貝氏「天真地」假設<b>每個字出不出現互不影響</b>，於是只要把每個字的比例分別乘起來。這個假設通常不完全對，但算得快、需要的資料少，在文字分類上效果意外地好。</p>
+        <p>要小心兩件事：某個字在某一類從沒出現過，乘上 0 就讓整個分數歸零（用 Laplace 平滑解決）；以及特徵其實高度相關時，同一個證據會被重複計算（見下面兩個「解決不了」）。</p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：信裡有「免費」，是垃圾信的機率多少？</div>
+      <p>訓練資料 10 封：垃圾信 4 封，其中 3 封有「免費」；正常信 6 封，其中 1 封有「免費」。</p>
+      <p><span class="step">STEP 1</span>先驗：P(垃圾) = 4/10 = 0.4，P(正常) = 6/10 = 0.6</p>
+      <p><span class="step">STEP 2</span>似然：P(免費 | 垃圾) = 3/4 = 0.75，P(免費 | 正常) = 1/6 ≈ 0.167</p>
+      <p><span class="step">STEP 3</span>分數：垃圾 0.4 × 0.75 = <b>0.3</b>；正常 0.6 × 1/6 = <b>0.1</b></p>
+      <p><span class="step">STEP 4</span>換算成機率：P(垃圾 | 免費) = 0.3 ÷ (0.3 + 0.1) = <b>0.75</b></p>
+      <p class="take"><b>解讀</b>：雖然垃圾信只佔 4 成，但「免費」在垃圾信裡太常見（75% vs 17%），看到它之後，垃圾信的機率從 40% 升到 75%。這就是「用證據更新判斷」。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：沒見過的組合讓機率變成 0（零頻率問題）</div>
+      <p>另一個字「會議」：垃圾信 0 封有、正常信 3 封有。新信同時有「免費」和「會議」：</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>不平滑（α = 0）</th><th>Laplace 平滑（α = 1）</th></tr></thead>
+        <tbody>
+          <tr><td>P(免費 | 垃圾)</td><td>3/4 = 0.75</td><td>(3 + 1)/(4 + 2) = 0.667</td></tr>
+          <tr><td>P(會議 | 垃圾)</td><td class="hl">0/4 = 0</td><td>(0 + 1)/(4 + 2) = 0.167</td></tr>
+          <tr><td>P(免費 | 正常)</td><td>1/6 = 0.167</td><td>(1 + 1)/(6 + 2) = 0.25</td></tr>
+          <tr><td>P(會議 | 正常)</td><td>3/6 = 0.5</td><td>(3 + 1)/(6 + 2) = 0.5</td></tr>
+          <tr><td>垃圾分數</td><td>0.4 × 0.75 × 0 = <b class="hl">0</b></td><td>0.4 × 0.667 × 0.167 = 0.0444</td></tr>
+          <tr><td>正常分數</td><td>0.6 × 0.167 × 0.5 = 0.05</td><td>0.6 × 0.25 × 0.5 = 0.075</td></tr>
+          <tr><td>P(垃圾 | 免費, 會議)</td><td class="hl">0</td><td>0.0444 ÷ (0.0444 + 0.075) = 0.372</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：連乘中只要有一項是 0，其他證據再強也沒用，結果永遠是 0。只因為訓練資料裡剛好沒有「含『會議』的垃圾信」，模型就斷定這種信絕不可能是垃圾信。<b>對策</b>：Laplace 平滑，每個計數都先加 α（通常 1），沒見過的情況也保留一點小機率。平滑後結論變成「37% 是垃圾信」，比較合理。scikit-learn 的 <code>MultinomialNB</code>、<code>BernoulliNB</code> 參數 <code>alpha</code> 預設就是 1。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：特徵其實相關，同一個證據被算兩次</div>
+      <p>假設還有一個字「限時免費」，它出現的信剛好就是有「免費」的那些（兩個字總是一起出現），比例完全相同：垃圾 3/4、正常 1/6。新信兩個字都有：</p>
+      <p>垃圾分數 0.4 × 0.75 × 0.75 = 0.225；正常分數 0.6 × 1/6 × 1/6 = 0.0167；P(垃圾) = 0.225 ÷ (0.225 + 0.0167) = <b class="hl">0.931</b></p>
+      <p class="take"><b>為什麼解決不了</b>：「限時免費」沒有提供任何新資訊（只要有它就一定有「免費」），正確答案仍應是 0.75。但朴素假設把兩個字當成獨立的兩個證據，相同的訊息乘了兩次，機率被誇大到 0.93，模型變得過度自信。<b>對策</b>：先移除高度相關的重複特徵；朴素貝氏的「分類結果」常常仍然正確，但它給的「機率數值」不要太相信。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-nb">
+      <div class="calc-h">朴素貝氏計算器：輸入各類信件數與每個字的出現次數，勾選新信有哪些字</div>
+      <div class="btns">
+        <button type="button" data-preset="免費,3,1,1&#10;會議,0,3,0">範例：只有「免費」</button>
+        <button type="button" data-preset="免費,3,1,1&#10;會議,0,3,1">範例：「免費」＋「會議」</button>
+        <button type="button" data-preset="免費,3,1,1&#10;限時免費,3,1,1">範例：重複的字</button>
+      </div>
+      <div class="row">
+        <div style="display:grid;gap:8px">
+          <label>垃圾信封數 N<sub>垃圾</sub><input type="number" min="1" step="1" value="4" data-k="ns"></label>
+          <label>正常信封數 N<sub>正常</sub><input type="number" min="1" step="1" value="6" data-k="nh"></label>
+          <label>α（0 = 不平滑）<input type="number" min="0" step="0.5" value="0" data-k="a"></label>
+          <label>每行一個字「字, 垃圾中出現封數, 正常中出現封數, 新信有沒有（1/0）」<textarea spellcheck="false" style="width:230px">免費,3,1,1
+會議,0,3,0</textarea></label>
+        </div>
+        <div class="out" aria-live="polite"></div>
+      </div>
+      <p class="note">這裡只計算新信中「有出現」的字（新信有沒有那一欄為 1 的字），和上面範例的算法相同。</p>
+    </div>
+
     <div class="formula"><span class="lbl">貝氏定理</span>P(y | x) = <span class="frac"><span>P(x | y) · P(y)</span><span>P(x)</span></span></div>
     <div class="formula"><span class="lbl">獨立假設後</span>ŷ = arg max<sub>y</sub> P(y) · Π<sub>j</sub> P(x<sub>j</sub> | y)</div>
     <ul>
       <li><b>P(y)</b> 先驗機率（各類別的比例），<b>P(x<sub>j</sub>|y)</b> 概似（該類別下出現這個特徵值的機率），<b>P(y|x)</b> 後驗機率。</li>
       <li>P(x) 對每一類都一樣，比大小時可以省略。</li>
-      <li>實作上會取 log 把連乘變連加，避免數值太小。</li>
+      <li>實作上會取 log 把連乘變連加：很多個小於 1 的機率連乘，結果會小到接近 0，電腦存不下（下溢，underflow）；取 log 後變成加總負數，就不會有這個問題，而且大小順序不變。</li>
     </ul>
 
     <h4>三種變體</h4>
@@ -615,6 +1257,96 @@ MultinomialNB(alpha=1.0).fit(X_counts, y)   # X_counts 來自 CountVectorizer</c
       <div class="meta"><span class="chip both">分類／回歸</span><span class="chip">可解釋</span><span class="chip">不需要標準化</span></div>
     </div>
     <p class="gist">每一步挑一個特徵和切點，把資料分得「越純越好」，一路切下去形成樹狀的 if-else 規則。</p>
+
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">Gini 不純度</span>Gini = 1 − Σ p<sub>k</sub>²</span><span class="fp"><span class="lbl">熵</span>H = −Σ p<sub>k</sub> log<sub>2</sub> p<sub>k</sub></span><span class="fp"><span class="lbl">切分後（加權平均）</span>I<sub>切後</sub> = <span class="frac"><span>n<sub>左</sub></span><span>n</span></span> I<sub>左</sub> + <span class="frac"><span>n<sub>右</sub></span><span>n</span></span> I<sub>右</sub></span><span class="fp"><span class="lbl">增益</span>Gain = I<sub>父</sub> − I<sub>切後</sub></span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">節點</td><td>樹上的一個位置，裝著一群資料；最上面的叫根節點，不再切的叫葉節點</td><td class="nw">根節點 10 筆</td></tr>
+          <tr><td class="nw">k</td><td>類別編號</td><td class="nw">「是」「否」兩類</td></tr>
+          <tr><td class="nw">p<sub>k</sub></td><td>這個節點裡第 k 類所佔的比例</td><td class="nw">根節點 5/10 = 0.5</td></tr>
+          <tr><td class="nw">Gini</td><td>不純度：隨機抽兩筆、類別不同的機率。0 = 全部同一類（最純），兩類各半時最大 = 0.5</td><td class="nw">根節點 0.5</td></tr>
+          <tr><td class="nw">H（熵）</td><td>另一種不純度，來自資訊理論：0 = 最純，兩類各半時最大 = 1</td><td class="nw">根節點 1</td></tr>
+          <tr><td class="nw">log<sub>2</sub></td><td>以 2 為底的對數；log<sub>2</sub> 1 = 0、log<sub>2</sub> 0.5 = −1。p<sub>k</sub> = 0 的項視為 0</td><td class="nw">—</td></tr>
+          <tr><td class="nw">I</td><td>代表不純度（用 Gini 或熵都可以）</td><td class="nw">—</td></tr>
+          <tr><td class="nw">n、n<sub>左</sub>、n<sub>右</sub></td><td>切分前的總筆數、切到左邊與右邊的筆數；用來加權，筆數多的那邊影響大</td><td class="nw">10、5、5</td></tr>
+          <tr><td class="nw">Gain</td><td>切分讓不純度下降多少；用熵時叫資訊增益（Information Gain）。樹會選 Gain 最大的切法</td><td class="nw">切法 A：0.18（Gini）</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：決策樹從根節點開始，嘗試每個特徵、每個切點，計算切分後子節點的加權不純度，挑「不純度下降最多」的切法；對子節點重複同樣步驟，直到節點夠純或達到停止條件（深度、最少樣本數等）。葉節點以多數類別（回歸則取平均）作為預測。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>決策樹就像玩「猜猜我是誰」：每次問一個是非題，把可能的答案切成兩群，越問越接近答案。例如判斷會不會去打球：先問「天氣晴嗎？」再問「濕度高嗎？」……最後得到一串 if-else 規則。</p>
+        <p>關鍵是<b>每一步要問哪一題</b>。好問題能把資料分得很「乾淨」：問完之後，左邊幾乎全是「去」、右邊幾乎全是「不去」。爛問題問完兩邊還是一半一半，等於沒問。</p>
+        <p>「乾淨」要用數字衡量，這就是 Gini 和熵。Gini 可以想成：從這群資料隨便抽兩筆，類別不一樣的機率。全部同一類 → 不可能抽到不一樣 → 0；一半一半 → 最容易抽到不一樣 → 最大。熵是同一個概念的另一種算法。</p>
+        <p>樹會把每個候選問題都試一次，算「問之前的不純度 − 問之後兩邊的加權不純度」，也就是這題讓資料變乾淨多少，然後選變乾淨最多的那一題。重複這個過程，樹就長出來了。</p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：從兩種切法中選出比較好的</div>
+      <p>10 天的紀錄，5 天去打球（是）、5 天沒去（否）。兩種候選切法：</p>
+      <ul>
+        <li><b>切法 A</b>「天氣晴？」：左（晴）5 天：是 4、否 1；右（不晴）5 天：是 1、否 4</li>
+        <li><b>切法 B</b>「星期一到三？」：左 6 天：是 3、否 3；右 4 天：是 2、否 2</li>
+      </ul>
+      <p><span class="step">STEP 1</span>根節點：p = (0.5, 0.5)，Gini = 1 − (0.5² + 0.5²) = <b>0.5</b>；熵 = −(0.5 log<sub>2</sub> 0.5 × 2) = <b>1</b></p>
+      <p><span class="step">STEP 2</span>算子節點與加權平均：</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>切法 A 左（4, 1）</th><th>切法 A 右（1, 4）</th><th>切法 B 左（3, 3）</th><th>切法 B 右（2, 2）</th></tr></thead>
+        <tbody>
+          <tr><td>p</td><td>(0.8, 0.2)</td><td>(0.2, 0.8)</td><td>(0.5, 0.5)</td><td>(0.5, 0.5)</td></tr>
+          <tr><td>Gini</td><td>1 − (0.64 + 0.04) = 0.32</td><td>0.32</td><td>0.5</td><td>0.5</td></tr>
+          <tr><td>熵</td><td>−(0.8 log<sub>2</sub>0.8 + 0.2 log<sub>2</sub>0.2) = 0.722</td><td>0.722</td><td>1</td><td>1</td></tr>
+        </tbody>
+      </table></div>
+      <p><span class="step">STEP 3</span>加權與增益：</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>切法 A</th><th>切法 B</th></tr></thead>
+        <tbody>
+          <tr><td>切後 Gini</td><td>5/10 × 0.32 + 5/10 × 0.32 = 0.32</td><td>6/10 × 0.5 + 4/10 × 0.5 = 0.5</td></tr>
+          <tr><td>Gini 增益</td><td><b>0.5 − 0.32 = 0.18</b></td><td>0.5 − 0.5 = 0</td></tr>
+          <tr><td>資訊增益（熵）</td><td><b>1 − 0.722 = 0.278</b></td><td>1 − 1 = 0</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>解讀</b>：切法 A 讓兩邊都從「一半一半」變成「八成同一類」，不純度明顯下降；切法 B 切完兩邊仍是一半一半，增益 0，等於白問。樹會選切法 A。Gini 和熵的數值不同，但通常選出同一個切法。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：不限制深度，連雜訊都背下來</div>
+      <p>如果再找到一個切法 C：左 6 天（是 5、否 1）、右 4 天（是 0、否 4）。右邊完全純（Gini = 0），左邊 Gini = 1 − (5/6)² − (1/6)² = 0.278，切後 Gini = 6/10 × 0.278 + 0 = 0.167，增益 0.333，比切法 A 更好。</p>
+      <p>樹會一直這樣切下去，直到每個葉節點都 100% 純。假設左邊那 1 天「否」其實只是那天剛好生病，樹還是會再問一題，專門把那一天切出來，形成「天氣晴、而且是 3 月 5 日 → 不去」這種只對那一天成立的規則。</p>
+      <p class="take"><b>為什麼解決不了</b>：「越純越好」的目標本身沒有停下來的理由，只要還能切就會切，最後訓練準確率 100%，但規則裡混進了雜訊，對新資料反而變差（過擬合）。<b>對策</b>：限制成長，例如 <code>max_depth</code>（最大深度）、<code>min_samples_leaf</code>（葉節點最少筆數）；或先長完再剪枝（<code>ccp_alpha</code>）；或改用隨機森林把很多棵樹平均。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：斜線邊界要切成很多階</div>
+      <p>如果真正的規則是「x<sub>1</sub> &gt; x<sub>2</sub> 就是正類」（一條斜對角線），決策樹每次只能問「某一個特徵 &gt; 某個值？」，畫出來是水平或垂直的切線，只能用很多段階梯去近似斜線：資料在 0～10 之間時，切 2 刀像一個大台階，切 20 刀才比較像斜線，而且每多一階都是多一層 if-else。</p>
+      <p class="take"><b>為什麼解決不了</b>：每次只看一個特徵，切線一定和座標軸平行。<b>對策</b>：自己先做一個新特徵 x<sub>1</sub> − x<sub>2</sub>，樹只要切一刀「x<sub>1</sub> − x<sub>2</sub> &gt; 0」就完全正確；或改用邏輯迴歸、SVM 這類邊界可以是斜線的模型。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-tree">
+      <div class="calc-h">決策樹切分計算器：輸入兩種切法左右兩邊的類別數，比較 Gini 和資訊增益</div>
+      <div class="btns">
+        <button type="button" data-v="4,1,1,4,3,3,2,2">範例：切法 A vs B</button>
+        <button type="button" data-v="4,1,1,4,5,1,0,4">範例：切法 A vs C</button>
+      </div>
+      <div class="row">
+        <div class="tbl" style="margin:0"><table>
+          <thead><tr><th></th><th>左：是</th><th>左：否</th><th>右：是</th><th>右：否</th></tr></thead>
+          <tbody>
+            <tr><td>切法 1</td><td><input type="number" min="0" step="1" value="4" data-k="0"></td><td><input type="number" min="0" step="1" value="1" data-k="1"></td><td><input type="number" min="0" step="1" value="1" data-k="2"></td><td><input type="number" min="0" step="1" value="4" data-k="3"></td></tr>
+            <tr><td>切法 2</td><td><input type="number" min="0" step="1" value="3" data-k="4"></td><td><input type="number" min="0" step="1" value="3" data-k="5"></td><td><input type="number" min="0" step="1" value="2" data-k="6"></td><td><input type="number" min="0" step="1" value="2" data-k="7"></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="out" aria-live="polite"></div>
+      <p class="note">兩種切法的「是」「否」總數要一樣（同一個父節點）；不一樣時會提示。</p>
+    </div>
 
     <h4>分類：衡量不純度</h4>
     <div class="formula"><span class="lbl">Gini</span>Gini = 1 − Σ<sub>k</sub> p<sub>k</sub>²<span class="lbl" style="margin-left:24px">Entropy</span>H = −Σ<sub>k</sub> p<sub>k</sub> log<sub>2</sub> p<sub>k</sub></div>
@@ -669,6 +1401,87 @@ tree.feature_importances_</code></pre>
     </div>
     <p class="gist">訓練很多棵「各自有點不一樣」的決策樹，分類投票、回歸取平均。很多棵高變異的樹平均起來，變異就降下來了。</p>
 
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">預測</span>分類：B 棵樹投票取多數；回歸：ŷ = <span class="frac"><span>1</span><span>B</span></span> Σ ŷ<sub>b</sub></span><span class="fp"><span class="lbl">平均後的變異數</span>Var = ρσ² + <span class="frac"><span>(1 − ρ)σ²</span><span>B</span></span></span><span class="fp"><span class="lbl">獨立時多數決的準確率</span>P(對) = Σ<sub>m &gt; B/2</sub> C(B, m) p<sup>m</sup>(1 − p)<sup>B − m</sup></span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">B</td><td>樹的棵數（scikit-learn 的 <code>n_estimators</code>）</td><td class="nw">1、5、10、100</td></tr>
+          <tr><td class="nw">ŷ<sub>b</sub></td><td>第 b 棵樹的預測</td><td class="nw">例如 1、1、0、1、0</td></tr>
+          <tr><td class="nw">σ²（讀作 sigma 平方）</td><td>單一棵樹預測的變異數：換一批訓練資料，這棵樹的預測會晃動多少</td><td class="nw">1（當作基準）</td></tr>
+          <tr><td class="nw">ρ（讀作 rho）</td><td>任兩棵樹預測之間的相關係數，0 = 完全不相關，1 = 完全一樣</td><td class="nw">0、0.5</td></tr>
+          <tr><td class="nw">Var</td><td>B 棵樹平均之後的變異數；越小表示預測越穩定</td><td class="nw">ρ = 0、B = 10 時 0.1</td></tr>
+          <tr><td class="nw">p</td><td>單一棵樹判對的機率</td><td class="nw">0.7</td></tr>
+          <tr><td class="nw">m</td><td>B 棵樹中判對的棵數；超過一半（m &gt; B/2）多數決就對</td><td class="nw">B = 5 時 m = 3、4、5</td></tr>
+          <tr><td class="nw">C(B, m)</td><td>組合數：從 B 棵中選 m 棵判對的方法數</td><td class="nw">C(5, 3) = 10</td></tr>
+          <tr><td class="nw">Bootstrap</td><td>每棵樹用「有放回抽樣」抽出的訓練資料；每棵看到的資料略有不同</td><td class="nw">—</td></tr>
+          <tr><td class="nw"><code>max_features</code></td><td>每次切分只從隨機挑出的部分特徵中選；讓樹之間更不像，降低 ρ</td><td class="nw">—</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：隨機森林訓練 B 棵決策樹，每棵用 bootstrap 抽樣的資料，並在每次切分時只考慮隨機選出的部分特徵。預測時分類用多數決、回歸取平均。平均能降低變異數，降低的幅度取決於樹之間的相關性 ρ。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>一棵長到很深的決策樹很聰明，但很神經質：訓練資料稍微換一點，它長出來的樣子就差很多，預測也跟著大幅晃動（變異大、容易過擬合）。</p>
+        <p>隨機森林的想法是「三個臭皮匠，勝過一個諸葛亮」：<b>訓練很多棵樹，讓它們投票</b>。每棵樹各自會犯錯，但如果它們犯的錯不一樣，投票時錯誤會互相抵消，多數意見通常是對的。</p>
+        <p>重點在「犯的錯不一樣」。如果 100 棵樹都用一模一樣的資料、一模一樣的方法訓練，它們會長得一模一樣、犯一樣的錯，投票就沒有意義。所以隨機森林刻意加入兩種隨機：每棵樹抽不同的資料（bootstrap），每次切分只看部分特徵，讓每棵樹「各有各的觀點」。</p>
+        <p>變異數公式把這件事說得很清楚：Var = ρσ² + (1 − ρ)σ²/B。第二項會隨樹變多而縮小，但第一項 ρσ² 跟樹的數量無關。<b>樹之間越不像（ρ 越小），加樹越有用；樹之間很像，加再多也沒用。</b></p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：多棵獨立的樹投票，比單棵準</div>
+      <p><span class="step">STEP 1</span>5 棵樹對一筆資料的預測是 1、1、0、1、0：類別 1 有 3 票、類別 0 有 2 票，森林預測 <b>1</b>（3/5 = 60% 的樹同意）。</p>
+      <p><span class="step">STEP 2</span>為什麼投票比較準？假設每棵樹判對的機率 p = 0.7，而且樹之間互相獨立。5 棵樹中至少 3 棵判對，多數決就對：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>判對棵數 m</th><th>算式 C(5, m) × 0.7<sup>m</sup> × 0.3<sup>5−m</sup></th><th>機率</th></tr></thead>
+        <tbody>
+          <tr><td>3</td><td>10 × 0.343 × 0.09</td><td>0.3087</td></tr>
+          <tr><td>4</td><td>5 × 0.2401 × 0.3</td><td>0.3602</td></tr>
+          <tr><td>5</td><td>1 × 0.16807 × 1</td><td>0.1681</td></tr>
+          <tr><th>合計</th><th></th><th><b>0.837</b></th></tr>
+        </tbody>
+      </table></div>
+      <p><span class="step">STEP 3</span>樹越多越準：B = 1 → 0.7，B = 5 → 0.837，B = 25 → 0.983。用變異數看也一樣（σ² = 1、ρ = 0）：B = 1 → 1，B = 10 → 0.1，B = 100 → 0.01。</p>
+      <p class="take"><b>解讀</b>：每棵樹只有 70% 準，但 5 棵獨立的樹投票就有 83.7%。個別的錯被其他樹的對抵消了。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：樹之間太像，加再多棵也降不下來</div>
+      <p>如果樹之間的相關係數 ρ = 0.5（σ² = 1）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>B</th><th>1</th><th>5</th><th>10</th><th>100</th><th>無限多</th></tr></thead>
+        <tbody>
+          <tr><td>ρ = 0 的 Var</td><td>1</td><td>0.2</td><td>0.1</td><td>0.01</td><td>0</td></tr>
+          <tr><td>ρ = 0.5 的 Var</td><td>1</td><td>0.6</td><td>0.55</td><td>0.505</td><td class="hl">0.5</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：ρσ² = 0.5 這一項和 B 無關，樹再多變異數也降不到 0.5 以下。極端情況 ρ = 1（每棵樹都一樣），森林就等於一棵樹。<b>對策</b>：讓樹更不像：調小 <code>max_features</code>（每次切分看的特徵更少），保持 bootstrap 抽樣。這就是隨機森林比單純的 Bagging 多做「隨機選特徵」的原因。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：每棵樹都比亂猜還差，投票反而更糟</div>
+      <p>如果每棵樹判對的機率只有 p = 0.45（比丟銅板的 0.5 還差），獨立投票的準確率：B = 1 → 0.45，B = 5 → 0.407，B = 25 → <b class="hl">0.306</b>。</p>
+      <p class="take"><b>為什麼解決不了</b>：多數決會放大「多數人的意見」。多數人是對的時候越投越準；多數人是錯的時候，越投越錯。隨機森林只能降低變異（讓預測穩定），不能修正每棵樹共同的偏差。<b>對策</b>：先確認單棵樹有學到東西（特徵有用、資料足夠）；如果問題是偏差太大（模型太簡單），改用梯度提升這類「逐步修正錯誤」的方法。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-rf">
+      <div class="calc-h">隨機森林計算器：調整樹的數量、相關性與單棵準確率</div>
+      <div class="row">
+        <div style="display:grid;gap:8px">
+          <label>樹的數量 B = <span data-show="B">10</span><input type="range" min="1" max="101" step="1" value="10" data-k="B"></label>
+          <label>相關係數 ρ = <span data-show="rho">0</span><input type="range" min="0" max="1" step="0.05" value="0" data-k="rho"></label>
+          <label>單棵變異數 σ²<input type="number" min="0" step="0.1" value="1" data-k="s2"></label>
+          <label>單棵判對機率 p = <span data-show="p">0.7</span><input type="range" min="0.3" max="0.95" step="0.05" value="0.7" data-k="p"></label>
+        </div>
+        <div class="out" aria-live="polite"></div>
+        <svg viewBox="0 0 360 240" role="img" aria-label="變異數隨樹的數量變化"></svg>
+      </div>
+      <p class="note">多數決準確率假設樹之間互相獨立，B 為偶數時平手算錯。圖：橘線是目前 ρ 下的變異數隨 B 變化，虛線是下限 ρσ²。</p>
+    </div>
+
     <h4>兩種隨機</h4>
     <ol>
       <li><b>資料隨機（Bootstrap）</b>：每棵樹從訓練集<b>有放回</b>地抽 n 筆。每次約有 63.2% 的不同樣本被抽到，剩下約 36.8% 沒被抽到，稱為 <b>OOB</b>（Out-of-Bag）樣本。</li>
@@ -710,6 +1523,103 @@ rf.oob_score_, rf.feature_importances_</code></pre>
       <div class="meta"><span class="chip both">分類／回歸</span><span class="chip">Boosting</span><span class="chip">循序訓練</span></div>
     </div>
     <p class="gist">一棵接一棵訓練淺樹，每棵新樹專門學「前面所有樹加起來還錯多少」（殘差），再用小步伐加進模型。</p>
+
+    <div class="teach">
+      <h4>教學：這個公式在解決什麼問題</h4>
+      <div class="formula"><span class="fp"><span class="lbl">起點</span>F<sub>0</sub>(x) = ȳ</span><span class="fp"><span class="lbl">第 m 輪的殘差</span>r<sub>i</sub> = y<sub>i</sub> − F<sub>m−1</sub>(x<sub>i</sub>)</span><span class="fp"><span class="lbl">更新</span>F<sub>m</sub>(x) = F<sub>m−1</sub>(x) + η · h<sub>m</sub>(x)</span><span class="fp"><span class="lbl">最後的模型</span>F<sub>M</sub>(x) = ȳ + η Σ<sub>m=1…M</sub> h<sub>m</sub>(x)</span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
+        <tbody>
+          <tr><td class="nw">x<sub>i</sub>、y<sub>i</sub></td><td>第 i 筆資料的特徵與實際值</td><td class="nw">x：1～6；y：2、3、4、8、9、10</td></tr>
+          <tr><td class="nw">ȳ</td><td>所有 y 的平均，當作第 0 輪的預測</td><td class="nw">6</td></tr>
+          <tr><td class="nw">m、M</td><td>第幾輪、總輪數（每輪加一棵樹；scikit-learn 的 <code>n_estimators</code>）</td><td class="nw">m = 1、2、3</td></tr>
+          <tr><td class="nw">F<sub>m</sub>(x)</td><td>做完第 m 輪後，整個模型對 x 的預測（前面所有樹加起來）</td><td class="nw">F<sub>1</sub> = 4.5 或 7.5</td></tr>
+          <tr><td class="nw">r<sub>i</sub></td><td>殘差：目前還差多少（正：預測太低；負：預測太高）</td><td class="nw">第 1 輪：−4、−3、−2、2、3、4</td></tr>
+          <tr><td class="nw">h<sub>m</sub>(x)</td><td>第 m 棵小樹，專門學「殘差」；這裡用只切一刀的樹（stump），每邊輸出那一邊殘差的平均</td><td class="nw">第 1 棵：x &lt; 3.5 → −3，否則 +3</td></tr>
+          <tr><td class="nw">η（讀作 eta）</td><td>學習率：每棵樹的修正只採用幾成，介於 0～1，常用 0.05～0.3（scikit-learn 的 <code>learning_rate</code>）</td><td class="nw">0.5</td></tr>
+          <tr><td class="nw">SSE</td><td>訓練資料的殘差平方和，用來看模型離答案還有多遠</td><td class="nw">58 → 17.5 → 7.38 → 3.86</td></tr>
+        </tbody>
+      </table></div>
+      <p class="formal"><b>正式說明</b>：梯度提升從一個簡單的預測（平均值）開始，每一輪訓練一棵淺樹去擬合目前的殘差（平方誤差的負梯度），再把這棵樹的輸出乘上學習率 η 加進模型。重複 M 輪，模型是所有樹的加總。和隨機森林「平行訓練、平均」不同，梯度提升是「依序訓練、逐步修正」。</p>
+      <div class="plain">
+        <b>白話說明</b>
+        <p>想像你在打高爾夫球。第一桿先往洞的大方向打（預測平均值）。球停下來後，看<b>還差多少、往哪個方向差</b>，第二桿只負責修正這段差距。再看還差多少，第三桿再修……每一桿都比上一桿更接近洞口。</p>
+        <p>梯度提升就是這樣：第一棵「樹」其實只是平均值，誤差很大。第二棵樹不重新學 y，而是<b>學「上一輪還錯多少」（殘差）</b>，把這個修正加上去，誤差就變小。第三棵再學新的殘差……每棵新樹都在補前面的不足。</p>
+        <p>每一桿不要用全力打，這就是<b>學習率 η</b>：每棵樹算出的修正只加上 η 倍（例如一半）。看起來比較慢，但不容易「打過頭」，也比較不會把雜訊學進去，最後通常更準。</p>
+        <p>和隨機森林比較：隨機森林是很多人<b>同時</b>各自猜、再平均，主要降低「晃動」（變異）；梯度提升是一個接一個<b>接力修正</b>，主要降低「系統性的偏差」。所以梯度提升通常更準，但也更容易過擬合，需要小心調 η 和輪數。</p>
+      </div>
+    </div>
+
+    <h4>計算範例</h4>
+    <div class="ex ok">
+      <div class="ex-h">✅ 解決得了：一輪一輪把殘差補起來（η = 0.5）</div>
+      <p>6 筆資料：x = 1、2、3、4、5、6，y = 2、3、4、8、9、10。每輪用一棵只切一刀的樹（stump）擬合殘差。</p>
+      <p><span class="step">STEP 0</span>F<sub>0</sub> = ȳ = (2 + 3 + 4 + 8 + 9 + 10) ÷ 6 = <b>6</b>，SSE = 16 + 9 + 4 + 4 + 9 + 16 = <b>58</b></p>
+      <div class="tbl"><table>
+        <thead><tr><th>x</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>SSE</th></tr></thead>
+        <tbody>
+          <tr><td>y</td><td>2</td><td>3</td><td>4</td><td>8</td><td>9</td><td>10</td><td></td></tr>
+          <tr><td>F<sub>0</sub></td><td>6</td><td>6</td><td>6</td><td>6</td><td>6</td><td>6</td><td>58</td></tr>
+          <tr><td>第 1 輪殘差 r</td><td>−4</td><td>−3</td><td>−2</td><td>2</td><td>3</td><td>4</td><td></td></tr>
+          <tr><td>h<sub>1</sub>（切在 3.5）</td><td>−3</td><td>−3</td><td>−3</td><td>3</td><td>3</td><td>3</td><td></td></tr>
+          <tr><td>F<sub>1</sub> = F<sub>0</sub> + 0.5h<sub>1</sub></td><td>4.5</td><td>4.5</td><td>4.5</td><td>7.5</td><td>7.5</td><td>7.5</td><td><b>17.5</b></td></tr>
+          <tr><td>第 2 輪殘差 r</td><td>−2.5</td><td>−1.5</td><td>−0.5</td><td>0.5</td><td>1.5</td><td>2.5</td><td></td></tr>
+          <tr><td>h<sub>2</sub>（切在 3.5）</td><td>−1.5</td><td>−1.5</td><td>−1.5</td><td>1.5</td><td>1.5</td><td>1.5</td><td></td></tr>
+          <tr><td>F<sub>2</sub> = F<sub>1</sub> + 0.5h<sub>2</sub></td><td>3.75</td><td>3.75</td><td>3.75</td><td>8.25</td><td>8.25</td><td>8.25</td><td><b>7.375</b></td></tr>
+          <tr><td>第 3 輪殘差 r</td><td>−1.75</td><td>−0.75</td><td>0.25</td><td>−0.25</td><td>0.75</td><td>1.75</td><td></td></tr>
+          <tr><td>h<sub>3</sub>（切在 2.5）</td><td>−1.25</td><td>−1.25</td><td>0.625</td><td>0.625</td><td>0.625</td><td>0.625</td><td></td></tr>
+          <tr><td>F<sub>3</sub> = F<sub>2</sub> + 0.5h<sub>3</sub></td><td>3.125</td><td>3.125</td><td>4.0625</td><td>8.5625</td><td>8.5625</td><td>8.5625</td><td><b>3.859</b></td></tr>
+        </tbody>
+      </table></div>
+      <p>stump 怎麼決定切點：把每個可能的切點（1.5、2.5、…、5.5）都試一次，兩邊各取殘差平均當輸出，選殘差平方和最小的。第 1 輪切在 3.5：左邊殘差 (−4 − 3 − 2) ÷ 3 = −3，右邊 (2 + 3 + 4) ÷ 3 = 3。</p>
+      <p class="take"><b>解讀</b>：SSE 從 58 → 17.5 → 7.38 → 3.86，每一輪都把剩下的誤差再補一些。第 3 輪開始，大方向已經修好，樹改去修細部（切點換到 2.5）。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 1：學習率太大，修過頭來回震盪</div>
+      <p>同一份資料，η = 1.8（每次修正 1.8 倍）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>輪數</th><th>x = 1～3 的預測</th><th>x = 4～6 的預測</th><th>SSE</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>6</td><td>6</td><td>58</td></tr>
+          <tr><td>1</td><td class="hl">0.6（太低）</td><td class="hl">11.4（太高）</td><td>38.56</td></tr>
+          <tr><td>2</td><td>4.92</td><td>7.08</td><td>26.12</td></tr>
+          <tr><td>3</td><td class="hl">1.464（又太低）</td><td class="hl">10.536（又太高）</td><td>18.16</td></tr>
+        </tbody>
+      </table></div>
+      <p class="take"><b>為什麼解決不了</b>：每棵樹算出「該修多少」，但 η &gt; 1 讓修正超過需要的量，預測衝過頭、再拉回來、再衝過頭，來回震盪，收斂很慢（η 再大甚至會發散）。η = 1 時一輪就把 SSE 降到 4，但對雜訊也毫不保留。<b>對策</b>：用較小的 η（0.05～0.3），搭配較多輪數。</p>
+    </div>
+
+    <div class="ex ng">
+      <div class="ex-h">❌ 解決不了 2：輪數太多，把每一點都背下來</div>
+      <p>同一份資料，η = 1，訓練 SSE 隨輪數：第 1 輪 4.0 → 第 5 輪 0.91 → 第 10 輪 0.20 → 第 20 輪 0.015 → 第 50 輪 <b class="hl">0</b>（每一點都預測得一模一樣）。</p>
+      <p class="take"><b>為什麼解決不了</b>：只要還有殘差，下一棵樹就會去擬合它，直到訓練資料完全沒有誤差。但資料本身有雜訊，例如 y 可能只是「x ≤ 3 時約 3、x ≥ 4 時約 9」加上一些隨機起伏，把起伏也背下來，對新資料反而變差（過擬合）。<b>對策</b>：用驗證資料決定輪數，驗證誤差不再下降就停止（early stopping，例如 XGBoost 的 <code>early_stopping_rounds</code>）；限制樹的深度、加入正則化、每棵樹只用部分資料（<code>subsample</code>）。</p>
+    </div>
+
+    <h4>動手算</h4>
+    <div class="calc" id="calc-gb">
+      <div class="calc-h">梯度提升計算器：調整學習率和輪數，看每一輪的殘差與預測</div>
+      <div class="btns">
+        <button type="button" data-eta="0.5" data-m="3">範例：η = 0.5、3 輪</button>
+        <button type="button" data-eta="1.8" data-m="4">η = 1.8（震盪）</button>
+        <button type="button" data-eta="1" data-m="50">η = 1、50 輪（背下來）</button>
+      </div>
+      <div class="row">
+        <div style="display:grid;gap:8px">
+          <label>學習率 η<input type="number" step="0.1" min="0.01" value="0.5" data-k="eta"></label>
+          <label>輪數 M<input type="number" step="1" min="1" max="200" value="3" data-k="m"></label>
+          <label>每行一點「x, y」<textarea spellcheck="false">1,2
+2,3
+3,4
+4,8
+5,9
+6,10</textarea></label>
+        </div>
+        <div class="out" aria-live="polite"></div>
+        <svg viewBox="0 0 360 240" role="img" aria-label="資料與目前的預測"></svg>
+      </div>
+      <p class="note">每輪的樹只切一刀（stump）。表格最多顯示前 8 輪的細節，之後只列 SSE。圖中的階梯線是最後一輪的預測 F<sub>M</sub>。</p>
+    </div>
 
     <div class="formula"><span class="lbl">逐步相加</span>F<sub>m</sub>(x) = F<sub>m−1</sub>(x) + η · h<sub>m</sub>(x)</div>
     <ul>
@@ -859,3 +1769,459 @@ xgb.fit(X_train, y_train, eval_set=[(X_val, y_val)])</code></pre>
   mark();
 })();
 </script>
+<script>
+/* 各演算法的互動計算器。共用：數字格式、解析「x, y」資料、畫散布圖 */
+(() => {
+  const fmt = (v, d = 4) => Number.isFinite(v) ? String(+v.toFixed(d)) : '—';
+  // 「a·x + b」寫成 1.5x − 4 這種形式（負號用 −）
+  const linStr = (a, b) => `${fmt(a)}x ${b < 0 ? '−' : '+'} ${fmt(Math.abs(b))}`;
+  const parsePoints = text => text.split(/\n/).map(l => l.trim()).filter(Boolean).map(l => l.split(/[,\s]+/).map(Number));
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  };
+
+  /* ---------- 線性迴歸 ---------- */
+  (function linreg() {
+    const box = document.getElementById('calc-linreg');
+    if (!box) return;
+    const ta = box.querySelector('textarea'), out = box.querySelector('.out'), svg = box.querySelector('svg');
+    function run() {
+      const pts = parsePoints(ta.value);
+      if (pts.some(p => p.length !== 2 || p.some(v => !Number.isFinite(v)))) { out.innerHTML = '<p class="err">每一行要是兩個數字，例如「3, 5」。</p>'; svg.innerHTML = ''; return; }
+      if (pts.length < 2) { out.innerHTML = '<p class="err">至少要兩個點。</p>'; svg.innerHTML = ''; return; }
+      const n = pts.length, xb = pts.reduce((s, p) => s + p[0], 0) / n, yb = pts.reduce((s, p) => s + p[1], 0) / n;
+      const sxy = pts.reduce((s, [x, y]) => s + (x - xb) * (y - yb), 0), sxx = pts.reduce((s, [x]) => s + (x - xb) ** 2, 0);
+      if (sxx === 0) { out.innerHTML = '<p class="err">所有 x 都一樣，畫不出斜率（Σ(x − x̄)² = 0）。</p>'; svg.innerHTML = ''; return; }
+      const b1 = sxy / sxx, b0 = yb - b1 * xb;
+      const rows = pts.map(([x, y]) => { const yh = b0 + b1 * x; return { x, y, yh, e: y - yh }; });
+      const sse = rows.reduce((s, r) => s + r.e ** 2, 0), sst = pts.reduce((s, [, y]) => s + (y - yb) ** 2, 0);
+      const r2 = sst === 0 ? NaN : 1 - sse / sst;
+      out.innerHTML =
+        `<p>x̄ = <span class="k">${fmt(xb)}</span>，ȳ = <span class="k">${fmt(yb)}</span></p>` +
+        `<p>β<sub>1</sub> = ${fmt(sxy)} ÷ ${fmt(sxx)} = <b class="k">${fmt(b1)}</b>；β<sub>0</sub> = ${fmt(yb)} − ${fmt(b1)} × ${fmt(xb)} = <b class="k">${fmt(b0)}</b></p>` +
+        `<p>直線：<b>ŷ = ${linStr(b1, b0)}</b></p>` +
+        `<p>SSE = <span class="k">${fmt(sse)}</span>，SST = <span class="k">${fmt(sst)}</span>，R² = <b class="k">${fmt(r2)}</b></p>` +
+        '<div class="tbl"><table><thead><tr><th>x</th><th>y</th><th>ŷ</th><th>殘差 e</th></tr></thead><tbody>' +
+        rows.map(r => `<tr><td>${fmt(r.x)}</td><td>${fmt(r.y)}</td><td>${fmt(r.yh)}</td><td>${fmt(r.e)}</td></tr>`).join('') +
+        '</tbody></table></div>';
+      draw(pts, b0, b1);
+    }
+    function draw(pts, b0, b1) {
+      svg.innerHTML = '';
+      const W = 360, H = 240, P = 30;
+      const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]).concat(pts.map(p => b0 + b1 * p[0]));
+      let [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+      const padX = (x1 - x0) * 0.1 || 1, padY = (y1 - y0) * 0.1 || 1;
+      x0 -= padX; x1 += padX; y0 -= padY; y1 += padY;
+      const sx = x => P + (x - x0) / (x1 - x0) * (W - 2 * P), sy = y => H - P - (y - y0) / (y1 - y0) * (H - 2 * P);
+      el('line', { x1: P, y1: H - P, x2: W - P, y2: H - P, class: 'ax' }, svg);
+      el('line', { x1: P, y1: P, x2: P, y2: H - P, class: 'ax' }, svg);
+      el('text', { x: W - P, y: H - 10, 'text-anchor': 'end' }, svg).textContent = 'x';
+      el('text', { x: 8, y: P - 8 }, svg).textContent = 'y';
+      el('line', { x1: sx(x0), y1: sy(b0 + b1 * x0), x2: sx(x1), y2: sy(b0 + b1 * x1), class: 'fit' }, svg);
+      pts.forEach(([x, y]) => {
+        el('line', { x1: sx(x), y1: sy(y), x2: sx(x), y2: sy(b0 + b1 * x), class: 'res' }, svg);
+        el('circle', { cx: sx(x), cy: sy(y), r: 4.5, class: 'pt' }, svg);
+      });
+    }
+    ta.addEventListener('input', run);
+    box.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => { ta.value = b.dataset.preset; run(); }));
+    run();
+  })();
+  /* ---------- 邏輯迴歸 ---------- */
+  (function logreg() {
+    const box = document.getElementById('calc-logreg');
+    if (!box) return;
+    const ta = box.querySelector('textarea'), out = box.querySelector('.out'), svg = box.querySelector('svg');
+    const inp = k => box.querySelector(`[data-k="${k}"]`);
+    const sig = z => 1 / (1 + Math.exp(-z));
+    function run() {
+      const w = +inp('w').value, b = +inp('b').value, t = +inp('t').value;
+      const pts = parsePoints(ta.value);
+      if (![w, b, t].every(Number.isFinite) || t <= 0 || t >= 1) { out.innerHTML = '<p class="err">w、b 要是數字，門檻要在 0 和 1 之間。</p>'; svg.innerHTML = ''; return; }
+      if (!pts.length || pts.some(p => p.length !== 2 || !Number.isFinite(p[0]) || (p[1] !== 0 && p[1] !== 1))) { out.innerHTML = '<p class="err">每一行要是「x, y」，y 只能是 0 或 1。</p>'; svg.innerHTML = ''; return; }
+      const eps = 1e-15;
+      const rows = pts.map(([x, y]) => {
+        const z = w * x + b, p = sig(z), yh = p >= t ? 1 : 0;
+        const L = -(y * Math.log(Math.max(p, eps)) + (1 - y) * Math.log(Math.max(1 - p, eps)));
+        return { x, y, z, p, yh, L };
+      });
+      const acc = rows.filter(r => r.yh === r.y).length, mean = rows.reduce((s, r) => s + r.L, 0) / rows.length;
+      // 門檻 t 對應的分數 z* = ln(t / (1 − t))，邊界 x = (z* − b) / w
+      const zt = Math.log(t / (1 - t)), bound = w === 0 ? NaN : (zt - b) / w;
+      out.innerHTML =
+        `<p>分數：<b>z = ${linStr(w, b)}</b>；決策邊界 x = ${w === 0 ? '（w = 0，沒有邊界）' : `<b class="k">${fmt(bound)}</b>`}${w < 0 ? '（w 為負：x 越小越像正類）' : ''}</p>` +
+        '<div class="tbl"><table><thead><tr><th>x</th><th>y</th><th>z</th><th>p</th><th>ŷ</th><th>L</th></tr></thead><tbody>' +
+        rows.map(r => `<tr><td>${fmt(r.x)}</td><td>${r.y}</td><td>${fmt(r.z)}</td><td>${fmt(r.p)}</td><td${r.yh !== r.y ? ' class="hl"' : ''}>${r.yh}</td><td>${fmt(r.L)}</td></tr>`).join('') +
+        '</tbody></table></div>' +
+        `<p>判對 <b>${acc} / ${rows.length}</b>，平均 log-loss = <b class="k">${fmt(mean)}</b></p>`;
+      draw(rows, w, b, t, bound);
+    }
+    function draw(rows, w, b, t, bound) {
+      svg.innerHTML = '';
+      const W = 360, H = 240, P = 30;
+      const xs = rows.map(r => r.x).concat(Number.isFinite(bound) ? [bound] : []);
+      let x0 = Math.min(...xs), x1 = Math.max(...xs);
+      const pad = (x1 - x0) * 0.2 || 1; x0 -= pad; x1 += pad;
+      const sx = x => P + (x - x0) / (x1 - x0) * (W - 2 * P), sy = p => H - P - p * (H - 2 * P);
+      el('line', { x1: P, y1: H - P, x2: W - P, y2: H - P, class: 'ax' }, svg);
+      el('line', { x1: P, y1: P, x2: P, y2: H - P, class: 'ax' }, svg);
+      [[0, '0'], [t, fmt(t, 2)], [1, '1']].forEach(([p, s]) => { el('text', { x: P - 4, y: sy(p) + 4, 'text-anchor': 'end' }, svg).textContent = s; });
+      el('text', { x: W - P, y: H - 10, 'text-anchor': 'end' }, svg).textContent = 'x';
+      el('text', { x: 8, y: P - 10 }, svg).textContent = 'p';
+      el('line', { x1: P, y1: sy(t), x2: W - P, y2: sy(t), class: 'res' }, svg);
+      if (Number.isFinite(bound) && bound >= x0 && bound <= x1) el('line', { x1: sx(bound), y1: P, x2: sx(bound), y2: H - P, class: 'res' }, svg);
+      let d = '';
+      for (let i = 0; i <= 120; i++) { const x = x0 + (x1 - x0) * i / 120; d += (i ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(1 / (1 + Math.exp(-(w * x + b)))).toFixed(1); }
+      el('path', { d, class: 'fit', fill: 'none' }, svg);
+      rows.forEach(r => {
+        const c = el('circle', { cx: sx(r.x), cy: sy(r.y), r: 5, class: 'pt' }, svg);
+        if (r.yh !== r.y) c.setAttribute('style', 'fill: var(--bad)');
+      });
+    }
+    box.querySelectorAll('input, textarea').forEach(e => e.addEventListener('input', run));
+    box.querySelectorAll('[data-w]').forEach(btn => btn.addEventListener('click', () => { inp('w').value = btn.dataset.w; inp('b').value = btn.dataset.b; run(); }));
+    run();
+  })();
+  /* ---------- Ridge／Lasso（單一特徵） ---------- */
+  (function ridge() {
+    const box = document.getElementById('calc-ridge');
+    if (!box) return;
+    const ta = box.querySelector('textarea'), out = box.querySelector('.out'), svg = box.querySelector('svg');
+    const lamIn = box.querySelector('[data-k="lam"]'), lamShow = box.querySelector('[data-show="lam"]');
+    const ridgeB = (sxy, sxx, l) => sxy / (sxx + l);
+    const lassoB = (sxy, sxx, l) => Math.sign(sxy) * Math.max(Math.abs(sxy) - l / 2, 0) / sxx;
+    function run() {
+      const lam = +lamIn.value; lamShow.textContent = lam;
+      const pts = parsePoints(ta.value);
+      if (pts.length < 2 || pts.some(p => p.length !== 2 || p.some(v => !Number.isFinite(v)))) { out.innerHTML = '<p class="err">每一行要是「x, y」兩個數字，至少兩行。</p>'; svg.innerHTML = ''; return; }
+      const n = pts.length, xb = pts.reduce((s, p) => s + p[0], 0) / n, yb = pts.reduce((s, p) => s + p[1], 0) / n;
+      const sxy = pts.reduce((s, [x, y]) => s + (x - xb) * (y - yb), 0), sxx = pts.reduce((s, [x]) => s + (x - xb) ** 2, 0);
+      if (sxx === 0) { out.innerHTML = '<p class="err">所有 x 都一樣，無法計算。</p>'; svg.innerHTML = ''; return; }
+      const sse = b => pts.reduce((s, [x, y]) => s + (y - (yb + b * (x - xb))) ** 2, 0);
+      const b = [['普通線性迴歸', sxy / sxx], ['Ridge', ridgeB(sxy, sxx, lam)], ['Lasso', lassoB(sxy, sxx, lam)]];
+      out.innerHTML =
+        `<p>減去平均後：S<sub>xy</sub> = <span class="k">${fmt(sxy)}</span>，S<sub>xx</sub> = <span class="k">${fmt(sxx)}</span></p>` +
+        `<p>Ridge：β = ${fmt(sxy)} ÷ (${fmt(sxx)} + ${lam}) = <b class="k">${fmt(b[1][1])}</b></p>` +
+        `<p>Lasso：β = sign × max(${fmt(Math.abs(sxy))} − ${fmt(lam / 2)}, 0) ÷ ${fmt(sxx)} = <b class="k">${fmt(b[2][1])}</b>${b[2][1] === 0 ? '（被壓成 0，這個特徵被刪掉）' : ''}</p>` +
+        '<div class="tbl"><table><thead><tr><th>方法</th><th>β</th><th>β<sub>0</sub></th><th>訓練 SSE</th></tr></thead><tbody>' +
+        b.map(([name, v]) => `<tr><td>${name}</td><td>${fmt(v)}</td><td>${fmt(yb - v * xb)}</td><td>${fmt(sse(v))}</td></tr>`).join('') +
+        '</tbody></table></div>' +
+        `<p class="note">Lasso 在 λ ≥ 2|S<sub>xy</sub>| = ${fmt(2 * Math.abs(sxy))} 時變成 0；Ridge 永遠不會剛好是 0。</p>`;
+      draw(sxy, sxx, lam);
+    }
+    function draw(sxy, sxx, lam) {
+      svg.innerHTML = '';
+      const W = 360, H = 240, P = 30, Lmax = Math.max(60, 2.5 * Math.abs(sxy));
+      const b0 = sxy / sxx, lo = Math.min(0, b0), hi = Math.max(0, b0), pad = (hi - lo) * 0.1 || 1;
+      const sx = l => P + l / Lmax * (W - 2 * P), sy = v => H - P - (v - (lo - pad)) / (hi - lo + 2 * pad) * (H - 2 * P);
+      el('line', { x1: P, y1: sy(0), x2: W - P, y2: sy(0), class: 'ax' }, svg);
+      el('line', { x1: P, y1: P, x2: P, y2: H - P, class: 'ax' }, svg);
+      el('text', { x: W - P, y: H - 10, 'text-anchor': 'end' }, svg).textContent = 'λ';
+      el('text', { x: 8, y: P - 10 }, svg).textContent = 'β';
+      const path = f => { let d = ''; for (let i = 0; i <= 100; i++) { const l = Lmax * i / 100; d += (i ? 'L' : 'M') + sx(l).toFixed(1) + ' ' + sy(f(l)).toFixed(1); } return d; };
+      el('path', { d: path(l => ridgeB(sxy, sxx, l)), class: 'fit', fill: 'none' }, svg);
+      el('path', { d: path(l => lassoB(sxy, sxx, l)), fill: 'none', style: 'stroke: var(--accent); stroke-width: 2' }, svg);
+      el('line', { x1: sx(lam), y1: P, x2: sx(lam), y2: H - P, class: 'res' }, svg);
+      el('text', { x: W - P, y: P, 'text-anchor': 'end', style: 'fill: var(--mark)' }, svg).textContent = '— Ridge';
+      el('text', { x: W - P, y: P + 14, 'text-anchor': 'end', style: 'fill: var(--accent)' }, svg).textContent = '— Lasso';
+    }
+    ta.addEventListener('input', run); lamIn.addEventListener('input', run);
+    box.querySelectorAll('[data-preset]').forEach(btn => btn.addEventListener('click', () => { ta.value = btn.dataset.preset; run(); }));
+    run();
+  })();
+  /* ---------- KNN ---------- */
+  (function knn() {
+    const box = document.getElementById('calc-knn');
+    if (!box) return;
+    const ta = box.querySelector('textarea'), out = box.querySelector('.out'), svg = box.querySelector('svg');
+    const inp = k => box.querySelector(`[data-k="${k}"]`);
+    function run() {
+      const rows = ta.value.split(/\n/).map(l => l.trim()).filter(Boolean).map(l => l.split(/[,\s]+/));
+      const data = rows.map(r => ({ x: [+r[0], +r[1]], c: r[2] }));
+      const q = inp('q').value.split(/[,\s]+/).map(Number), k = Math.round(+inp('k').value), scale = inp('scale').checked;
+      if (!data.length || rows.some(r => r.length !== 3) || data.some(d => !d.x.every(Number.isFinite))) { out.innerHTML = '<p class="err">每一行要是「x1, x2, 類別」，例如「3, 2, B」。</p>'; svg.innerHTML = ''; return; }
+      if (q.length !== 2 || !q.every(Number.isFinite)) { out.innerHTML = '<p class="err">新點要是兩個數字，例如「2, 2」。</p>'; svg.innerHTML = ''; return; }
+      if (!(k >= 1 && k <= data.length)) { out.innerHTML = `<p class="err">k 要在 1 到 ${data.length} 之間。</p>`; svg.innerHTML = ''; return; }
+      // 標準化：用訓練資料 ＋ 新點的範圍
+      const all = data.map(d => d.x).concat([q]);
+      const mn = [0, 1].map(j => Math.min(...all.map(p => p[j]))), mx = [0, 1].map(j => Math.max(...all.map(p => p[j])));
+      const tf = p => scale ? p.map((v, j) => mx[j] === mn[j] ? 0 : (v - mn[j]) / (mx[j] - mn[j])) : p;
+      const qq = tf(q);
+      const ranked = data.map(d => { const p = tf(d.x); return { ...d, p, d: Math.hypot(p[0] - qq[0], p[1] - qq[1]) }; }).sort((a, b) => a.d - b.d);
+      const nb = ranked.slice(0, k), votes = {};
+      nb.forEach(r => { votes[r.c] = (votes[r.c] || 0) + 1; });
+      const top = Math.max(...Object.values(votes)), winners = Object.keys(votes).filter(c => votes[c] === top);
+      const tie = k < ranked.length && ranked[k].d === ranked[k - 1].d;
+      out.innerHTML =
+        (scale ? `<p>標準化範圍：x<sub>1</sub> ${fmt(mn[0])}～${fmt(mx[0])}，x<sub>2</sub> ${fmt(mn[1])}～${fmt(mx[1])}；新點變成 (${fmt(qq[0])}, ${fmt(qq[1])})</p>` : '') +
+        '<div class="tbl"><table><thead><tr><th>排名</th><th>點</th><th>類別</th><th>距離</th></tr></thead><tbody>' +
+        ranked.map((r, i) => `<tr${i < k ? ' style="font-weight:700"' : ''}><td>${i + 1}</td><td>(${fmt(r.x[0])}, ${fmt(r.x[1])})</td><td>${r.c}</td><td>${fmt(r.d)}</td></tr>`).join('') +
+        '</tbody></table></div>' +
+        `<p>前 ${k} 名投票：${Object.entries(votes).map(([c, v]) => `${c} ${v} 票`).join('、')} → 預測 <b>${winners.length > 1 ? winners.join(' 與 ') + ' 平手' : winners[0]}</b></p>` +
+        (tie ? '<p class="note">第 k 名和第 k + 1 名距離一樣，鄰居的選法不唯一。</p>' : '');
+      draw(ranked, qq, k);
+    }
+    function draw(ranked, q, k) {
+      svg.innerHTML = '';
+      const W = 360, H = 240, P = 30, ps = ranked.map(r => r.p).concat([q]);
+      let [x0, x1, y0, y1] = [Math.min(...ps.map(p => p[0])), Math.max(...ps.map(p => p[0])), Math.min(...ps.map(p => p[1])), Math.max(...ps.map(p => p[1]))];
+      const px = (x1 - x0) * 0.1 || 1, py = (y1 - y0) * 0.1 || 1; x0 -= px; x1 += px; y0 -= py; y1 += py;
+      const sx = v => P + (v - x0) / (x1 - x0) * (W - 2 * P), sy = v => H - P - (v - y0) / (y1 - y0) * (H - 2 * P);
+      el('line', { x1: P, y1: H - P, x2: W - P, y2: H - P, class: 'ax' }, svg);
+      el('line', { x1: P, y1: P, x2: P, y2: H - P, class: 'ax' }, svg);
+      const classes = [...new Set(ranked.map(r => r.c))], colors = ['var(--accent)', 'var(--mark)', 'var(--good)', 'var(--bad)'];
+      ranked.slice(0, k).forEach(r => el('line', { x1: sx(q[0]), y1: sy(q[1]), x2: sx(r.p[0]), y2: sy(r.p[1]), class: 'res' }, svg));
+      ranked.forEach(r => {
+        const col = colors[classes.indexOf(r.c) % colors.length];
+        el('circle', { cx: sx(r.p[0]), cy: sy(r.p[1]), r: 5, style: `fill: ${col}` }, svg);
+        el('text', { x: sx(r.p[0]) + 7, y: sy(r.p[1]) - 5 }, svg).textContent = r.c;
+      });
+      el('circle', { cx: sx(q[0]), cy: sy(q[1]), r: 7, style: 'fill: none; stroke: var(--fg); stroke-width: 2' }, svg);
+      el('text', { x: sx(q[0]) + 9, y: sy(q[1]) + 14 }, svg).textContent = 'q';
+    }
+    box.querySelectorAll('input, textarea').forEach(e => e.addEventListener('input', run));
+    box.querySelectorAll('[data-preset]').forEach(btn => btn.addEventListener('click', () => { ta.value = btn.dataset.preset; inp('q').value = btn.dataset.q; inp('k').value = btn.dataset.k; inp('scale').checked = false; run(); }));
+    run();
+  })();
+  /* ---------- SVM ---------- */
+  (function svm() {
+    const box = document.getElementById('calc-svm');
+    if (!box) return;
+    const ta = box.querySelector('textarea'), out = box.querySelector('.out'), svg = box.querySelector('svg');
+    const inp = k => box.querySelector(`[data-k="${k}"]`);
+    const base = ta.value;
+    function run() {
+      const w1 = +inp('w1').value, w2 = +inp('w2').value, b = +inp('b').value, C = +inp('C').value;
+      const pts = parsePoints(ta.value);
+      if (![w1, w2, b, C].every(Number.isFinite) || C < 0) { out.innerHTML = '<p class="err">w、b、C 要是數字，C 不能是負數。</p>'; svg.innerHTML = ''; return; }
+      if (!pts.length || pts.some(p => p.length !== 3 || !Number.isFinite(p[0]) || !Number.isFinite(p[1]) || (p[2] !== 1 && p[2] !== -1))) { out.innerHTML = '<p class="err">每一行要是「x1, x2, y」，y 只能是 1 或 −1。</p>'; svg.innerHTML = ''; return; }
+      const nw = Math.hypot(w1, w2);
+      if (nw === 0) { out.innerHTML = '<p class="err">w 不能是 (0, 0)，那樣沒有分隔線。</p>'; svg.innerHTML = ''; return; }
+      const rows = pts.map(([x1, x2, y]) => { const f = w1 * x1 + w2 * x2 + b, yf = y * f; return { x1, x2, y, f, yf, h: Math.max(0, 1 - yf) }; });
+      const eps = 1e-9, hs = rows.reduce((s, r) => s + r.h, 0), obj = 0.5 * nw * nw + C * hs;
+      const status = r => r.yf < -eps ? '判錯' : r.yf < 1 - eps ? '在間隔內' : Math.abs(r.yf - 1) < eps ? '支援向量' : '安全';
+      const minyf = Math.min(...rows.map(r => r.yf));
+      out.innerHTML =
+        `<p>‖w‖ = √(${fmt(w1)}² + ${fmt(w2)}²) = <span class="k">${fmt(nw)}</span>，margin = 2 ÷ ‖w‖ = <b class="k">${fmt(2 / nw)}</b></p>` +
+        '<div class="tbl"><table><thead><tr><th>點</th><th>y</th><th>f(x)</th><th>y · f</th><th>hinge</th><th>狀態</th></tr></thead><tbody>' +
+        rows.map(r => `<tr><td>(${fmt(r.x1)}, ${fmt(r.x2)})</td><td>${r.y}</td><td>${fmt(r.f)}</td><td>${fmt(r.yf)}</td><td>${fmt(r.h)}</td><td${r.yf < 1 - eps ? ' class="hl"' : ''}>${status(r)}</td></tr>`).join('') +
+        '</tbody></table></div>' +
+        `<p>Σhinge = <span class="k">${fmt(hs)}</span>；目標值 ½‖w‖² + C × Σhinge = ${fmt(0.5 * nw * nw)} + ${fmt(C)} × ${fmt(hs)} = <b class="k">${fmt(obj)}</b></p>` +
+        (minyf > 1 + eps ? `<p class="note">最近的點 y · f = ${fmt(minyf)} &gt; 1：這條線還能把 w 縮小 ${fmt(minyf)} 倍讓間隔更寬（w、b 同除以 ${fmt(minyf)}）。</p>` : '');
+      draw(rows, w1, w2, b);
+    }
+    function draw(rows, w1, w2, b) {
+      svg.innerHTML = '';
+      const W = 360, H = 240, P = 24;
+      let [x0, x1, y0, y1] = [Math.min(...rows.map(r => r.x1)), Math.max(...rows.map(r => r.x1)), Math.min(...rows.map(r => r.x2)), Math.max(...rows.map(r => r.x2))];
+      const span = Math.max(x1 - x0, y1 - y0, 1) * 0.6, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      x0 = cx - span * 1.5; x1 = cx + span * 1.5; y0 = cy - span; y1 = cy + span;
+      const sx = v => P + (v - x0) / (x1 - x0) * (W - 2 * P), sy = v => H - P - (v - y0) / (y1 - y0) * (H - 2 * P);
+      el('rect', { x: P, y: P, width: W - 2 * P, height: H - 2 * P, fill: 'none', class: 'ax' }, svg);
+      const clip = el('clipPath', { id: 'svm-clip' }, svg); el('rect', { x: P, y: P, width: W - 2 * P, height: H - 2 * P }, clip);
+      const g = el('g', { 'clip-path': 'url(#svm-clip)' }, svg);
+      const add = (tag, attrs) => el(tag, attrs, g);
+      // 畫 w1·x1 + w2·x2 + b = c 的線，在繪圖範圍內取兩端點
+      const lineG = (c, attrs) => {
+        let pA, pB;
+        if (Math.abs(w2) > 1e-9) { pA = [x0, (c - b - w1 * x0) / w2]; pB = [x1, (c - b - w1 * x1) / w2]; }
+        else { pA = [(c - b) / w1, y0]; pB = [(c - b) / w1, y1]; }
+        add('line', { x1: sx(pA[0]), y1: sy(pA[1]), x2: sx(pB[0]), y2: sy(pB[1]), ...attrs });
+      };
+      lineG(0, { class: 'fit' }); lineG(1, { class: 'res' }); lineG(-1, { class: 'res' });
+      rows.forEach(r => {
+        const c = add('circle', { cx: sx(r.x1), cy: sy(r.x2), r: 5.5, style: `fill: ${r.y === 1 ? 'var(--accent)' : 'var(--mark)'}` });
+        if (r.yf < 1 - 1e-9) c.setAttribute('style', c.getAttribute('style') + '; stroke: var(--bad); stroke-width: 3');
+        else if (Math.abs(r.yf - 1) < 1e-9) c.setAttribute('style', c.getAttribute('style') + '; stroke: var(--fg); stroke-width: 2');
+      });
+    }
+    box.querySelectorAll('input, textarea').forEach(e => e.addEventListener('input', run));
+    box.querySelectorAll('[data-w1]').forEach(btn => btn.addEventListener('click', () => {
+      inp('w1').value = btn.dataset.w1; inp('w2').value = btn.dataset.w2; inp('b').value = btn.dataset.b;
+      ta.value = btn.dataset.add ? base + '\n' + btn.dataset.add : base;
+      run();
+    }));
+    run();
+  })();
+  /* ---------- 朴素貝氏 ---------- */
+  (function nb() {
+    const box = document.getElementById('calc-nb');
+    if (!box) return;
+    const ta = box.querySelector('textarea'), out = box.querySelector('.out');
+    const inp = k => box.querySelector(`[data-k="${k}"]`);
+    function run() {
+      const ns = +inp('ns').value, nh = +inp('nh').value, a = +inp('a').value;
+      const words = ta.value.split(/\n/).map(l => l.trim()).filter(Boolean).map(l => l.split(/\s*,\s*/));
+      if (!(ns >= 1 && nh >= 1 && a >= 0)) { out.innerHTML = '<p class="err">信件數至少 1，α 不能是負數。</p>'; return; }
+      const bad = words.find(w => w.length !== 4 || ![1, 2, 3].every(i => Number.isFinite(+w[i])) || !(w[3] === '0' || w[3] === '1'));
+      if (bad) { out.innerHTML = '<p class="err">每一行要是「字, 垃圾封數, 正常封數, 1 或 0」。</p>'; return; }
+      const over = words.find(w => +w[1] > ns || +w[2] > nh || +w[1] < 0 || +w[2] < 0);
+      if (over) { out.innerHTML = `<p class="err">「${over[0]}」的出現封數不能超過該類的信件數，也不能是負數。</p>`; return; }
+      const used = words.filter(w => w[3] === '1');
+      const ps = ns / (ns + nh), ph = nh / (ns + nh);
+      const lik = (c, n) => (c + a) / (n + 2 * a);
+      let ss = ps, sh = ph;
+      const rows = used.map(w => { const ls = lik(+w[1], ns), lh = lik(+w[2], nh); ss *= ls; sh *= lh; return { w: w[0], cs: +w[1], ch: +w[2], ls, lh }; });
+      const tot = ss + sh;
+      out.innerHTML =
+        `<p>先驗：P(垃圾) = ${ns}/${ns + nh} = <span class="k">${fmt(ps)}</span>，P(正常) = ${nh}/${ns + nh} = <span class="k">${fmt(ph)}</span></p>` +
+        (rows.length ? '<div class="tbl"><table><thead><tr><th>新信中的字</th><th>P(字 | 垃圾)</th><th>P(字 | 正常)</th></tr></thead><tbody>' +
+          rows.map(r => `<tr><td>${r.w}</td><td>(${r.cs} + ${fmt(a)}) / (${ns} + ${fmt(2 * a)}) = ${fmt(r.ls)}</td><td>(${r.ch} + ${fmt(a)}) / (${nh} + ${fmt(2 * a)}) = ${fmt(r.lh)}</td></tr>`).join('') +
+          '</tbody></table></div>' : '<p>新信沒有勾選任何字，只能用先驗判斷。</p>') +
+        `<p>垃圾分數 = ${[fmt(ps)].concat(rows.map(r => fmt(r.ls))).join(' × ')} = <span class="k">${fmt(ss, 5)}</span></p>` +
+        `<p>正常分數 = ${[fmt(ph)].concat(rows.map(r => fmt(r.lh))).join(' × ')} = <span class="k">${fmt(sh, 5)}</span></p>` +
+        (tot === 0 ? '<p class="err">兩類分數都是 0，無法判斷，請把 α 調大。</p>' :
+          `<p>P(垃圾 | 這封信) = ${fmt(ss, 5)} ÷ (${fmt(ss, 5)} + ${fmt(sh, 5)}) = <b class="k">${fmt(ss / tot)}</b> → 判為 <b>${ss >= sh ? '垃圾信' : '正常信'}</b></p>`) +
+        (rows.some(r => r.ls === 0 || r.lh === 0) ? '<p class="hl">有機率等於 0 的項，整個分數被歸零。試試把 α 改成 1。</p>' : '');
+    }
+    box.querySelectorAll('input, textarea').forEach(e => e.addEventListener('input', run));
+    box.querySelectorAll('[data-preset]').forEach(btn => btn.addEventListener('click', () => { ta.value = btn.dataset.preset; inp('a').value = 0; inp('ns').value = 4; inp('nh').value = 6; run(); }));
+    run();
+  })();
+  /* ---------- 決策樹切分 ---------- */
+  (function tree() {
+    const box = document.getElementById('calc-tree');
+    if (!box) return;
+    const out = box.querySelector('.out');
+    const ins = [...box.querySelectorAll('input[data-k]')].sort((a, b) => a.dataset.k - b.dataset.k);
+    const gini = (a, b) => { const n = a + b; return n ? 1 - (a / n) ** 2 - (b / n) ** 2 : 0; };
+    const ent = (a, b) => { const n = a + b; return n ? -[a, b].filter(v => v > 0).reduce((s, v) => s + v / n * Math.log2(v / n), 0) : 0; };
+    function split(v) {
+      const [la, lb, ra, rb] = v, nl = la + lb, nr = ra + rb, n = nl + nr;
+      return { nl, nr, n, gl: gini(la, lb), gr: gini(ra, rb), hl: ent(la, lb), hr: ent(ra, rb),
+        g: (nl * gini(la, lb) + nr * gini(ra, rb)) / n, h: (nl * ent(la, lb) + nr * ent(ra, rb)) / n };
+    }
+    function run() {
+      const v = ins.map(i => +i.value);
+      if (v.some(x => !Number.isInteger(x) || x < 0)) { out.innerHTML = '<p class="err">每格要是 0 以上的整數。</p>'; return; }
+      const s1 = v.slice(0, 4), s2 = v.slice(4);
+      const pa = s1[0] + s1[2], pb = s1[1] + s1[3];
+      if (pa + pb === 0) { out.innerHTML = '<p class="err">至少要有一筆資料。</p>'; return; }
+      const warn = (s2[0] + s2[2] !== pa || s2[1] + s2[3] !== pb) ? '<p class="err">兩種切法的「是」「否」總數不同，它們不是同一個父節點的切法；下面仍各自計算。</p>' : '';
+      const pg = gini(pa, pb), ph = ent(pa, pb);
+      const r = [split(s1), split(s2)];
+      const best = r[0].g < r[1].g - 1e-12 ? 0 : r[1].g < r[0].g - 1e-12 ? 1 : -1;
+      out.innerHTML = warn +
+        `<p>父節點（依切法 1）：是 ${pa}、否 ${pb}，Gini = <span class="k">${fmt(pg)}</span>，熵 = <span class="k">${fmt(ph)}</span></p>` +
+        '<div class="tbl"><table><thead><tr><th></th><th>左 Gini</th><th>右 Gini</th><th>切後 Gini</th><th>Gini 增益</th><th>左熵</th><th>右熵</th><th>資訊增益</th></tr></thead><tbody>' +
+        r.map((x, i) => `<tr${best === i ? ' style="font-weight:700"' : ''}><td>切法 ${i + 1}</td><td>${fmt(x.gl)}</td><td>${fmt(x.gr)}</td><td>${fmt(x.g)}</td><td>${fmt(pg - x.g)}</td><td>${fmt(x.hl)}</td><td>${fmt(x.hr)}</td><td>${fmt(ph - x.h)}</td></tr>`).join('') +
+        '</tbody></table></div>' +
+        `<p>${best === -1 ? '兩種切法一樣好。' : `樹會選 <b>切法 ${best + 1}</b>（切後 Gini 較低、增益較大）。`}</p>`;
+    }
+    ins.forEach(i => i.addEventListener('input', run));
+    box.querySelectorAll('[data-v]').forEach(btn => btn.addEventListener('click', () => { btn.dataset.v.split(',').forEach((x, i) => { ins[i].value = x; }); run(); }));
+    run();
+  })();
+  /* ---------- 隨機森林 ---------- */
+  (function rf() {
+    const box = document.getElementById('calc-rf');
+    if (!box) return;
+    const out = box.querySelector('.out'), svg = box.querySelector('svg');
+    const inp = k => box.querySelector(`[data-k="${k}"]`), show = k => box.querySelector(`[data-show="${k}"]`);
+    const comb = (n, k) => { let r = 1; for (let i = 1; i <= k; i++) r = r * (n - k + i) / i; return r; };
+    const maj = (p, B) => { let s = 0; for (let m = Math.floor(B / 2) + 1; m <= B; m++) s += comb(B, m) * p ** m * (1 - p) ** (B - m); return s; };
+    function run() {
+      const B = +inp('B').value, rho = +inp('rho').value, s2 = +inp('s2').value, p = +inp('p').value;
+      show('B').textContent = B; show('rho').textContent = fmt(rho, 2); show('p').textContent = fmt(p, 2);
+      if (!(s2 >= 0)) { out.innerHTML = '<p class="err">σ² 不能是負數。</p>'; return; }
+      const v = rho * s2 + (1 - rho) * s2 / B;
+      out.innerHTML =
+        `<p>Var = ρσ² + (1 − ρ)σ²/B = ${fmt(rho, 2)} × ${fmt(s2)} + ${fmt(1 - rho, 2)} × ${fmt(s2)} ÷ ${B} = <b class="k">${fmt(v)}</b></p>` +
+        `<p>下限（樹無限多時）：ρσ² = <span class="k">${fmt(rho * s2)}</span>；和單棵樹相比，變異數剩 <b>${fmt(s2 ? v / s2 * 100 : 0, 1)}%</b></p>` +
+        `<p>單棵判對 ${fmt(p, 2)}，${B} 棵獨立的樹多數決判對：<b class="k">${fmt(maj(p, B))}</b>${p < 0.5 ? '（單棵比亂猜差，越投越錯）' : ''}</p>`;
+      draw(rho, s2, B);
+    }
+    function draw(rho, s2, B) {
+      svg.innerHTML = '';
+      const W = 360, H = 240, P = 30, Bmax = 101, top = Math.max(s2, 1e-9);
+      const sx = b => P + (b - 1) / (Bmax - 1) * (W - 2 * P), sy = v => H - P - v / top * (H - 2 * P);
+      el('line', { x1: P, y1: H - P, x2: W - P, y2: H - P, class: 'ax' }, svg);
+      el('line', { x1: P, y1: P, x2: P, y2: H - P, class: 'ax' }, svg);
+      el('text', { x: W - P, y: H - 10, 'text-anchor': 'end' }, svg).textContent = 'B';
+      el('text', { x: 8, y: P - 10 }, svg).textContent = 'Var';
+      let d = '';
+      for (let b = 1; b <= Bmax; b++) d += (b > 1 ? 'L' : 'M') + sx(b).toFixed(1) + ' ' + sy(rho * s2 + (1 - rho) * s2 / b).toFixed(1);
+      el('path', { d, class: 'fit', fill: 'none' }, svg);
+      el('line', { x1: P, y1: sy(rho * s2), x2: W - P, y2: sy(rho * s2), class: 'res' }, svg);
+      el('circle', { cx: sx(B), cy: sy(rho * s2 + (1 - rho) * s2 / B), r: 5, class: 'pt' }, svg);
+    }
+    box.querySelectorAll('input').forEach(e => e.addEventListener('input', run));
+    run();
+  })();
+  /* ---------- 梯度提升（stump） ---------- */
+  (function gb() {
+    const box = document.getElementById('calc-gb');
+    if (!box) return;
+    const ta = box.querySelector('textarea'), out = box.querySelector('.out'), svg = box.querySelector('svg');
+    const inp = k => box.querySelector(`[data-k="${k}"]`);
+    // 在排序好的 x 上找 SSE 最小的切點，兩邊輸出各自殘差的平均
+    function stump(xs, res) {
+      let best = null;
+      for (let i = 1; i < xs.length; i++) {
+        if (xs[i] === xs[i - 1]) continue;
+        const L = res.slice(0, i), R = res.slice(i);
+        const mL = L.reduce((s, v) => s + v, 0) / L.length, mR = R.reduce((s, v) => s + v, 0) / R.length;
+        const s = L.reduce((a, v) => a + (v - mL) ** 2, 0) + R.reduce((a, v) => a + (v - mR) ** 2, 0);
+        if (!best || s < best.s - 1e-12) best = { s, t: (xs[i - 1] + xs[i]) / 2, mL, mR };
+      }
+      return best;
+    }
+    function run() {
+      const eta = +inp('eta').value, M = Math.round(+inp('m').value);
+      const pts = parsePoints(ta.value);
+      if (!(eta > 0) || !(M >= 1 && M <= 200)) { out.innerHTML = '<p class="err">η 要大於 0，輪數在 1～200 之間。</p>'; svg.innerHTML = ''; return; }
+      if (pts.length < 2 || pts.some(p => p.length !== 2 || p.some(v => !Number.isFinite(v)))) { out.innerHTML = '<p class="err">每一行要是「x, y」兩個數字，至少兩行。</p>'; svg.innerHTML = ''; return; }
+      pts.sort((a, b) => a[0] - b[0]);
+      const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+      if (new Set(xs).size < 2) { out.innerHTML = '<p class="err">至少要有兩個不同的 x 才能切分。</p>'; svg.innerHTML = ''; return; }
+      const sse = F => ys.reduce((s, y, i) => s + (y - F[i]) ** 2, 0);
+      const yb = ys.reduce((s, v) => s + v, 0) / ys.length;
+      let F = ys.map(() => yb);
+      const stumps = [], hist = [{ m: 0, F: F.slice(), sse: sse(F) }];
+      for (let m = 1; m <= M; m++) {
+        const res = ys.map((y, i) => y - F[i]), st = stump(xs, res);
+        const h = xs.map(x => x < st.t ? st.mL : st.mR);
+        F = F.map((f, i) => f + eta * h[i]);
+        stumps.push(st);
+        hist.push({ m, res, st, h, F: F.slice(), sse: sse(F) });
+      }
+      const head = '<tr><th>x</th>' + xs.map(x => `<th>${fmt(x)}</th>`).join('') + '<th>SSE</th></tr>';
+      const line = (label, arr, extra = '') => `<tr><td>${label}</td>${arr.map(v => `<td>${fmt(v, 3)}</td>`).join('')}<td>${extra}</td></tr>`;
+      let body = line('y', ys) + line('F<sub>0</sub> = ȳ', hist[0].F, `<b>${fmt(hist[0].sse, 3)}</b>`);
+      hist.slice(1, 9).forEach(hh => {
+        body += line(`第 ${hh.m} 輪殘差`, hh.res) + line(`h<sub>${hh.m}</sub>（切在 ${fmt(hh.st.t)}）`, hh.h) + line(`F<sub>${hh.m}</sub>`, hh.F, `<b>${fmt(hh.sse, 3)}</b>`);
+      });
+      out.innerHTML =
+        `<p>F<sub>0</sub> = ȳ = <span class="k">${fmt(yb)}</span>；每輪 F<sub>m</sub> = F<sub>m−1</sub> + ${fmt(eta)} × h<sub>m</sub></p>` +
+        `<div class="tbl"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>` +
+        (M > 8 ? `<p>SSE 隨輪數：${hist.filter(hh => [0, 1, 2, 5, 10, 20, 50, 100, 200, M].includes(hh.m)).map(hh => `第 ${hh.m} 輪 ${fmt(hh.sse, 4)}`).join('、')}</p>` : '') +
+        `<p>最後 SSE = <b class="k">${fmt(hist[M].sse, 4)}</b>${hist.slice(1).some((hh, i) => hh.sse > hist[i].sse + 1e-9) ? '（有某一輪 SSE 反而上升：學習率太大）' : ''}</p>`;
+      draw(xs, ys, stumps, yb, eta);
+    }
+    function draw(xs, ys, stumps, yb, eta) {
+      svg.innerHTML = '';
+      const W = 360, H = 240, P = 30;
+      const pred = x => stumps.reduce((f, st) => f + eta * (x < st.t ? st.mL : st.mR), yb);
+      let x0 = Math.min(...xs), x1 = Math.max(...xs);
+      const px = (x1 - x0) * 0.08 || 1; x0 -= px; x1 += px;
+      const grid = []; for (let i = 0; i <= 300; i++) grid.push(x0 + (x1 - x0) * i / 300);
+      const all = ys.concat(grid.map(pred));
+      let y0 = Math.min(...all), y1 = Math.max(...all); const py = (y1 - y0) * 0.1 || 1; y0 -= py; y1 += py;
+      const sx = v => P + (v - x0) / (x1 - x0) * (W - 2 * P), sy = v => H - P - (v - y0) / (y1 - y0) * (H - 2 * P);
+      el('line', { x1: P, y1: H - P, x2: W - P, y2: H - P, class: 'ax' }, svg);
+      el('line', { x1: P, y1: P, x2: P, y2: H - P, class: 'ax' }, svg);
+      el('path', { d: grid.map((x, i) => (i ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(pred(x)).toFixed(1)).join(''), class: 'fit', fill: 'none' }, svg);
+      xs.forEach((x, i) => el('circle', { cx: sx(x), cy: sy(ys[i]), r: 4.5, class: 'pt' }, svg));
+    }
+    box.querySelectorAll('input, textarea').forEach(e => e.addEventListener('input', run));
+    box.querySelectorAll('[data-eta]').forEach(btn => btn.addEventListener('click', () => { inp('eta').value = btn.dataset.eta; inp('m').value = btn.dataset.m; run(); }));
+    run();
+  })();
+})();
+</script>
+
