@@ -605,7 +605,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula steps"><span class="fp"><span class="lbl">① 模型（同線性迴歸）</span>ŷ = β<sub>0</sub> + Σβ<sub>j</sub>x<sub>j</sub></span><span class="fp"><span class="lbl">② 方法：Ridge</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σβ<sub>j</sub>²</span><span class="fp"><span class="lbl">Lasso</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ|β<sub>j</sub>|</span><span class="fp"><span class="lbl">③ 解出來（單一特徵）</span>β<sub>Ridge</sub> = <span class="frac"><span>S<sub>xy</sub></span><span>S<sub>xx</sub> + λ</span></span></span><span class="fp">β<sub>Lasso</sub> = <span class="frac"><span>sign(S<sub>xy</sub>) · max(|S<sub>xy</sub>| − λ/2, 0)</span><span>S<sub>xx</sub></span></span></span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型（線性迴歸的多特徵版）</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x<sub>1</sub> + ⋯ + β<sub>p</sub>x<sub>p</sub> = β<sub>0</sub> + Σβ<sub>j</sub>x<sub>j</sub></span><span class="fp"><span class="lbl">② 方法：Ridge</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σβ<sub>j</sub>²</span><span class="fp"><span class="lbl">Lasso</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ|β<sub>j</sub>|</span><span class="fp"><span class="lbl">③ 解出來（單一特徵）</span>β<sub>Ridge</sub> = <span class="frac"><span>S<sub>xy</sub></span><span>S<sub>xx</sub> + λ</span></span></span><span class="fp">β<sub>Lasso</sub> = <span class="frac"><span>sign(S<sub>xy</sub>) · max(|S<sub>xy</sub>| − λ/2, 0)</span><span>S<sub>xx</sub></span></span></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
