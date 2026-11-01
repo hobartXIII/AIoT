@@ -35,6 +35,7 @@ th { background: var(--soft); white-space: nowrap; }
 .cm div { border: 1px solid var(--line); padding: .3mm; }
 .cm .h { border: 0; color: var(--muted); }
 .note { color: var(--muted); font-size: 8.3pt; }
+.st { font-family: "Noto Sans TC", sans-serif; font-size: 7.2pt; font-weight: 700; color: var(--accent); margin-right: .8mm; }
 sub, sup { font-size: 70%; line-height: 0; }
 @media print {
   body { background: #fff; }
@@ -52,14 +53,14 @@ sub, sup { font-size: 70%; line-height: 0; }
 
 <!-- ======================= 正面：公式與符號 ======================= -->
 <section class="sheet" id="front">
-  <h1>Quiz 1 監督式學習・正面：公式與符號 <small>MLP、LDA 不考｜<span class="k">橘字</span> = 必背數字或方向</small></h1>
+  <h1>Quiz 1 監督式學習・正面：公式與符號 <small>MLP、LDA 不考｜<span class="k">橘字</span> = 必背數字或方向｜<span class="st">①模型</span><span class="st">②方法</span><span class="st">③解</span><span class="st">④評估／預測</span></small></h1>
   <div class="grid">
 
     <div class="box">
       <h2>① 線性迴歸 <span class="t">回歸｜參數模型</span></h2>
-      <div class="f">ŷ = β<sub>0</sub> + β<sub>1</sub>x；min SSE = Σ(y − ŷ)²</div>
-      <div class="f">β<sub>1</sub> = Σ(x−x̄)(y−ȳ) ÷ Σ(x−x̄)²；β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</div>
-      <div class="f">R² = 1 − SSE/SST，SST = Σ(y − ȳ)²</div>
+      <div class="f"><span class="st">①</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x；<span class="st">②</span>min SSE = Σ(y − ŷ)²</div>
+      <div class="f"><span class="st">③</span>β<sub>1</sub> = Σ(x−x̄)(y−ȳ) ÷ Σ(x−x̄)²；β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</div>
+      <div class="f"><span class="st">④</span>R² = 1 − SSE/SST，SST = Σ(y − ȳ)²</div>
       <ul>
         <li>直線必過 (x̄, ȳ)；殘差 e = y − ŷ</li>
         <li><span class="k">SST = SSR + SSE</span>（總變異 = 已解釋 + 沒解釋），SSR = Σ(ŷ − ȳ)²；R² = SSR/SST</li>
@@ -71,9 +72,9 @@ sub, sup { font-size: 70%; line-height: 0; }
 
     <div class="box">
       <h2>② Ridge／Lasso <span class="t">回歸｜正則化</span></h2>
-      <div class="f">Ridge（L2）：SSE + λΣβ<sub>j</sub>²</div>
+      <div class="f"><span class="st">①同線性　②</span>Ridge（L2）：SSE + λΣβ<sub>j</sub>²</div>
       <div class="f">Lasso（L1）：SSE + λΣ|β<sub>j</sub>|</div>
-      <div class="f">單特徵：β<sub>R</sub> = S<sub>xy</sub> ÷ (S<sub>xx</sub> + λ)</div>
+      <div class="f"><span class="st">③單特徵</span>β<sub>R</sub> = S<sub>xy</sub> ÷ (S<sub>xx</sub> + λ)</div>
       <div class="f">β<sub>L</sub> = sign·max(|S<sub>xy</sub>| − λ/2, 0) ÷ S<sub>xx</sub></div>
       <ul>
         <li>Ridge 縮小但<span class="k">不會 = 0</span>；Lasso 可 = 0 → 特徵選擇</li>
@@ -85,9 +86,10 @@ sub, sup { font-size: 70%; line-height: 0; }
 
     <div class="box">
       <h2>③ 邏輯迴歸 <span class="t">分類｜輸出機率</span></h2>
-      <div class="f">z = wx + b；p = σ(z) = 1 ÷ (1 + e<sup>−z</sup>)</div>
+      <div class="f"><span class="st">①</span>z = wx + b；p = σ(z) = 1 ÷ (1 + e<sup>−z</sup>)</div>
       <div class="f">ln(p ÷ (1 − p)) = z（log-odds）</div>
-      <div class="f">L = −[y ln p + (1−y) ln(1−p)]</div>
+      <div class="f"><span class="st">②min</span>L = −[y ln p + (1−y) ln(1−p)]</div>
+      <div class="f"><span class="st">③</span>梯度下降（無公式解）　<span class="st">④</span>p ≥ 0.5 → 1</div>
       <ul>
         <li><span class="k">σ(0) = 0.5</span>；z 大的正數 → 1，大的負數 → 0</li>
         <li>邊界 z = 0 → <span class="k">x = −b ÷ w</span>，是直線（XOR 不行）</li>
@@ -111,9 +113,10 @@ sub, sup { font-size: 70%; line-height: 0; }
 
     <div class="box">
       <h2>⑤ SVM <span class="t">分類（SVR 回歸）</span></h2>
-      <div class="f">f(x) = w·x + b；ŷ = sign(f)；y ∈ {+1, −1}</div>
-      <div class="f">margin = <span class="k">2 ÷ ‖w‖</span>，‖w‖ = √(w<sub>1</sub>² + w<sub>2</sub>²)</div>
+      <div class="f"><span class="st">①</span>f(x) = w·x + b；y ∈ {+1, −1}</div>
+      <div class="f"><span class="st">②</span>margin = <span class="k">2 ÷ ‖w‖</span>，‖w‖ = √(w<sub>1</sub>² + w<sub>2</sub>²)</div>
       <div class="f">min ½‖w‖² + C·Σ max(0, 1 − y·f)</div>
+      <div class="f"><span class="st">③</span>數值最佳化　<span class="st">④</span>ŷ = sign(f)</div>
       <ul>
         <li>y·f = 1：支援向量；&lt; 1：在間隔內；&lt; 0：判錯</li>
         <li><span class="k">C 大 → 間隔窄、過擬合</span>；C 小 → 容許違規</li>
