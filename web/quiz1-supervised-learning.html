@@ -427,7 +427,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula steps"><span class="fp"><span class="lbl">① 模型</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x</span><span class="fp"><span class="lbl">② 方法：最小平方法（OLS）</span><span class="txt">找 β<sub>0</sub>、β<sub>1</sub>，使</span> SSE = Σ(y<sub>i</sub> − (β<sub>0</sub> + β<sub>1</sub>x<sub>i</sub>))² <span class="txt">最小</span></span><span class="fp"><span class="lbl">③ 解出來：斜率</span>β<sub>1</sub> = <span class="frac"><span>Σ(x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ)</span><span>Σ(x<sub>i</sub> − x̄)²</span></span></span><span class="fp"><span class="lbl">截距</span>β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</span><span class="fp"><span class="lbl">④ 評估</span>R² = 1 − <span class="frac"><span>SSE</span><span>SST</span></span></span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x</span><span class="fp"><span class="lbl">② 方法：最小平方法（OLS）</span><span class="txt">找</span> β<sub>0</sub>、β<sub>1</sub><span class="txt">，使</span> SSE = Σ(y<sub>i</sub> − (β<sub>0</sub> + β<sub>1</sub>x<sub>i</sub>))² <span class="txt">最小</span></span><span class="fp"><span class="lbl">③ 解出來：斜率</span>β<sub>1</sub> = <span class="frac"><span>Σ(x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ)</span><span>Σ(x<sub>i</sub> − x̄)²</span></span></span><span class="fp"><span class="lbl">截距</span>β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</span><span class="fp"><span class="lbl">④ 評估</span>R² = 1 − <span class="frac"><span>SSE</span><span>SST</span></span></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -774,7 +774,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula steps"><span class="fp"><span class="lbl">① 模型：分數</span>z = wx + b</span><span class="fp"><span class="lbl">機率</span>p = σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span></span><span class="fp"><span class="lbl">② 方法：最小化 log-loss</span>L = −[ y ln p + (1 − y) ln(1 − p) ]</span><span class="fp"><span class="lbl">③ 解出來</span><span class="txt">沒有公式解 → 梯度下降反覆更新 w、b</span></span><span class="fp"><span class="lbl">④ 預測</span>ŷ = 1 若 p ≥ 0.5</span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型：分數</span>z = wx + b</span><span class="fp"><span class="lbl">機率</span>p = σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span></span><span class="fp"><span class="lbl">② 方法：最小化 log-loss</span>L = −[ y ln p + (1 − y) ln(1 − p) ]</span><span class="fp"><span class="lbl">③ 解出來</span><span class="txt">沒有公式解 → 梯度下降反覆更新</span> w、b</span><span class="fp"><span class="lbl">④ 預測</span>ŷ = 1 <span class="txt">若</span> p ≥ 0.5</span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -959,7 +959,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula steps"><span class="fp"><span class="lbl">① 前處理：Min-Max 標準化（每個特徵各自算，最先做）</span>x′ = <span class="frac"><span>x − min</span><span>max − min</span></span></span><span class="fp"><span class="lbl">② 算距離：歐氏距離（新點 q 到每一筆訓練資料 p）</span>d(p, q) = √[ (p<sub>1</sub> − q<sub>1</sub>)² + (p<sub>2</sub> − q<sub>2</sub>)² + ⋯ ]</span><span class="fp"><span class="lbl">③ 找鄰居</span><span class="txt">依距離由近到遠排序，取前 k 筆</span></span><span class="fp"><span class="lbl">④ 預測：分類</span>ŷ = <span class="txt">前 k 筆中最多的類別（多數決）</span></span><span class="fp"><span class="lbl">回歸</span>ŷ = <span class="txt">前 k 筆 y 的平均</span></span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 前處理：Min-Max 標準化（每個特徵各自算，最先做）</span>x′ = <span class="frac"><span>x − min</span><span>max − min</span></span></span><span class="fp"><span class="lbl">② 算距離：歐氏距離（新點 q 到每一筆訓練資料 p）</span>d(p, q) = √[ (p<sub>1</sub> − q<sub>1</sub>)² + (p<sub>2</sub> − q<sub>2</sub>)² + ⋯ ]</span><span class="fp"><span class="lbl">③ 找鄰居</span><span class="txt">依距離由近到遠排序，取前</span> k <span class="txt">筆</span></span><span class="fp"><span class="lbl">④ 預測：分類</span>ŷ = <span class="txt">前</span> k <span class="txt">筆中最多的類別（多數決）</span></span><span class="fp"><span class="lbl">回歸</span>ŷ = <span class="txt">前</span> k <span class="txt">筆</span> y <span class="txt">的平均</span></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -1108,7 +1108,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula steps"><span class="fp"><span class="lbl">① 模型：分隔線</span>f(x) = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + b</span><span class="fp"><span class="lbl">② 方法：間隔最大</span>margin = <span class="frac"><span>2</span><span>‖w‖</span></span>，‖w‖ = √(w<sub>1</sub>² + w<sub>2</sub>²) <span class="txt">→ 間隔最大 ⇔ ‖w‖ 最小</span></span><span class="fp"><span class="lbl">軟間隔目標</span>min ½‖w‖² + C Σ max(0, 1 − y<sub>i</sub> f(x<sub>i</sub>))</span><span class="fp"><span class="lbl">③ 解出來</span><span class="txt">沒有簡單的公式解 → 用數值最佳化求 w、b；結果只由支援向量（y · f = 1 的點）決定</span></span><span class="fp"><span class="lbl">④ 預測</span>ŷ = sign(f(x))</span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型：分隔線</span>f(x) = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + b</span><span class="fp"><span class="lbl">② 方法：間隔最大</span>margin = <span class="frac"><span>2</span><span>‖w‖</span></span></span><span class="fp"><span class="lbl">其中</span>‖w‖ = √(w<sub>1</sub>² + w<sub>2</sub>²)</span><span class="fp"><span class="lbl">所以</span><span class="txt">間隔最大</span> ⇔ ‖w‖ <span class="txt">最小</span></span><span class="fp"><span class="lbl">軟間隔目標</span>min ½‖w‖² + C Σ max(0, 1 − y<sub>i</sub> f(x<sub>i</sub>))</span><span class="fp"><span class="lbl">③ 解出來</span><span class="txt">沒有簡單的公式解 → 用數值最佳化求</span> w、b<span class="txt">；結果只由支援向量（</span>y · f = 1<span class="txt"> 的點）決定</span></span><span class="fp"><span class="lbl">④ 預測</span>ŷ = sign(f(x))</span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
