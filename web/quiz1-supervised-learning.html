@@ -1055,7 +1055,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula"><span class="fp"><span class="lbl">分隔線</span>f(x) = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + b</span><span class="fp"><span class="lbl">判定</span>ŷ = sign(f(x))</span><span class="fp"><span class="lbl">間隔</span>margin = <span class="frac"><span>2</span><span>‖w‖</span></span>，‖w‖ = √(w<sub>1</sub>² + w<sub>2</sub>²)</span><span class="fp"><span class="lbl">目標（軟間隔）</span>min ½‖w‖² + C Σ max(0, 1 − y<sub>i</sub> f(x<sub>i</sub>))</span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型：分隔線</span>f(x) = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + b</span><span class="fp"><span class="lbl">② 方法：間隔最大</span>margin = <span class="frac"><span>2</span><span>‖w‖</span></span>，‖w‖ = √(w<sub>1</sub>² + w<sub>2</sub>²) <span class="txt">→ 間隔最大 ⇔ ‖w‖ 最小</span></span><span class="fp"><span class="lbl">軟間隔目標</span>min ½‖w‖² + C Σ max(0, 1 − y<sub>i</sub> f(x<sub>i</sub>))</span><span class="fp"><span class="lbl">③ 解出來</span><span class="txt">沒有簡單的公式解 → 用數值最佳化求 w、b；結果只由支援向量（y · f = 1 的點）決定</span></span><span class="fp"><span class="lbl">④ 預測</span>ŷ = sign(f(x))</span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -1073,7 +1073,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">C</td><td>對違規點的懲罰強度，自己設定的超參數；C 大 → 盡量不違規（間隔窄）；C 小 → 容許違規（間隔寬）</td><td class="nw">見「解決不了 2」</td></tr>
         </tbody>
       </table></div>
-      <p class="formal"><b>正式說明</b>：在能把兩類分開的所有直線（超平面）中，SVM 選間隔最大的一條。把 f(x) 縮放成「最近的點剛好 y · f(x) = 1」之後，間隔等於 2 ÷ ‖w‖，所以「間隔最大」等於「‖w‖ 最小」。資料分不乾淨時，加上 hinge loss 容許少數點違規（軟間隔），由 C 控制取捨。</p>
+      <p class="formal"><b>正式說明</b>：在能把兩類分開的所有直線（超平面）中，SVM 選間隔最大的一條。把 f(x) 縮放成「最近的點剛好 y · f(x) = 1」之後，間隔等於 2 ÷ ‖w‖，所以「間隔最大」等於「‖w‖ 最小」。資料分不乾淨時，加上 hinge loss 容許少數點違規（軟間隔），由 C 控制取捨。這個最佳化問題沒有像線性迴歸那樣的公式解，要用數值方法求解；解出來的分隔線只由支援向量決定，其他點移動（只要不跨進間隔）都不影響結果。</p>
       <div class="plain">
         <b>白話說明</b>
         <p>想像桌上有紅豆和綠豆兩堆，你要放一根筷子把它們分開。能分開的擺法通常有很多種，有的筷子緊貼著紅豆、有的緊貼著綠豆。哪一種最好？SVM 的答案是：<b>放在正中間、離兩堆最近的豆子都最遠的那一種</b>。這樣新的豆子即使位置稍微偏一點，也比較不會被分錯。</p>
