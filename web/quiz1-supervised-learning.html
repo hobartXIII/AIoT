@@ -967,6 +967,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">p</td><td>訓練資料中的某一點</td><td class="nw">例如 (3, 2)</td></tr>
           <tr><td class="nw">p<sub>1</sub>、q<sub>1</sub></td><td>兩點的第 1 個特徵；下標是第幾個特徵</td><td class="nw">3、2</td></tr>
           <tr><td class="nw">d(p, q)</td><td>兩點之間的直線距離；越小表示越像</td><td class="nw">(3, 2) 到 (2, 2) 是 1</td></tr>
+          <tr><td class="nw">明氏距離（Minkowski）<br>( Σ|p<sub>j</sub> − q<sub>j</sub>|<sup>r</sup> )<sup>1/r</sup></td><td>距離的通式，r 是自己選的次方：r = 1 是曼哈頓距離 Σ|p<sub>j</sub> − q<sub>j</sub>|（各軸差的絕對值相加），r = 2 就是上面的歐氏距離。用 r 是為了不和點 p 混淆</td><td class="nw">(1, 2) 到 (4, 6)：<br>r = 1 得 7、r = 2 得 5</td></tr>
           <tr><td class="nw">√</td><td>開根號</td><td class="nw">√2 = 1.414</td></tr>
           <tr><td class="nw">k</td><td>要看幾個最近的鄰居，自己設定的超參數；兩個類別時常取奇數，避免票數平手</td><td class="nw">1、3、7</td></tr>
           <tr><td class="nw">ŷ</td><td>預測結果：分類取多數類別、回歸取平均</td><td class="nw">k = 3 時為 A</td></tr>
