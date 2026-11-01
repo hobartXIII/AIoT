@@ -76,7 +76,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">β<sub>L</sub> = sign·max(|S<sub>xy</sub>| − λ/2, 0) ÷ S<sub>xx</sub></div>
       <ul>
         <li>Ridge 縮小但<span class="k">不會 = 0</span>；Lasso 可 = 0 → 特徵選擇</li>
-        <li>λ（也寫 α）<span class="k">越大越強</span>：偏差 ↑、變異 ↓，太大 → 欠擬合</li>
+        <li>λ <span class="k">越大越強</span>：偏差 ↑、變異 ↓，太大 → 欠擬合</li>
         <li><span class="k">要先標準化</span>（懲罰看係數大小）</li>
       </ul>
     </div>
@@ -232,7 +232,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <h2>超參數方向（最常考）</h2>
       <table>
         <tr><th>參數</th><th>變大會…</th></tr>
-        <tr><td>Ridge/Lasso λ（α）</td><td>正則化<span class="k">變強</span> → 欠擬合</td></tr>
+        <tr><td>Ridge/Lasso λ</td><td>正則化<span class="k">變強</span> → 欠擬合</td></tr>
         <tr><td>邏輯迴歸／SVM C</td><td>正則化<span class="k">變弱</span> → 過擬合（C 是倒數）</td></tr>
         <tr><td>SVM rbf γ</td><td>邊界更彎 → 過擬合</td></tr>
         <tr><td>KNN k</td><td>更平滑 → 欠擬合</td></tr>

@@ -709,8 +709,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <p class="note">計算器會先把 x、y 減去平均（截距不受懲罰，β<sub>0</sub> = ȳ − βx̄）。圖是係數隨 λ 變化的路徑：橘線 Ridge 慢慢趨近 0；藍線 Lasso 在 λ = 2|S<sub>xy</sub>| 時剛好變成 0。注意這裡的 λ 用的是上面公式的定義，有些教材會先把誤差除以 2n，同樣的 λ 數值效果會不同。</p>
     </div>
 
-    <div class="formula"><span class="lbl">Ridge（L2）</span>Loss = Σ (y<sub>i</sub> − ŷ<sub>i</sub>)² + α Σ β<sub>j</sub>²</div>
-    <div class="formula"><span class="lbl">Lasso（L1）</span>Loss = Σ (y<sub>i</sub> − ŷ<sub>i</sub>)² + α Σ |β<sub>j</sub>|</div>
+    <div class="formula"><span class="lbl">Ridge（L2）</span>Loss = Σ (y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ β<sub>j</sub>²</div>
+    <div class="formula"><span class="lbl">Lasso（L1）</span>Loss = Σ (y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ |β<sub>j</sub>|</div>
 
     <div class="tbl"><table>
       <thead><tr><th></th><th>Ridge（L2）</th><th>Lasso（L1）</th></tr></thead>
@@ -723,21 +723,21 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       </tbody>
     </table></div>
     <ul>
-      <li><b>α（alpha）</b>：懲罰強度。α = 0 就是普通線性迴歸；α 越大 → 係數越小 → 偏差升高、變異降低，太大會欠擬合。用交叉驗證挑。</li>
+      <li><b>λ（lambda）</b>：懲罰強度。λ = 0 就是普通線性迴歸；λ 越大 → 係數越小 → 偏差升高、變異降低，太大會欠擬合。用交叉驗證挑。</li>
       <li><b>Elastic Net</b> 同時加 L1 和 L2，用一個比例參數調整 L1 和 L2 的比重。</li>
       <li>截距 β<sub>0</sub> 不加懲罰。</li>
     </ul>
 
     <div class="pc">
       <div class="pro"><b>優點</b><ul><li>降低過擬合</li><li>Ridge 穩定共線性係數</li><li>Lasso 自動做特徵選擇</li></ul></div>
-      <div class="con"><b>缺點</b><ul><li>仍然只有線性關係</li><li>要調 α</li><li>一定要先標準化特徵</li></ul></div>
+      <div class="con"><b>缺點</b><ul><li>仍然只有線性關係</li><li>要調 λ</li><li>一定要先標準化特徵</li></ul></div>
     </div>
 
     <h4>常考陷阱</h4>
     <ul class="trap">
       <li><span>懲罰的是係數大小，特徵尺度不同時懲罰不公平，所以<b>必須先標準化</b>。</span></li>
       <li><span>記法：L<b>1</b> → 一刀砍到 0（稀疏）；L<b>2</b> → 平方，大的係數罰更多，但只縮不砍。</span></li>
-      <li><span>Ridge／Lasso 的 λ（α）越大正則化越強；邏輯迴歸、SVM 的 C 是倒數，<b>越小越強</b>。</span></li>
+      <li><span>Ridge／Lasso 的 λ 越大正則化越強；邏輯迴歸、SVM 的 C 是倒數，<b>越小越強</b>。</span></li>
     </ul>
 <div class="key3"><b>考前重點</b><ul><li><b>用途</b>：特徵很多或彼此相關時，壓住過大的係數，降低過擬合。</li><li><b>Ridge vs Lasso</b>：L2 讓係數變小但不會等於 0；L1 能把係數壓成 0，等於自動挑特徵。兩者都要先標準化。</li><li><b>最常考</b>：λ 越大正則化越強（偏差上升、變異下降）；邏輯迴歸與 SVM 的 C 方向相反，C 越小正則化越強。</li></ul></div>
   </section>
@@ -1780,7 +1780,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <thead><tr><th>演算法</th><th>任務</th><th>非線性</th><th>需要縮放</th><th>可解釋</th><th>訓練</th><th>預測</th><th>主要超參數</th></tr></thead>
       <tbody>
         <tr><td class="nw">線性迴歸</td><td>回</td><td class="c">✗</td><td class="c">✗*</td><td class="c">高</td><td>快</td><td>快</td><td>—</td></tr>
-        <tr><td class="nw">Ridge／Lasso</td><td>回</td><td class="c">✗</td><td class="c">✓</td><td class="c">高</td><td>快</td><td>快</td><td>λ（α）</td></tr>
+        <tr><td class="nw">Ridge／Lasso</td><td>回</td><td class="c">✗</td><td class="c">✓</td><td class="c">高</td><td>快</td><td>快</td><td>λ</td></tr>
         <tr><td class="nw">邏輯迴歸</td><td>分</td><td class="c">✗</td><td class="c">✓</td><td class="c">高</td><td>快</td><td>快</td><td>C、正則化類型</td></tr>
         <tr><td class="nw">KNN</td><td>兩者</td><td class="c">✓</td><td class="c">✓</td><td class="c">中</td><td>不用</td><td><b>慢</b></td><td>k、距離</td></tr>
         <tr><td class="nw">SVM</td><td>兩者</td><td class="c">✓（核）</td><td class="c">✓</td><td class="c">低</td><td><b>慢</b></td><td>中</td><td>C、γ、核函數</td></tr>
@@ -1832,7 +1832,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
         <tr><td class="nw">KNN</td><td>k <b>變小</b></td></tr>
         <tr><td class="nw">SVM</td><td>C <b>變大</b>、γ <b>變大</b></td></tr>
         <tr><td class="nw">邏輯迴歸</td><td>C <b>變大</b>（正則化變弱）</td></tr>
-        <tr><td class="nw">Ridge／Lasso</td><td>α <b>變小</b>（正則化變弱）</td></tr>
+        <tr><td class="nw">Ridge／Lasso</td><td>λ <b>變小</b>（正則化變弱）</td></tr>
         <tr><td class="nw">決策樹</td><td>max_depth <b>變大</b>、min_samples_leaf <b>變小</b></td></tr>
         <tr><td class="nw">梯度提升</td><td>n_estimators <b>變大</b>、learning_rate <b>變大</b>、max_depth <b>變大</b></td></tr>
         <tr><td class="nw">隨機森林</td><td>n_estimators 變大<b>不太會</b>；單棵樹限制越鬆才會</td></tr>
