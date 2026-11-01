@@ -62,6 +62,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">R² = 1 − SSE/SST，SST = Σ(y − ȳ)²</div>
       <ul>
         <li>直線必過 (x̄, ȳ)；殘差 e = y − ŷ</li>
+        <li><span class="k">SST = SSR + SSE</span>（總變異 = 已解釋 + 沒解釋），SSR = Σ(ŷ − ȳ)²；R² = SSR/SST</li>
         <li>假設 LINE：線性、獨立、常態、等變異</li>
         <li>弱點：離群值（平方放大）、曲線；<span class="k">R² 高 ≠ 模型對</span>，看殘差有無規律</li>
         <li>多重共線性：係數不穩，預測影響小 → VIF、Ridge</li>
@@ -78,6 +79,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>Ridge 縮小但<span class="k">不會 = 0</span>；Lasso 可 = 0 → 特徵選擇</li>
         <li>λ <span class="k">越大越強</span>：偏差 ↑、變異 ↓，太大 → 欠擬合</li>
         <li><span class="k">要先標準化</span>（懲罰看係數大小）</li>
+        <li>Ridge 用「除」；Lasso 用「減」：|S<sub>xy</sub>| 扣不過 λ/2 → <span class="k">歸零</span>；單特徵公式限特徵互不相關</li>
       </ul>
     </div>
 
@@ -180,12 +182,13 @@ sub, sup { font-size: 70%; line-height: 0; }
           <div class="f">Accuracy = (TP + TN) ÷ 全部</div>
           <div class="f">Precision = TP ÷ (TP + FP)　<span class="note">預測為正的裡面有幾成真的正</span></div>
           <div class="f">Recall = TP ÷ (TP + FN)　<span class="note">真的正的有幾成被抓到</span></div>
-          <div class="f">F1 = 2PR ÷ (P + R)　<span class="note">調和平均，≤ 算術平均</span></div>
+          <div class="f">F1 = 2PR ÷ (P + R) = 2TP ÷ (2TP + FP + FN)　<span class="note">調和平均，≤ 算術平均</span></div>
         </div>
         <div>
-          <div class="f">Specificity = TN ÷ (TN + FP)</div>
+          <div class="f">Specificity = TN ÷ (TN + FP)；FPR = 1 − Specificity</div>
           <div class="f">MAE = Σ|e| ÷ n；MSE = Σe² ÷ n；RMSE = √MSE</div>
           <div class="f">R² = 1 − SSE ÷ SST（≤ 1，可為負）</div>
+          <div class="f">Adj R² = 1 − (1 − R²)(n − 1) ÷ (n − p − 1)　<span class="note">n 筆數、p 特徵數；加沒用的特徵會降</span></div>
           <ul><li>類別不平衡 → 不看 Accuracy，看 F1、PR、ROC-AUC</li><li>怕漏抓（疾病）重 Recall；怕誤判（垃圾信）重 Precision</li></ul>
         </div>
       </div>
@@ -233,7 +236,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <table>
         <tr><th>參數</th><th>變大會…</th></tr>
         <tr><td>Ridge/Lasso λ</td><td>正則化<span class="k">變強</span> → 欠擬合</td></tr>
-        <tr><td>邏輯迴歸／SVM C</td><td>正則化<span class="k">變弱</span> → 過擬合（C 是倒數）</td></tr>
+        <tr><td>邏輯迴歸／SVM C</td><td>正則化<span class="k">變弱</span> → 過擬合（C = 1/λ，和 λ 方向相反）</td></tr>
         <tr><td>SVM rbf γ</td><td>邊界更彎 → 過擬合</td></tr>
         <tr><td>KNN k</td><td>更平滑 → 欠擬合</td></tr>
         <tr><td>樹 最大深度</td><td>更複雜 → 過擬合</td></tr>
@@ -250,15 +253,18 @@ sub, sup { font-size: 70%; line-height: 0; }
       <h2>計算步驟速記</h2>
       <ul>
         <li><b>β<sub>1</sub></b>：求 x̄、ȳ → 離差相乘加總 ÷ x 離差平方加總；β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</li>
-        <li><b>R²</b>：1 − SSE/SST</li>
+        <li><b>R²</b>：1 − SSE/SST（= SSR/SST）</li>
+        <li><b>Ridge／Lasso</b>：算 S<sub>xy</sub>、S<sub>xx</sub> → Ridge ÷ (S<sub>xx</sub> + λ)；Lasso |S<sub>xy</sub>| − λ/2，負的 → 0，否則 ÷ S<sub>xx</sub>、帶回正負號</li>
         <li><b>邏輯</b>：z → p = 1/(1+e<sup>−z</sup>) → p ≥ 0.5 判 1 → L = −ln p（y=1）</li>
         <li><b>KNN</b>：算距離 → 排序 → 前 k 名投票</li>
-        <li><b>SVM</b>：‖w‖ → 2/‖w‖；hinge 先算 y·f</li>
+        <li><b>SVM</b>：‖w‖ → 2/‖w‖；hinge 逐點 max(0, 1 − y·f) 加總 → ½‖w‖² + C·Σhinge</li>
         <li><b>貝氏</b>：先驗 × 似然（各類）→ 除以總和</li>
         <li><b>Gini 增益</b>：父 − 加權子（權重 = 筆數比例）</li>
         <li><b>RF</b>：ρσ² + (1−ρ)σ²/B；多數決 = Σ C(B,m)p<sup>m</sup>(1−p)<sup>B−m</sup></li>
         <li><b>GB</b>：r = y − F；F<sub>新</sub> = F + η·h</li>
         <li><b>F1</b>：先 P、R，再 2PR/(P+R)</li>
+        <li><b>MAE／MSE／RMSE</b>：列出 e → |e|、e² 加總 ÷ n → RMSE 開根號</li>
+        <li><b>Adj R²</b>：代入 1 − (1 − R²)(n − 1)/(n − p − 1)</li>
       </ul>
       <h2 style="margin-top:1mm">必背數字</h2>
       <ul>
@@ -267,6 +273,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>margin = 2/‖w‖；支援向量 y·f = 1</li>
         <li>Laplace：分子 +1、分母 +2（兩種情況）</li>
         <li>R² ≤ 1；F1 ≤ (P+R)/2</li>
+        <li>e ≈ 2.718；e<sup>−1</sup> ≈ 0.368（OOB 36.8%）</li>
       </ul>
     </div>
 
