@@ -160,6 +160,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 .calc { background: var(--surface); border: 1px solid var(--accent); border-radius: 10px; padding: 12px 16px 14px; margin: 12px 0 18px; }
 .teach .formula { white-space: normal; }
 .teach .formula .fp { display: inline-block; white-space: nowrap; margin-right: 28px; }
+.teach .formula.steps .fp { display: block; white-space: normal; margin-right: 0; }
+.formula .txt { font-family: var(--font-body); font-size: 15px; }
 .key3 { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--mark); border-radius: 0 8px 8px 0; padding: 8px 16px; margin: 12px 0 16px; }
 .key3 > b { color: var(--mark); }
 .key3 ul { margin: 4px 0 0; }
@@ -411,7 +413,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula"><span class="fp"><span class="lbl">斜率</span>β<sub>1</sub> = <span class="frac"><span>Σ(x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ)</span><span>Σ(x<sub>i</sub> − x̄)²</span></span></span><span class="fp"><span class="lbl">截距</span>β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</span><span class="fp"><span class="lbl">解釋力</span>R² = 1 − <span class="frac"><span>SSE</span><span>SST</span></span></span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x</span><span class="fp"><span class="lbl">② 方法：最小平方法（OLS）</span>min SSE = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)²</span><span class="fp"><span class="lbl">③ 解出來：斜率</span>β<sub>1</sub> = <span class="frac"><span>Σ(x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ)</span><span>Σ(x<sub>i</sub> − x̄)²</span></span></span><span class="fp"><span class="lbl">截距</span>β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</span><span class="fp"><span class="lbl">④ 評估</span>R² = 1 − <span class="frac"><span>SSE</span><span>SST</span></span></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -435,7 +437,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">R²</td><td>決定係數：比起只猜平均值，直線把誤差減少了幾成（0～1，越接近 1 越好）</td><td class="nw">0.963</td></tr>
         </tbody>
       </table></div>
-      <p class="formal"><b>正式說明</b>：給定 n 筆資料 (x<sub>i</sub>, y<sub>i</sub>)，找一條直線 ŷ = β<sub>0</sub> + β<sub>1</sub>x，讓所有點的殘差平方和 SSE = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² 最小。這是在「預測連續數值」的問題裡，最簡單、可以直接解出答案的模型。</p>
+      <p class="formal"><b>正式說明</b>：給定 n 筆資料 (x<sub>i</sub>, y<sub>i</sub>)，找一條直線 ŷ = β<sub>0</sub> + β<sub>1</sub>x，讓所有點的殘差平方和 SSE = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² 最小（最小平方法）。把 SSE 分別對 β<sub>0</sub>、β<sub>1</sub> 微分、令它等於 0，就能解出 ③ 的公式，不用一條一條線去試。這是在「預測連續數值」的問題裡，最簡單、可以直接解出答案的模型。</p>
       <div class="plain">
         <b>白話說明</b>
         <p>假設你蒐集了幾間房子的坪數和房價，畫在圖上是一堆散開的點。你想要一個「看坪數就能估房價」的規則。最簡單的規則就是一條直線：<b>房價 = 起始價 + 每坪單價 × 坪數</b>。起始價就是截距 β<sub>0</sub>，每坪單價就是斜率 β<sub>1</sub>。</p>
@@ -584,7 +586,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula"><span class="fp"><span class="lbl">Ridge</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σβ<sub>j</sub>²</span><span class="fp"><span class="lbl">Lasso</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ|β<sub>j</sub>|</span><span class="fp"><span class="lbl">單一特徵時的解</span>β<sub>Ridge</sub> = <span class="frac"><span>S<sub>xy</sub></span><span>S<sub>xx</sub> + λ</span></span></span><span class="fp">β<sub>Lasso</sub> = <span class="frac"><span>sign(S<sub>xy</sub>) · max(|S<sub>xy</sub>| − λ/2, 0)</span><span>S<sub>xx</sub></span></span></span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型（同線性迴歸）</span>ŷ = β<sub>0</sub> + Σβ<sub>j</sub>x<sub>j</sub></span><span class="fp"><span class="lbl">② 方法：Ridge</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σβ<sub>j</sub>²</span><span class="fp"><span class="lbl">Lasso</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ|β<sub>j</sub>|</span><span class="fp"><span class="lbl">③ 解出來（單一特徵）</span>β<sub>Ridge</sub> = <span class="frac"><span>S<sub>xy</sub></span><span>S<sub>xx</sub> + λ</span></span></span><span class="fp">β<sub>Lasso</sub> = <span class="frac"><span>sign(S<sub>xy</sub>) · max(|S<sub>xy</sub>| − λ/2, 0)</span><span>S<sub>xx</sub></span></span></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -601,7 +603,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">max(a, 0)</td><td>a 是負數就變成 0，否則保留 a；Lasso 把係數變成剛好 0 就是靠它</td><td class="nw">—</td></tr>
         </tbody>
       </table></div>
-      <p class="formal"><b>正式說明</b>：在線性迴歸的誤差後面加一個「係數大小的懲罰項」。Ridge 用係數平方（L2），會把所有係數往 0 縮但不會等於 0；Lasso 用係數絕對值（L1），會把影響小的係數直接壓成 0，等於自動做特徵選擇。λ 控制懲罰多強。上面的「單一特徵時的解」適用於特徵彼此不相關（正交）的情況，每個係數可以分開算。</p>
+      <p class="formal"><b>正式說明</b>：在線性迴歸的誤差後面加一個「係數大小的懲罰項」。Ridge 用係數平方（L2），會把所有係數往 0 縮但不會等於 0；Lasso 用係數絕對值（L1），會把影響小的係數直接壓成 0，等於自動做特徵選擇。λ 控制懲罰多強。上面 ③ 的「單一特徵」解適用於特徵彼此不相關（正交）的情況，每個係數可以分開算。一般情況下，Ridge 仍有公式解；Lasso 因為絕對值在 0 的地方不能微分，沒有公式解，要用數值方法反覆逼近。</p>
       <div class="plain">
         <b>白話說明</b>
         <p>普通的線性迴歸只在乎「誤差最小」，為了把訓練資料的每一點都擬合好，它可能給某些特徵很誇張的係數，例如 +500、−480 互相抵銷。在訓練資料上看起來很準，換一批新資料就失準，這就是過擬合。特徵很多、或特徵彼此高度相關時特別容易發生。</p>
@@ -749,7 +751,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula"><span class="fp"><span class="lbl">分數</span>z = wx + b</span><span class="fp"><span class="lbl">機率</span>p = σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span></span><span class="fp"><span class="lbl">判定</span>ŷ = 1 若 p ≥ 0.5</span><span class="fp"><span class="lbl">損失</span>L = −[ y ln p + (1 − y) ln(1 − p) ]</span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型：分數</span>z = wx + b</span><span class="fp"><span class="lbl">機率</span>p = σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span></span><span class="fp"><span class="lbl">② 方法：最小化 log-loss</span>L = −[ y ln p + (1 − y) ln(1 − p) ]</span><span class="fp"><span class="lbl">③ 解出來</span><span class="txt">沒有公式解 → 梯度下降反覆更新 w、b</span></span><span class="fp"><span class="lbl">④ 預測</span>ŷ = 1 若 p ≥ 0.5</span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -769,7 +771,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">平均 log-loss</td><td>所有資料罰分的平均，訓練要讓它最小</td><td class="nw">0.248</td></tr>
         </tbody>
       </table></div>
-      <p class="formal"><b>正式說明</b>：在二元分類問題中，給定特徵 x，估計它屬於正類（y = 1）的機率 p = σ(wx + b)，再用門檻（通常 0.5）決定類別。參數 w、b 由最小化平均 log-loss 求得。</p>
+      <p class="formal"><b>正式說明</b>：在二元分類問題中，給定特徵 x，估計它屬於正類（y = 1）的機率 p = σ(wx + b)，再用門檻（通常 0.5）決定類別。參數 w、b 由最小化平均 log-loss 求得；和線性迴歸不同，它沒有公式解，要用梯度下降之類的方法反覆更新，直到損失不再下降。</p>
       <div class="plain">
         <b>白話說明</b>
         <p>假設你想用「讀書時數」預測「考試會不會及格」。答案只有兩種：及格（1）或不及格（0）。如果直接用線性迴歸畫一條線，讀很少的人會被預測成 −0.3、讀很多的人變成 1.4，這些數字既不是 0／1，也不是機率，很難解釋。</p>
