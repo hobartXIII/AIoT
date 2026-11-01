@@ -431,6 +431,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">Σ(x<sub>i</sub> − x̄)²</td><td>x 本身的變動量，用來把上一項換算成「每 1 單位 x」</td><td class="nw">5</td></tr>
           <tr><td class="nw">SSE = Σe<sub>i</sub>²</td><td>殘差平方和（Sum of Squared Errors）：模型還沒解釋掉的誤差，線性迴歸要讓它最小</td><td class="nw">0.7</td></tr>
           <tr><td class="nw">SST = Σ(y<sub>i</sub> − ȳ)²</td><td>總平方和（Total Sum of Squares）：只用平均值 ȳ 猜所有點時的誤差，當作比較基準</td><td class="nw">18.75</td></tr>
+          <tr><td class="nw">SSR = Σ(ŷ<sub>i</sub> − ȳ)²</td><td>迴歸平方和（Regression Sum of Squares）：直線的預測值離平均多遠，也就是直線比「只猜平均」多解釋掉的部分；SST = SSR + SSE</td><td class="nw">18.05</td></tr>
           <tr><td class="nw">R²</td><td>決定係數：比起只猜平均值，直線把誤差減少了幾成（0～1，越接近 1 越好）</td><td class="nw">0.963</td></tr>
         </tbody>
       </table></div>
@@ -463,16 +464,11 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <p><span class="step">STEP 3</span>β<sub>1</sub> = 9.5 ÷ 5 = <b>1.9</b>；β<sub>0</sub> = 4.75 − 1.9 × 2.5 = <b>0</b>。直線是 <b>ŷ = 1.9x</b>。</p>
       <p><span class="step">STEP 4</span>檢查誤差：</p>
       <div class="tbl"><table>
-        <thead><tr><th>x</th><th>y</th><th>ŷ = 1.9x</th><th>殘差 e</th><th>e²</th><th>(y − ȳ)²</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>2</td><td>1.9</td><td>0.1</td><td>0.01</td><td>7.5625</td></tr>
-          <tr><td>2</td><td>4</td><td>3.8</td><td>0.2</td><td>0.04</td><td>0.5625</td></tr>
-          <tr><td>3</td><td>5</td><td>5.7</td><td>−0.7</td><td>0.49</td><td>0.0625</td></tr>
-          <tr><td>4</td><td>8</td><td>7.6</td><td>0.4</td><td>0.16</td><td>10.5625</td></tr>
-          <tr><th>合計</th><th></th><th></th><th></th><th>SSE = 0.7</th><th>SST = 18.75</th></tr>
-        </tbody>
+        <thead><tr><th>x</th><th>y</th><th>ŷ = 1.9x</th><th>殘差 e</th><th>e²</th><th>ŷ − ȳ</th><th>(ŷ − ȳ)²</th><th>(y − ȳ)²</th></tr></thead>
+        <tbody><tr><td>1</td><td>2</td><td>1.9</td><td>0.1</td><td>0.01</td><td>−2.85</td><td>8.1225</td><td>7.5625</td></tr><tr><td>2</td><td>4</td><td>3.8</td><td>0.2</td><td>0.04</td><td>−0.95</td><td>0.9025</td><td>0.5625</td></tr><tr><td>3</td><td>5</td><td>5.7</td><td>−0.7</td><td>0.49</td><td>0.95</td><td>0.9025</td><td>0.0625</td></tr><tr><td>4</td><td>8</td><td>7.6</td><td>0.4</td><td>0.16</td><td>2.85</td><td>8.1225</td><td>10.5625</td></tr><tr><td>合計</td><td></td><td></td><td></td><td>SSE = 0.7</td><td></td><td>SSR = 18.05</td><td>SST = 18.75</td></tr></tbody>
       </table></div>
       <p>R² = 1 − 0.7 ÷ 18.75 = <b>0.963</b></p>
+      <p>三者的關係：<b>SST = SSR + SSE</b>，18.75 = 18.05 + 0.7。總變異 = 直線解釋掉的 + 沒解釋到的，所以 R² 也可以寫成 SSR ÷ SST = 18.05 ÷ 18.75 ≈ 0.963，結果一樣。注意：要把所有點加總後才會相等，單看一個點的平方不一定相加得起來。</p>
       <p class="take"><b>解讀</b>：x 每多 1，y 平均多 1.9。直線把「只猜平均值」的誤差減少了 96%。殘差有正有負、大小沒有規律，表示直線的形狀是對的。</p>
     </div>
 
