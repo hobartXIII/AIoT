@@ -256,7 +256,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <h2>計算步驟速記</h2>
       <ul>
         <li><b>β<sub>1</sub></b>：求 x̄、ȳ → 離差相乘加總 ÷ x 離差平方加總；β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</li>
-        <li><b>R²</b>：1 − SSE/SST（= SSR/SST）</li>
+        <li><b>SST／SSR／SSE</b>：算 ȳ、ŷ → SST = Σ(y − ȳ)²、SSE = Σ(y − ŷ)²、SSR = Σ(ŷ − ȳ)² → 驗算 SST = SSR + SSE → R² = SSR/SST = 1 − SSE/SST</li>
         <li><b>Ridge／Lasso</b>：算 S<sub>xy</sub>、S<sub>xx</sub> → Ridge ÷ (S<sub>xx</sub> + λ)；Lasso |S<sub>xy</sub>| − λ/2，負的 → 0，否則 ÷ S<sub>xx</sub>、帶回正負號</li>
         <li><b>邏輯</b>：z → p = 1/(1+e<sup>−z</sup>) → p ≥ 0.5 判 1 → L = −ln p（y=1）</li>
         <li><b>KNN</b>：算距離 → 排序 → 前 k 名投票</li>
@@ -265,9 +265,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li><b>Gini 增益</b>：父 − 加權子（權重 = 筆數比例）</li>
         <li><b>RF</b>：ρσ² + (1−ρ)σ²/B；多數決 = Σ C(B,m)p<sup>m</sup>(1−p)<sup>B−m</sup></li>
         <li><b>GB</b>：r = y − F；F<sub>新</sub> = F + η·h</li>
-        <li><b>F1</b>：先 P、R，再 2PR/(P+R)</li>
         <li><b>MAE／MSE／RMSE</b>：列出 e → |e|、e² 加總 ÷ n → RMSE 開根號</li>
-        <li><b>Adj R²</b>：代入 1 − (1 − R²)(n − 1)/(n − p − 1)</li>
       </ul>
       <h2 style="margin-top:1mm">必背數字</h2>
       <ul>
