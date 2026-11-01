@@ -58,12 +58,12 @@ sub, sup { font-size: 70%; line-height: 0; }
 
     <div class="box">
       <h2>① 線性迴歸 <span class="t">回歸｜參數模型</span></h2>
-      <div class="f"><span class="st">①</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x；<span class="st">②</span>min SSE = Σ(y − ŷ)²</div>
+      <div class="f"><span class="st">①</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x；<span class="st">②</span>調 β 使 SSE = Σ(y − ŷ)² 最小</div>
       <div class="f"><span class="st">③</span>β<sub>1</sub> = Σ(x−x̄)(y−ȳ) ÷ Σ(x−x̄)²；β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</div>
       <div class="f"><span class="st">④</span>R² = 1 − SSE/SST，SST = Σ(y − ȳ)²</div>
       <ul>
         <li>直線必過 (x̄, ȳ)；殘差 e = y − ŷ</li>
-        <li><span class="k">SST = SSR + SSE</span>（總變異 = 已解釋 + 沒解釋），SSR = Σ(ŷ − ȳ)²；R² = SSR/SST</li>
+        <li><span class="k">SST = SSR + SSE</span>（總變異 = 已解釋 + 沒解釋），SSR = Σ(ŷ − ȳ)²；R² = SSR/SST；SSE 又稱 RSS</li>
         <li>假設 LINE：線性、獨立、常態、等變異</li>
         <li>弱點：離群值（平方放大）、曲線；<span class="k">R² 高 ≠ 模型對</span>，看殘差有無規律</li>
         <li>多重共線性：係數不穩，預測影響小 → VIF、Ridge</li>
