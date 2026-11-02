@@ -282,17 +282,7 @@ sub, sup { font-size: 70%; line-height: 0; }
     </div>
 
     <div class="box">
-      <h2>計算步驟速記</h2>
-      <ul>
-        <li><b>β<sub>1</sub></b>：求 x̄、ȳ → 離差相乘加總 ÷ x 離差平方加總；β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</li>
-        <li><b>SST／SSR／SSE</b>：算 ȳ、ŷ → SST = Σ(y − ȳ)²、SSE = Σ(y − ŷ)²、SSR = Σ(ŷ − ȳ)² → 驗算 SST = SSR + SSE → R² = 1 − SSE/SST（OLS 時 = SSR/SST）</li>
-        <li><b>邏輯</b>：z → p = 1/(1+e<sup>−z</sup>) → p ≥ 0.5 判 1 → L = −ln p（y=1）</li>
-        <li><b>KNN</b>：算距離 → 排序 → 前 k 名投票</li>
-        <li><b>SVM</b>：‖w‖ → 2/‖w‖；hinge 逐點 max(0, 1 − y·f) 加總 → ½‖w‖² + C·Σhinge</li>
-        <li class="x"><b>RF 多數決</b>：Σ C(B,m)p<sup>m</sup>(1−p)<sup>B−m</sup></li>
-        <li><b>MAE／MSE／RMSE</b>：列出 e → |e|、e² 加總 ÷ n → RMSE 開根號</li>
-      </ul>
-      <h2 style="margin-top:1mm">免計算機數值表</h2>
+      <h2>免計算機數值表</h2>
       <table class="num">
         <colgroup><col style="width:12mm"><col span="7"></colgroup>
         <tbody>
@@ -314,6 +304,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <ul>
         <li>√2 1.414、√3 1.732、√5 2.236、√8 2.828、√10 3.162</li>
         <li>C(3,2) 3、C(4,2) 6、C(5,3) 10、C(5,4) 5；ln 2 .693、e 2.718、e<sup>−1</sup> .368</li>
+        <li class="x"><b>RF 多數決</b>（B 棵、每棵對的機率 p）：P(對) = Σ<sub>m &gt; B/2</sub> C(B,m)p<sup>m</sup>(1−p)<sup>B−m</sup></li>
       </ul>
     </div>
 
