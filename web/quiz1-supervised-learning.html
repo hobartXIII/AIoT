@@ -346,7 +346,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <li>朴素貝氏也不需要，它是對每個特徵各自估計機率分布。</li>
     </ul>
     <ul class="trap">
-      <li><span><b>資料洩漏</b>（Data Leakage）：標準化的平均、標準差要只用訓練集算出，再套用到測試集。用全部資料算會讓測試分數偏高。</span></li>
+      <li><span><b>資料洩漏</b>（Data Leakage）：標準化的平均、標準差要只用訓練集算出，再套用到測試集。用全部資料算會讓測試分數偏高。不只標準化，補缺值、特徵選擇也一樣；時間序列如果用到未來的資料來訓練，也屬於資料洩漏。</span></li>
     </ul>
   </section>
 
