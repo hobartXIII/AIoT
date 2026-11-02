@@ -282,7 +282,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <h2>共通觀念與陷阱</h2>
       <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5mm">
         <ul>
-          <li><b>流程</b>：資料 → 切訓練／測試 → 前處理（只用訓練資料 fit）→ 訓練 → 驗證調參 → 測試</li>
+          <li><b>流程</b>：資料 → 切訓練／測試 → 前處理（平均、標準差只用訓練資料算）→ 訓練 → 驗證調參 → 測試</li>
           <li><b>交叉驗證</b>：K-fold 輪流當驗證集，取平均；用來選超參數</li>
           <li><b>資料洩漏</b>：先在全部資料上標準化／補值再切分 ✗</li>
         </ul>
