@@ -388,6 +388,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <ul class="trap">
       <li><span>95% 是負例的資料，模型全部猜負就有 95% Accuracy，但 Recall = 0。不平衡資料不要只看 Accuracy。</span></li>
       <li><span>Precision 和 Recall 通常此消彼長：調高分類門檻 → Precision 上升、Recall 下降。</span></li>
+      <li><span>正類非常稀少時，改看 <b>PR 曲線</b>（Precision-Recall Curve）而不是 ROC：ROC 的 FPR = FP ÷ (FP + TN)，TN 很多時，FP 增加 FPR 也幾乎不動，看起來過度樂觀；Precision 會直接反映誤報。</span></li>
     </ul>
 
     <h3>回歸指標</h3>
@@ -565,8 +566,10 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <div class="formula"><span class="lbl">OLS 目標</span>β* = arg min<sub>β</sub> Σ<sub>i</sub> (y<sub>i</sub> − ŷ<sub>i</sub>)²<span class="lbl" style="margin-left:24px">解析解</span>β = (XᵀX)<sup>−1</sup>Xᵀy</div>
     <ul>
       <li><b>普通最小平方法</b>（OLS）：最小化殘差平方和（SSE）。可以直接用解析解，也可以用梯度下降。</li>
+      <li><b>什麼時候改用梯度下降</b>：解析解要算 (XᵀX)<sup>−1</sup>，特徵數 p 很多時計算量大約跟 p³ 成正比，太慢，就改用梯度下降一步步逼近。資料量很大時，每次只用一筆或一小批資料更新，叫<b>隨機梯度下降</b>（SGD）。</li>
       <li><b>係數解讀</b>：其他特徵固定時，x<sub>j</sub> 增加 1，y 平均變化 β<sub>j</sub>。</li>
       <li>只有一個特徵叫<b>簡單線性迴歸</b>，多個特徵叫<b>多元線性迴歸</b>。</li>
+      <li><b>自迴歸 AR(p)</b>（Auto-Regression）：時間序列用<b>過去 p 期的值</b>當特徵預測下一期，y<sub>t</sub> = c + φ<sub>1</sub>y<sub>t−1</sub> + ⋯ + φ<sub>p</sub>y<sub>t−p</sub>，本質就是線性迴歸（課程 L05 的股價預測）。</li>
     </ul>
 
     <h4>基本假設（LINE）</h4>
@@ -575,7 +578,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
         <tr><td class="nw"><b>L</b>inearity</td><td>特徵與 y 呈線性關係</td></tr>
         <tr><td class="nw"><b>I</b>ndependence</td><td>誤差彼此獨立</td></tr>
         <tr><td class="nw"><b>N</b>ormality</td><td>誤差呈常態分布</td></tr>
-        <tr><td class="nw"><b>E</b>qual variance</td><td>誤差變異數固定（同質變異，Homoscedasticity）</td></tr>
+        <tr><td class="nw"><b>E</b>qual variance</td><td>誤差變異數固定（同質變異，Homoscedasticity）。違反時叫<b>異質變異</b>（Heteroscedasticity）：殘差圖呈<b>漏斗狀</b>，預測值越大殘差越散開；可以對 y 取 log 改善</td></tr>
         <tr><td class="nw">另外</td><td>特徵之間沒有嚴重的<b>多重共線性</b>（Multicollinearity）</td></tr>
       </tbody>
     </table></div>
@@ -748,6 +751,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <li><b>λ（lambda）</b>：懲罰強度。λ = 0 就是普通線性迴歸；λ 越大 → 係數越小 → 偏差升高、變異降低，太大會欠擬合。用交叉驗證挑。</li>
       <li><b>Elastic Net</b> 同時加 L1 和 L2，用一個比例參數調整 L1 和 L2 的比重。</li>
       <li>截距 β<sub>0</sub> 不加懲罰。</li>
+      <li><b>Ridge 的閉式解</b>：β = (XᵀX + λI)<sup>−1</sup>Xᵀy，比 OLS 多了 <b>+ λI</b>，所以就算特徵共線、XᵀX 不可逆也解得出來。Lasso 因為絕對值在 0 不能微分，沒有閉式解。</li>
     </ul>
 
     <div class="pc">
@@ -923,6 +927,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <li>用<b>最大概似估計</b>（MLE）求參數，等同最小化 Log Loss。沒有解析解，用梯度下降等迭代法。</li>
       <li><b>係數解讀</b>：x<sub>j</sub> 增加 1，log-odds 增加 w<sub>j</sub>，勝算（odds）變成 e<sup>w<sub>j</sub></sup> 倍。</li>
       <li><b>多類別</b>：One-vs-Rest（每類各訓練一個二元分類器）或 Softmax（Multinomial）。</li>
+      <li><b>梯度</b>：單一筆資料的 log-loss 對 w 的梯度是 <b>(p − y)x</b>，也就是「預測 − 實際」乘上特徵，形式和線性迴歸一樣。梯度下降就是 w ← w − η(p − y)x。</li>
     </ul>
 
     <h4>重要超參數</h4>
@@ -1529,6 +1534,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <ul>
       <li>選讓<b>不純度下降最多</b>（資訊增益最大）的切法。常用 Gini；CART 演算法每次切成兩支。</li>
       <li><b>回歸樹</b>：切分標準改成讓子節點的 MSE（變異）最小，葉節點預測值 = 該葉樣本的平均。</li>
+      <li>建樹是<b>貪婪演算法</b>（Greedy）：每一步只選當下增益最大的切法，選了就不回頭改，所以不保證整棵樹是最佳的（找最佳的樹太難，只能這樣近似）。</li>
     </ul>
 
     <h4>控制過擬合（剪枝）</h4>
