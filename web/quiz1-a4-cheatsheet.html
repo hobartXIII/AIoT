@@ -14,27 +14,35 @@ body { margin: 0; background: #d9dde1; font-family: "Noto Sans TC", "Microsoft J
 .tools button { font: inherit; padding: 4px 12px; border: 1px solid #888; border-radius: 6px; background: #fff; cursor: pointer; }
 .tools .fit { margin-left: auto; }
 .tools .fit.bad { color: #b23b3b; font-weight: 700; }
-.sheet { width: 210mm; height: 297mm; margin: 12px auto; padding: 6mm 6.5mm; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.2); overflow: hidden; font-size: 9.3pt; line-height: 1.32; position: relative; }
+.sheet { width: 210mm; height: 297mm; margin: 12px auto; padding: 6mm 6.5mm; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.2); overflow: hidden; font-size: 8.5pt; line-height: 1.25; position: relative; }
 .sheet h1 { font-size: 12.8pt; margin: 0 0 1.6mm; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1.5px solid var(--ink); padding-bottom: .8mm; }
 .sheet h1 small { font-size: 8.5pt; font-weight: 400; color: var(--muted); }
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.6mm; }
 .box { border: 1px solid var(--line); border-radius: 1.5mm; padding: 1.2mm 1.6mm; break-inside: avoid; }
 .box h2 { font-size: 10.2pt; margin: 0 0 .6mm; color: var(--accent); display: flex; justify-content: space-between; gap: 4px; }
 .box h2 .t { font-size: 8.3pt; font-weight: 400; color: var(--muted); }
-.f { font-family: "Times New Roman", "Noto Serif TC", serif; font-size: 10.2pt; background: var(--soft); border-radius: 1mm; padding: .3mm 1.2mm; margin: .4mm 0; }
+.f { font-family: "Times New Roman", "Noto Serif TC", serif; font-size: 9.5pt; background: var(--soft); border-radius: 1mm; padding: .3mm 1.2mm; margin: .4mm 0; }
 ul { margin: .3mm 0; padding-left: 3.2mm; }
 li { margin: 0; }
 b { font-weight: 700; }
 .k { color: var(--mark); font-weight: 700; }
 .span2 { grid-column: span 2; }
 .span3 { grid-column: span 3; }
-table { border-collapse: collapse; width: 100%; font-size: 8.9pt; line-height: 1.28; }
+table { border-collapse: collapse; width: 100%; font-size: 8.1pt; line-height: 1.28; }
 th, td { border: 1px solid var(--line); padding: .45mm .9mm; text-align: left; vertical-align: top; }
 th { background: var(--soft); white-space: nowrap; }
 .cm { display: grid; grid-template-columns: auto 1fr 1fr; gap: .4mm; text-align: center; font-size: 8.5pt; margin: .5mm 0; }
 .cm div { border: 1px solid var(--line); padding: .3mm; }
 .cm .h { border: 0; color: var(--muted); }
 .note { color: var(--muted); font-size: 8.3pt; }
+#back { font-size: 9.1pt; line-height: 1.3; }
+#back table { font-size: 8.7pt; }
+#back .num { font-size: 7.4pt; table-layout: fixed; }
+#back .num th { width: 8.6mm; }
+#back .num th, #back .num td { padding: .2mm .2mm; }
+.num { font-size: 7.8pt; margin: .4mm 0; }
+.num th, .num td { padding: .2mm .5mm; text-align: center; }
+.num th { text-align: left; }
 .st { font-family: "Noto Sans TC", sans-serif; font-size: 7.2pt; font-weight: 700; color: var(--accent); margin-right: .8mm; }
 sub, sup { font-size: 70%; line-height: 0; }
 @media print {
@@ -63,10 +71,14 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f"><span class="st">④</span>R² = 1 − SSE/SST，SST = Σ(y − ȳ)²</div>
       <ul>
         <li>直線必過 (x̄, ȳ)；殘差 e = y − ŷ</li>
+        <li>正規方程 β = (XᵀX)<sup>−1</sup>Xᵀy；特徵多 → 梯度下降／SGD</li>
+        <li>梯度下降 w ← w <span class="k">−</span> η∂L/∂w；η 太大發散</li>
+        <li>β<sub>j</sub>＝其他特徵固定時 x<sub>j</sub> +1 的變化；截距＝特徵全 0 的預測</li>
+        <li>AR(p)：過去 p 期的值當特徵，本質是線性迴歸</li>
         <li><span class="k">SST = SSR + SSE</span>，SSR = Σ(ŷ − ȳ)²；R² = SSR/SST；SSE 又稱 RSS</li>
         <li>假設 LINE：線性、獨立、常態、等變異</li>
-        <li>弱點：離群值（平方放大）、曲線；<span class="k">R² 高 ≠ 模型對／準確率</span>，看殘差規律（漏斗狀＝異質變異）</li>
-        <li>多重共線性：係數不穩，預測影響小 → VIF、Ridge</li>
+        <li>弱點：離群值、曲線；<span class="k">R² 高 ≠ 模型對／準確率</span>；殘差漏斗＝異質變異</li>
+        <li>共線性：係數不穩、預測影響小 → VIF、Ridge</li>
       </ul>
     </div>
 
@@ -78,10 +90,11 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">β<sub>L</sub> = sign·max(|S<sub>xy</sub>| − λ/2, 0) ÷ S<sub>xx</sub></div>
       <ul>
         <li>Ridge 縮小但<span class="k">不會 = 0</span>；Lasso 可 = 0 → 特徵選擇</li>
-        <li>λ <span class="k">越大越強</span>：偏差 ↑、變異 ↓，太大 → 欠擬合</li>
+        <li>λ↑ <span class="k">越強</span>：偏差↑ 變異↓，太大欠擬合</li>
         <li><span class="k">要先標準化</span>（懲罰看係數大小）</li>
-        <li>Ridge 用「除」；Lasso 用「減」：|S<sub>xy</sub>| 扣不過 λ/2 → <span class="k">歸零</span>；單特徵公式限特徵互不相關</li>
+        <li>Ridge 用除、Lasso 用減（|S<sub>xy</sub>| ≤ λ/2 → <span class="k">0</span>）；單特徵公式限特徵不相關</li>
         <li>矩陣閉式解 β = (XᵀX + λI)<sup>−1</sup>Xᵀy；Lasso 無閉式解</li>
+        <li>Elastic Net = L1 + L2；截距不罰；p &gt; n 時 OLS 無唯一解，Ridge 可解</li>
       </ul>
     </div>
 
@@ -92,9 +105,11 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f"><span class="st">②min</span>L = −[y ln p + (1−y) ln(1−p)]</div>
       <div class="f"><span class="st">③</span>梯度下降，梯度 (p − y)x　<span class="st">④</span>p ≥ 0.5 → 1</div>
       <ul>
-        <li><span class="k">σ(0) = 0.5</span>；z 大的正數 → 1，大的負數 → 0</li>
+        <li><span class="k">σ(0) = 0.5</span>；z → +∞ 得 1、−∞ 得 0</li>
         <li>邊界 z = 0 → <span class="k">x = −b ÷ w</span>，是直線（XOR 不行）</li>
-        <li>y = 1 只看 −ln p；越有把握地錯罰越重</li>
+        <li>y = 1 用 −ln p、y = 0 用 −ln(1 − p)；越有把握地錯罰越重</li>
+        <li>用 MLE 估參數（不用 MSE：非凸）；門檻↓ → Recall↑ Precision↓</li>
+        <li>多類別：One-vs-Rest 或 Softmax</li>
         <li>可分資料 w → ∞；C <span class="k">越小正則化越強</span></li><li><span class="k">勝算比</span>：x 增加 1，勝算 p/(1−p) 變 e<sup>w</sup> 倍</li>
       </ul>
     </div>
@@ -109,6 +124,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li><span class="k">k 小 → 過擬合</span>（雜訊）；k 大 → 欠擬合（多數類）</li>
         <li><span class="k">必須標準化</span>；兩類時 k 取奇數；高維度效果差</li>
         <li>距離加權：越近票越重</li>
+        <li>明氏 (Σ|p<sub>j</sub> − q<sub>j</sub>|<sup>r</sup>)<sup>1/r</sup>：r = 1 曼哈頓、r = 2 歐氏</li>
       </ul>
     </div>
 
@@ -120,6 +136,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f"><span class="st">③</span>數值最佳化　<span class="st">④</span>ŷ = sign(f)</div>
       <ul>
         <li>y·f = 1：支援向量；&lt; 1：在間隔內；&lt; 0：判錯</li>
+        <li>只有支援向量決定邊界，遠處的點移動不影響</li>
         <li><span class="k">C 大 → 間隔窄、過擬合</span>；C 小 → 容許違規</li>
         <li>核函數（poly、rbf）處理非線性；rbf 的 <span class="k">γ 大 → 過擬合</span></li>
         <li>要標準化；大資料慢</li>
@@ -134,7 +151,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <ul>
         <li>先驗 P(C)、似然 P(x|C)、後驗 P(C|x)</li>
         <li>假設：給定類別下特徵<span class="k">條件獨立</span></li>
-        <li>零頻率 → 整個乘積 = 0 → Laplace 平滑（α = 1）</li>
+        <li>零頻率 → 乘積 = 0 → Laplace（α = 1）</li>
         <li>相關特徵重複計算 → 機率過度自信；取 log 防下溢</li>
         <li>Gaussian（連續）、Multinomial（次數）、Bernoulli（有無）</li>
       </ul>
@@ -148,7 +165,8 @@ sub, sup { font-size: 70%; line-height: 0; }
       <ul>
         <li>選增益最大的切法；純節點 = 0</li>
         <li><span class="k">不需標準化</span>；可解釋（if-else）</li>
-        <li>易過擬合 → 最大深度、葉節點最少樣本數、剪枝 剪枝強度</li>
+        <li>易過擬合 → 限深度、葉節點最少樣本數、剪枝</li>
+        <li>回歸樹：MSE 最小切分、葉子取平均；CART 二元切分</li>
         <li>切線平行座標軸，斜線邊界要很多階</li>
         <li><b>貪婪</b>：每步選當下最佳切法，不保證整棵最佳</li>
       </ul>
@@ -160,9 +178,11 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">Var = ρσ² + (1 − ρ)σ² ÷ B</div>
       <ul>
         <li>bootstrap（有放回抽樣）＋每次切分隨機選特徵</li>
+        <li>每棵樹長<span class="k">深</span>（低偏差高變異）；GB 才用淺樹</li>
+        <li>每次切分常用 √p 個特徵；bootstrap 約 63.2% 不重複</li>
         <li>主要<span class="k">降變異</span>；樹平行訓練</li>
         <li>ρσ² 降不掉 → 每次切分的特徵數 小 → 樹更不像</li>
-        <li>樹多（樹的棵數）不太會過擬合，只是變慢</li>
+        <li>樹多不易過擬合，只變慢</li>
         <li>沒抽到的 <span class="k">OOB ≈ 36.8%</span>（(1−1/n)<sup>n</sup> → e<sup>−1</sup>）可估誤差；單棵比亂猜差時越投越錯</li>
       </ul>
     </div>
@@ -176,6 +196,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>學習率 η 小＋輪數多較好；<span class="k">η 太大震盪</span></li>
         <li>輪數太多 → 背下雜訊 → early stopping</li>
         <li>最大深度 淺（3～8）、樣本抽樣比例；XGBoost／LightGBM</li>
+        <li>MSE 時殘差＝負梯度；XGBoost：加正則化、缺值自動分支；LightGBM：leaf-wise＋直方圖</li>
       </ul>
     </div>
 
@@ -194,7 +215,7 @@ sub, sup { font-size: 70%; line-height: 0; }
           <div class="f">MAE = Σ|e| ÷ n；MSE = Σe² ÷ n；RMSE = √MSE</div>
           <div class="f">R² = 1 − SSE ÷ SST（≤ 1，可為負）</div>
           <div class="f">Adj R² = 1 − (1 − R²)(n − 1) ÷ (n − p − 1)　<span class="note">n 筆數、p 特徵數；加沒用的特徵會降</span></div>
-          <ul><li>類別不平衡 → 不看 Accuracy，看 F1、PR 曲線（正類很少時比 ROC 可靠）</li><li>怕漏抓（疾病）重 Recall；怕誤判（垃圾信）重 Precision</li></ul>
+          <ul><li>類別不平衡 → 不看 Accuracy，看 F1、PR 曲線（正類很少時比 ROC 可靠）</li><li>怕漏抓（疾病）重 Recall；怕誤判（垃圾信）重 Precision</li><li>ROC：x 軸 FPR、y 軸 TPR（= Recall = 靈敏度）；AUC .5 = 亂猜、1 = 完美</li></ul>
         </div>
       </div>
     </div>
@@ -259,24 +280,25 @@ sub, sup { font-size: 70%; line-height: 0; }
       <ul>
         <li><b>β<sub>1</sub></b>：求 x̄、ȳ → 離差相乘加總 ÷ x 離差平方加總；β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</li>
         <li><b>SST／SSR／SSE</b>：算 ȳ、ŷ → SST = Σ(y − ȳ)²、SSE = Σ(y − ŷ)²、SSR = Σ(ŷ − ȳ)² → 驗算 SST = SSR + SSE → R² = SSR/SST = 1 − SSE/SST</li>
-        <li><b>Ridge／Lasso</b>：算 S<sub>xy</sub>、S<sub>xx</sub> → Ridge ÷ (S<sub>xx</sub> + λ)；Lasso |S<sub>xy</sub>| − λ/2，負的 → 0，否則 ÷ S<sub>xx</sub>、帶回正負號</li>
         <li><b>邏輯</b>：z → p = 1/(1+e<sup>−z</sup>) → p ≥ 0.5 判 1 → L = −ln p（y=1）</li>
         <li><b>KNN</b>：算距離 → 排序 → 前 k 名投票</li>
         <li><b>SVM</b>：‖w‖ → 2/‖w‖；hinge 逐點 max(0, 1 − y·f) 加總 → ½‖w‖² + C·Σhinge</li>
-        <li><b>貝氏</b>：先驗 × 似然（各類）→ 除以總和</li>
-        <li><b>Gini 增益</b>：父 − 加權子（權重 = 筆數比例）</li>
-        <li><b>RF</b>：ρσ² + (1−ρ)σ²/B；多數決 = Σ C(B,m)p<sup>m</sup>(1−p)<sup>B−m</sup></li>
-        <li><b>GB</b>：r = y − F；F<sub>新</sub> = F + η·h</li>
+        <li><b>RF 多數決</b>：Σ C(B,m)p<sup>m</sup>(1−p)<sup>B−m</sup></li>
         <li><b>MAE／MSE／RMSE</b>：列出 e → |e|、e² 加總 ÷ n → RMSE 開根號</li>
       </ul>
-      <h2 style="margin-top:1mm">必背數字</h2>
+      <h2 style="margin-top:1mm">免計算機數值表</h2>
+      <table class="num">
+        <tr><th>z</th><td>−3</td><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td><td>3</td></tr>
+        <tr><th>σ(z)</th><td>.047</td><td>.119</td><td>.269</td><td>.5</td><td>.731</td><td>.881</td><td>.953</td></tr>
+        <tr><th>p</th><td>.01</td><td>.1</td><td>.2</td><td>.5</td><td>.8</td><td>.9</td><td>.99</td></tr>
+        <tr><th>−ln p</th><td>4.605</td><td>2.303</td><td>1.609</td><td>.693</td><td>.223</td><td>.105</td><td>.010</td></tr>
+        <tr><th>p</th><td>1/4</td><td>1/3</td><td>1/2</td><td>2/3</td><td>3/4</td><td>.2</td><td>.8</td></tr>
+        <tr><th>log<sub>2</sub>p</th><td>−2</td><td>−1.58</td><td>−1</td><td>−.58</td><td>−.42</td><td>−2.32</td><td>−.32</td></tr>
+      </table>
       <ul>
-        <li>σ(0) = 0.5；ln 1 = 0</li>
-        <li>Gini 兩類最大 0.5；熵兩類最大 1</li>
-        <li>margin = 2/‖w‖；支援向量 y·f = 1</li>
-        <li>Laplace：分子 +1、分母 +2（兩種情況）</li>
-        <li>R² ≤ 1；F1 ≤ (P+R)/2</li>
-        <li>e ≈ 2.718；e<sup>−1</sup> ≈ 0.368（OOB 36.8%）</li>
+        <li>√2 ≈ 1.414、√3 ≈ 1.732、√5 ≈ 2.236、√8 ≈ 2.828、√10 ≈ 3.162</li>
+        <li>C(3,2) = 3、C(4,2) = 6、C(5,2) = C(5,3) = 10、C(5,4) = 5</li>
+        <li>ln 1 = 0、ln 2 ≈ .693；e ≈ 2.718、e<sup>−1</sup> ≈ .368</li>
       </ul>
     </div>
 
@@ -286,7 +308,9 @@ sub, sup { font-size: 70%; line-height: 0; }
         <ul>
           <li><b>流程</b>：資料 → 切訓練／測試 → 前處理（平均、標準差只用訓練資料算）→ 訓練 → 驗證調參 → 測試</li>
           <li><b>交叉驗證</b>：K-fold 輪流當驗證集，取平均；用來選超參數</li>
-          <li><b>資料洩漏</b>：先在全部資料上標準化／補值再切分 ✗</li>
+          <li><b>網格搜尋</b>：窮舉超參數組合＋交叉驗證；測試集只在最後用一次</li>
+          <li><b>資料洩漏</b>：測試（或未來）資料的資訊混進訓練 → 分數<span class="k">過度樂觀</span>。例：先用全部資料算平均、補值再切分 ✗ → 應先切分，只用訓練資料算</li>
+          <li><b>時間序列</b>：依時間切分（過去訓練、未來驗證），不能打亂</li>
         </ul>
         <ul>
           <li><b>需標準化</b>：KNN、SVM、Ridge/Lasso、邏輯迴歸（看距離或係數大小）</li>
