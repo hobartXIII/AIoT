@@ -63,9 +63,9 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f"><span class="st">④</span>R² = 1 − SSE/SST，SST = Σ(y − ȳ)²</div>
       <ul>
         <li>直線必過 (x̄, ȳ)；殘差 e = y − ŷ</li>
-        <li><span class="k">SST = SSR + SSE</span>（總變異 = 已解釋 + 沒解釋），SSR = Σ(ŷ − ȳ)²；R² = SSR/SST；SSE 又稱 RSS</li>
+        <li><span class="k">SST = SSR + SSE</span>，SSR = Σ(ŷ − ȳ)²；R² = SSR/SST；SSE 又稱 RSS</li>
         <li>假設 LINE：線性、獨立、常態、等變異</li>
-        <li>弱點：離群值（平方放大）、曲線；<span class="k">R² 高 ≠ 模型對／準確率</span>，看殘差規律</li>
+        <li>弱點：離群值（平方放大）、曲線；<span class="k">R² 高 ≠ 模型對／準確率</span>，看殘差規律（漏斗狀＝異質變異）</li>
         <li>多重共線性：係數不穩，預測影響小 → VIF、Ridge</li>
       </ul>
     </div>
@@ -81,6 +81,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>λ <span class="k">越大越強</span>：偏差 ↑、變異 ↓，太大 → 欠擬合</li>
         <li><span class="k">要先標準化</span>（懲罰看係數大小）</li>
         <li>Ridge 用「除」；Lasso 用「減」：|S<sub>xy</sub>| 扣不過 λ/2 → <span class="k">歸零</span>；單特徵公式限特徵互不相關</li>
+        <li>矩陣閉式解 β = (XᵀX + λI)<sup>−1</sup>Xᵀy；Lasso 無閉式解</li>
       </ul>
     </div>
 
@@ -89,7 +90,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f"><span class="st">①</span>z = wx + b；p = σ(z) = 1 ÷ (1 + e<sup>−z</sup>)</div>
       <div class="f">ln(p ÷ (1 − p)) = z（log-odds）</div>
       <div class="f"><span class="st">②min</span>L = −[y ln p + (1−y) ln(1−p)]</div>
-      <div class="f"><span class="st">③</span>梯度下降（無公式解）　<span class="st">④</span>p ≥ 0.5 → 1</div>
+      <div class="f"><span class="st">③</span>梯度下降，梯度 (p − y)x　<span class="st">④</span>p ≥ 0.5 → 1</div>
       <ul>
         <li><span class="k">σ(0) = 0.5</span>；z 大的正數 → 1，大的負數 → 0</li>
         <li>邊界 z = 0 → <span class="k">x = −b ÷ w</span>，是直線（XOR 不行）</li>
@@ -149,6 +150,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li><span class="k">不需標準化</span>；可解釋（if-else）</li>
         <li>易過擬合 → 最大深度、葉節點最少樣本數、剪枝 剪枝強度</li>
         <li>切線平行座標軸，斜線邊界要很多階</li>
+        <li><b>貪婪</b>：每步選當下最佳切法，不保證整棵最佳</li>
       </ul>
     </div>
 
@@ -192,7 +194,7 @@ sub, sup { font-size: 70%; line-height: 0; }
           <div class="f">MAE = Σ|e| ÷ n；MSE = Σe² ÷ n；RMSE = √MSE</div>
           <div class="f">R² = 1 − SSE ÷ SST（≤ 1，可為負）</div>
           <div class="f">Adj R² = 1 − (1 − R²)(n − 1) ÷ (n − p − 1)　<span class="note">n 筆數、p 特徵數；加沒用的特徵會降</span></div>
-          <ul><li>類別不平衡 → 不看 Accuracy，看 F1、PR、ROC-AUC</li><li>怕漏抓（疾病）重 Recall；怕誤判（垃圾信）重 Precision</li></ul>
+          <ul><li>類別不平衡 → 不看 Accuracy，看 F1、PR 曲線（正類很少時比 ROC 可靠）</li><li>怕漏抓（疾病）重 Recall；怕誤判（垃圾信）重 Precision</li></ul>
         </div>
       </div>
     </div>
