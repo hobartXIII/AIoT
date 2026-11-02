@@ -64,7 +64,7 @@ footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--line);
   <header class="mast">
     <div class="eyebrow">AIoT-DA 2026・Quiz 1</div>
     <h1>計算題練習</h1>
-    <p>選擇題會考的「代入一次」計算，每種 2～7 題。作答後顯示正確答案、計算步驟，以及錯誤選項常見的算錯原因。公式與符號的說明見<a href="quiz1-supervised-learning.html">監督式學習：會考的 9 個演算法</a>，考前整理見 <a href="quiz1-a4-cheatsheet.html">A4 筆記草稿</a>。</p>
+    <p>選擇題會考的「代入一次」計算，每種 2～8 題。作答後顯示正確答案、計算步驟，以及錯誤選項常見的算錯原因。公式與符號的說明見<a href="quiz1-supervised-learning.html">監督式學習：會考的 9 個演算法</a>，考前整理見 <a href="quiz1-a4-cheatsheet.html">A4 筆記草稿</a>。</p>
   </header>
   <div class="bar"><span class="score"></span><button class="btn" type="button" data-act="reset">↺ 重新作答</button></div>
   <main id="quiz"></main>
@@ -95,6 +95,9 @@ const QUIZ = [
     { q: '某線性迴歸 R² = 0.75、SSE = 30，SST 和 SSR 是多少？', o: ['SST = 40，SSR = 10', 'SST = 120，SSR = 90', 'SST = 120，SSR = 30', 'SST = 22.5，SSR = 7.5'], a: 1,
       s: ['R² = 1 − SSE ÷ SST → SSE ÷ SST = 1 − 0.75 = 0.25', 'SST = 30 ÷ 0.25 = <b>120</b>', 'SSR = SST − SSE = 120 − 30 = <b>90</b>（驗算：90 ÷ 120 = 0.75 ✓）'],
       t: '40 是 30 ÷ 0.75（SSE 占的是 1 − R² = 0.25，不是 0.75）；22.5 是 30 × 0.75；SSR = 30 是把 SSE 當成 SSR。' },
+    { q: '某模型的殘差：預測值小的 4 筆是 1、−1、0.5、−0.5；預測值大的 4 筆是 4、−4、3、−3。分別算兩組「殘差平方的平均」，可以判斷違反了哪個假設？', o: ['0.625 vs 12.5，殘差隨預測值變大而散開 → 異質變異', '兩組殘差平均都是 0，沒有違反任何假設', '0.625 vs 12.5 → 多重共線性', '兩組相差 20 倍 → 線性關係不成立'], a: 0,
+      s: ['預測值小的一組：(1 + 1 + 0.25 + 0.25) ÷ 4 = <b>0.625</b>', '預測值大的一組：(16 + 16 + 9 + 9) ÷ 4 = <b>12.5</b>，是小組的 20 倍', '預測值越大、殘差越散開 → 殘差圖呈漏斗狀 → 違反「誤差變異數固定」，也就是<b>異質變異</b>（Heteroscedasticity）'],
+      t: '只看殘差平均（兩組都是 0）會漏掉散開的程度；多重共線性是特徵之間高度相關的問題，和殘差的散開程度無關。' },
   ] },
   { tag: 'RL', title: 'Ridge／Lasso', items: [
     { q: '單一特徵（已減去平均），S<sub>xy</sub> = Σxy = 12、S<sub>xx</sub> = Σx² = 4，λ = 4。Ridge 的係數是？', o: ['3', '1.5', '2.5', '0'], a: 1,
@@ -197,6 +200,12 @@ const QUIZ = [
     { q: '4 筆預測的誤差（y − ŷ）為 2、−1、−3、0。MAE、MSE 分別是？', o: ['1.5、3.5', '−0.5、3.5', '1.5、1.87', '1.5、14'], a: 0,
       s: ['MAE = (|2| + |−1| + |−3| + 0) ÷ 4 = 6 ÷ 4 = <b>1.5</b>', 'MSE = (4 + 1 + 9 + 0) ÷ 4 = 14 ÷ 4 = <b>3.5</b>', 'RMSE = √3.5 ≈ 1.87'],
       t: '−0.5 是沒取絕對值；1.87 是 RMSE；14 是平方和忘了除以 n。' },
+    { q: '10,000 筆負類、100 筆正類（正類很少）。模型抓到 TP = 80，誤報 FP = 100。FPR 和 Precision 分別是？', o: ['FPR = 0.01，Precision ≈ 0.444', 'FPR = 0.5，Precision ≈ 0.8', 'FPR = 0.01，Precision ≈ 0.8', 'FPR ≈ 0.556，Precision ≈ 0.444'], a: 0,
+      s: ['TN = 10,000 − 100 = 9,900', 'FPR = FP ÷ (FP + TN) = 100 ÷ 10,000 = <b>0.01</b>', 'Precision = TP ÷ (TP + FP) = 80 ÷ 180 ≈ <b>0.444</b>', 'FPR 只有 1%，ROC 看起來很好；但模型說「正類」的 180 筆裡，超過一半是誤報'],
+      t: '0.8 是 Recall（80 ÷ 100），不是 Precision；FPR = 0.5 或 0.556 是分母用錯，FPR 的分母是「實際為負」的總數 FP + TN。' },
+    { q: '承上，誤報從 100 增加到 200（TP 不變），FPR 和 Precision 變成？', o: ['FPR = 0.02，Precision ≈ 0.286', 'FPR = 0.02，Precision ≈ 0.444', 'FPR = 0.2，Precision ≈ 0.286', 'FPR = 0.01，Precision ≈ 0.4'], a: 0,
+      s: ['TN = 10,000 − 200 = 9,800，FPR = 200 ÷ 10,000 = <b>0.02</b>', 'Precision = 80 ÷ (80 + 200) = 80 ÷ 280 ≈ <b>0.286</b>', '誤報加倍，FPR 只從 1% 變 2%，幾乎看不出來；Precision 卻從 0.444 掉到 0.286。所以<b>正類很少時，PR 曲線比 ROC 更能反映誤報</b>'],
+      t: 'Precision 不變是忘了 FP 也在分母裡；FPR = 0.2 是除錯了數字（分母是全部負類 10,000）。' },
   ] },
 ];
 
