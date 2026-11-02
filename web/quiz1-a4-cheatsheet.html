@@ -81,7 +81,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>AR(p)：過去 p 期的值當特徵，本質是線性迴歸</li>
         <li><span class="k">SST = SSR + SSE</span>，SSR = Σ(ŷ − ȳ)²；SSE 又稱 RSS</li>
         <li>R² = SSR/SST <span class="k">只限最小平方法＋訓練資料</span>；一般用 1 − SSE/SST（可為負）</li>
-        <li>假設 LINE：線性、獨立、常態、等變異</li>
+        <li>LINE：對參數線性、獨立、常態、等變異</li>
         <li>弱點：離群值、曲線；<span class="k">R² 高 ≠ 模型對／準確率</span>；殘差漏斗＝異質變異</li>
         <li>共線性：係數不穩、預測影響小 → <span class="x">VIF</span>、Ridge</li>
       </ul>
@@ -115,6 +115,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>y = 1 用 −ln p、y = 0 用 −ln(1 − p)；越有把握地錯罰越重</li>
         <li>用 MLE 估參數（不用 MSE：非凸）；<span class="x">門檻↓ → Recall↑ Precision↓</span></li>
         <li class="x">多類別：One-vs-Rest 或 Softmax</li>
+        <li class="x">機率校準：預測 0.8 的那群，約 80% 真的發生</li>
         <li><span class="x">可分資料 w → ∞</span>；C <span class="k">越小正則化越強</span></li><li class="x"><span class="k">勝算比</span>：x 增加 1，勝算 p/(1−p) 變 e<sup>w</sup> 倍</li>
       </ul>
     </div>
@@ -168,9 +169,9 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">H = −Σp<sub>k</sub> log<sub>2</sub> p<sub>k</sub>（兩類最大 <span class="k">1</span>）</div>
       <div class="f">Gain = I<sub>父</sub> − Σ(n<sub>子</sub>/n)·I<sub>子</sub></div>
       <ul>
-        <li>選增益最大的切法；純節點 = 0</li>
+                <li>根→內部→葉；選增益最大切法；純節點 = 0</li>
         <li><span class="k">不需標準化</span>；可解釋（if-else）</li>
-        <li>易過擬合 → 限深度、葉節點最少樣本數、剪枝</li>
+        <li>易過擬合 → 限深度、葉節點最少樣本數（預剪枝）；長完再剪（後剪枝）</li>
         <li class="x">回歸樹：MSE 最小切分、葉子取平均；CART 二元切分</li>
         <li>切線平行座標軸，斜線邊界要很多階</li>
         <li class="x"><b>貪婪</b>：每步選當下最佳切法，不保證整棵最佳</li>
@@ -217,7 +218,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         </div>
         <div>
           <div class="f">Specificity = TN ÷ (TN + FP)；FPR = 1 − Specificity</div>
-          <div class="f">MAE = Σ|e| ÷ n；MSE = Σe² ÷ n；RMSE = √MSE</div>
+          <div class="f">MAE = Σ|e| ÷ n；MSE = Σe² ÷ n；RMSE = √MSE（單位同 y）</div>
           <div class="f">R² = 1 − SSE ÷ SST（≤ 1，可為負）</div>
           <div class="f x">Adj R² = 1 − (1 − R²)(n − 1) ÷ (n − p − 1)　<span class="note">n 筆數、p 特徵數；加沒用的特徵會降</span></div>
           <ul><li>類別不平衡 → 不看 Accuracy，看 F1、<span class="x">PR 曲線（正類很少時比 ROC 可靠）</span></li><li>怕漏抓（疾病）重 Recall；怕誤判（垃圾信）重 Precision</li><li>ROC：x 軸 FPR、y 軸 TPR（= Recall = 靈敏度）；AUC .5 = 亂猜、1 = 完美</li></ul>
