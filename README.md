@@ -9,6 +9,7 @@ GitHub Pages：https://hobartxiii.github.io/AIoT/
 - L04-1 ～ L07：https://hobartxiii.github.io/AIoT/web/aiot-da-notes.html （原始檔 [`web/aiot-da-notes.html`](web/aiot-da-notes.html)）
 - Quiz 1 監督式學習：https://hobartxiii.github.io/AIoT/web/quiz1-supervised-learning.html （原始檔 [`web/quiz1-supervised-learning.html`](web/quiz1-supervised-learning.html)）
 - Quiz 1 題庫：https://hobartxiii.github.io/AIoT/web/quiz1-question-bank.html （原始檔 [`web/quiz1-question-bank.html`](web/quiz1-question-bank.html)）
+- Quiz 1 ChatGPT 考題專區：https://hobartxiii.github.io/AIoT/web/quiz1-chatgpt-bank.html （原始檔 [`web/quiz1-chatgpt-bank.html`](web/quiz1-chatgpt-bank.html)）
 - Quiz 1 計算題練習：https://hobartxiii.github.io/AIoT/web/quiz1-calc-practice.html （原始檔 [`web/quiz1-calc-practice.html`](web/quiz1-calc-practice.html)）
 - Quiz 1 A4 筆記草稿（正反兩面，可列印）：https://hobartxiii.github.io/AIoT/web/quiz1-a4-cheatsheet.html （原始檔 [`web/quiz1-a4-cheatsheet.html`](web/quiz1-a4-cheatsheet.html)）
 
@@ -25,6 +26,7 @@ GitHub Pages：https://hobartxiii.github.io/AIoT/
 | [L06](L06-multiple-linear-regression.md) | 2026.9.30 | 多元線性回歸（50 Startups） | DIC-2 股票預測 |
 | [Quiz 1](Quiz1-supervised-learning.md) | — | 監督式學習十大演算法、題庫 prompt、資訊圖表 | — |
 | [Quiz 1 題庫](Quiz1-question-bank.md) | — | 監督式學習 209 題選擇題（附答案解析；[網頁版](web/quiz1-question-bank.html)） | — |
+| [Quiz 1 ChatGPT 考題專區](Quiz1-chatgpt-question-bank.md) | — | ChatGPT 產生的 100 題：線性迴歸、邏輯斯迴歸、決策樹（[網頁版](web/quiz1-chatgpt-bank.html)） | — |
 | [L07](L07-logistic-regression.md) | 2026.10.14 | Logistic Regression（分類問題）、混淆矩陣 | — |
 
 ## 筆記整理方式
