@@ -175,6 +175,12 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 :root { --f1: #2a78d6; --f2: #eb6834; --f3: #1baf7a; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --f1: #3987e5; --f2: #d95926; --f3: #199e70; } }
 :root[data-theme="dark"] { --f1: #3987e5; --f2: #d95926; --f3: #199e70; }
+:root { --ext: #1d4ed8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ext: #8fb0ff; } }
+:root[data-theme="dark"] { --ext: #8fb0ff; }
+.x, .x td, .x .take, .x .ex-h, .x b, .x .k { color: var(--ext); }
+.ex.x { border-left-color: var(--ext); }
+.x-tag { display: inline-block; font-size: 12px; font-weight: 700; color: var(--ext); border: 1px solid var(--ext); border-radius: 6px; padding: 0 6px; margin-right: 6px; }
 .nm { font-family: "Times New Roman", "Noto Serif TC", serif; }
 .formula .txt { font-family: var(--font-body); font-size: 15px; }
 .key3 { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--mark); border-radius: 0 8px 8px 0; padding: 8px 16px; margin: 12px 0 16px; }
@@ -210,6 +216,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <div class="eyebrow">AIoT-DA · L8 Quiz 1 準備</div>
     <h1>監督式學習：會考的 9 個演算法</h1>
     <p>依「AIoT L8 Quiz 1 準備」整理。範圍只有監督式學習，人工神經網路（MLP）和線性判別分析（LDA）不考。每個演算法依序整理：一句話、核心思想與公式、重要超參數、優缺點、常考陷阱。</p>
+    <p><span class="x-tag">延伸</span><span class="x">藍色的內容</span>是老師的課程資料（L05～L07、Notion 範圍頁）沒有提到的延伸內容：先熟悉黑字，有時間再看藍字。</p>
     <p>考前練習：<a href="quiz1-calc-practice.html">計算題練習</a>・<a href="quiz1-question-bank.html">209 題題庫</a>・<a href="quiz1-a4-cheatsheet.html">A4 筆記草稿</a></p>
   </header>
 
@@ -347,7 +354,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <li>朴素貝氏也不需要，它是對每個特徵各自估計機率分布。</li>
     </ul>
     <ul class="trap">
-      <li><span><b>資料洩漏</b>（Data Leakage）：標準化的平均、標準差要只用訓練集算出，再套用到測試集。用全部資料算會讓測試分數偏高。不只標準化，補缺值、特徵選擇也一樣；時間序列如果用到未來的資料來訓練，也屬於資料洩漏。</span></li>
+      <li><span><b>資料洩漏</b>（Data Leakage）：標準化的平均、標準差要只用訓練集算出，再套用到測試集。用全部資料算會讓測試分數偏高。不只標準化，補缺值、特徵選擇也一樣；<span class="x">時間序列如果用到未來的資料來訓練，也屬於資料洩漏。</span></span></li>
     </ul>
   </section>
 
@@ -389,7 +396,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <ul class="trap">
       <li><span>95% 是負例的資料，模型全部猜負就有 95% Accuracy，但 Recall = 0。不平衡資料不要只看 Accuracy。</span></li>
       <li><span>Precision 和 Recall 通常此消彼長：調高分類門檻 → Precision 上升、Recall 下降。</span></li>
-      <li><span>正類非常稀少時，改看 <b>PR 曲線</b>（Precision-Recall Curve）而不是 ROC：ROC 的 FPR = FP ÷ (FP + TN)，TN 很多時，FP 增加 FPR 也幾乎不動，看起來過度樂觀；Precision 會直接反映誤報。</span></li>
+      <li class="x"><span>正類非常稀少時，改看 <b>PR 曲線</b>（Precision-Recall Curve）而不是 ROC：ROC 的 FPR = FP ÷ (FP + TN)，TN 很多時，FP 增加 FPR 也幾乎不動，看起來過度樂觀；Precision 會直接反映誤報。</span></li>
     </ul>
 
     <h3>回歸指標</h3>
@@ -400,7 +407,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
         <tr><td class="nw">MSE</td><td class="nw">(1/n) Σ (y − ŷ)²</td><td>平方放大大誤差，對離群值敏感；單位是 y²</td></tr>
         <tr><td class="nw">RMSE</td><td class="nw">√MSE</td><td>單位同 y，比較好解釋</td></tr>
         <tr><td class="nw">R²</td><td class="nw">1 − SS<sub>res</sub> / SS<sub>tot</sub></td><td>模型解釋了多少比例的變異。1 = 完美，0 = 跟猜平均一樣，<b>可以是負的</b>（比猜平均還差）</td></tr>
-        <tr><td class="nw">Adjusted R²</td><td class="nw">1 − (1 − R²)(n − 1) / (n − p − 1)</td><td>n 是資料筆數、p 是特徵數。R² 加特徵一定不降；Adjusted R² 加了沒用的特徵會下降</td></tr>
+        <tr class="x"><td class="nw">Adjusted R²</td><td class="nw">1 − (1 − R²)(n − 1) / (n − p − 1)</td><td>n 是資料筆數、p 是特徵數。R² 加特徵一定不降；Adjusted R² 加了沒用的特徵會下降</td></tr>
       </tbody>
     </table></div>
     <h4>算一次看看（回歸）</h4>
@@ -413,7 +420,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <li>MAE = 1.4 / 4 = <b>0.35</b></li>
       <li>MSE = 0.7 / 4 = <b>0.175</b></li>
       <li>RMSE = √0.175 ≈ <b>0.418</b>（單位和 y 一樣）</li>
-      <li>R² = 1 − SS<sub>res</sub> / SS<sub>tot</sub> = 1 − 0.7 / 18.75 ≈ <b>0.963</b>（SS<sub>res</sub> 就是 SSE，SS<sub>tot</sub> 就是 SST = Σ(y − ȳ)² = 18.75）</li>
+      <li class="x">R² = 1 − SS<sub>res</sub> / SS<sub>tot</sub> = 1 − 0.7 / 18.75 ≈ <b>0.963</b>（SS<sub>res</sub> 就是 SSE，SS<sub>tot</sub> 就是 SST = Σ(y − ȳ)² = 18.75）</li>
       <li>Adjusted R²：n = 4 筆、p = 1 個特徵，1 − (1 − 0.963) × (4 − 1) / (4 − 1 − 1) = 1 − 0.037 × 1.5 ≈ <b>0.944</b></li>
       <li>如果多加一個沒用的特徵（p = 2），R² 只從 0.963 升到 0.965：Adjusted R² = 1 − 0.035 × 3 / 1 = <b>0.895</b>，反而下降。這就是 Adjusted R² 會懲罰沒用特徵的原因。</li>
     </ul>
@@ -564,10 +571,10 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <h4>模型與目標</h4>
     <div class="formula"><span class="lbl">模型</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x<sub>1</sub> + β<sub>2</sub>x<sub>2</sub> + ⋯ + β<sub>p</sub>x<sub>p</sub></div>
-    <div class="formula"><span class="lbl">OLS 目標</span>β* = arg min<sub>β</sub> Σ<sub>i</sub> (y<sub>i</sub> − ŷ<sub>i</sub>)²<span class="lbl" style="margin-left:24px">解析解</span>β = (XᵀX)<sup>−1</sup>Xᵀy</div>
+    <div class="formula"><span class="lbl">OLS 目標</span>β* = arg min<sub>β</sub> Σ<sub>i</sub> (y<sub>i</sub> − ŷ<sub>i</sub>)²<span class="x"><span class="lbl" style="margin-left:24px">解析解</span>β = (XᵀX)<sup>−1</sup>Xᵀy</span></div>
     <ul>
       <li><b>普通最小平方法</b>（OLS）：最小化殘差平方和（SSE）。可以直接用解析解，也可以用梯度下降。</li>
-      <li><b>什麼時候改用梯度下降</b>：解析解要算 (XᵀX)<sup>−1</sup>，特徵數 p 很多時計算量大約跟 p³ 成正比，太慢，就改用梯度下降一步步逼近。資料量很大時，每次只用一筆或一小批資料更新，叫<b>隨機梯度下降</b>（SGD）。</li>
+      <li class="x"><b>什麼時候改用梯度下降</b>：解析解要算 (XᵀX)<sup>−1</sup>，特徵數 p 很多時計算量大約跟 p³ 成正比，太慢，就改用梯度下降一步步逼近。資料量很大時，每次只用一筆或一小批資料更新，叫<b>隨機梯度下降</b>（SGD）。</li>
       <li><b>係數解讀</b>：其他特徵固定時，x<sub>j</sub> 增加 1，y 平均變化 β<sub>j</sub>。</li>
       <li>只有一個特徵叫<b>簡單線性迴歸</b>，多個特徵叫<b>多元線性迴歸</b>。</li>
       <li><b>自迴歸 AR(p)</b>（Auto-Regression）：時間序列用<b>過去 p 期的值</b>當特徵預測下一期，y<sub>t</sub> = c + φ<sub>1</sub>y<sub>t−1</sub> + ⋯ + φ<sub>p</sub>y<sub>t−p</sub>，本質就是線性迴歸（課程 L05 的股價預測）。</li>
@@ -591,7 +598,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <h4>常考陷阱</h4>
     <ul class="trap">
-      <li><span>多重共線性<b>不太影響預測能力</b>，但會讓係數忽大忽小、正負號亂跳，難以解釋。用 VIF 檢查，或改用 Ridge。</span></li>
+      <li><span>多重共線性<b>不太影響預測能力</b>，但會讓係數忽大忽小、正負號亂跳，難以解釋。<span class="x">用 VIF</span> 檢查，或改用 Ridge。</span></li>
       <li><span>非線性關係可以先做多項式特徵（Polynomial Features），模型對係數仍然是線性的，所以還是線性迴歸。</span></li>
       <li><span>One-Hot 後要丟掉一欄當基準，否則虛擬變數加總恆為 1，和截距完全共線。</span></li>
       <li><span>特徵選擇常用逐步法：Backward Elimination（從全部開始，逐一刪掉 p-value 最大的）。</span></li>
@@ -610,7 +617,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula steps"><span class="fp"><span class="lbl">① 模型（線性迴歸的多特徵版）</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x<sub>1</sub> + ⋯ + β<sub>p</sub>x<sub>p</sub> = β<sub>0</sub> + Σβ<sub>j</sub>x<sub>j</sub></span><span class="fp"><span class="lbl">② 方法：Ridge</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σβ<sub>j</sub>²</span><span class="fp"><span class="lbl">Lasso</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ|β<sub>j</sub>|</span><span class="fp"><span class="lbl">③ 解出來（單一特徵）</span>β<sub>Ridge</sub> = <span class="frac"><span>S<sub>xy</sub></span><span>S<sub>xx</sub> + λ</span></span></span><span class="fp">β<sub>Lasso</sub> = <span class="frac"><span>sign(S<sub>xy</sub>) · max(|S<sub>xy</sub>| − λ/2, 0)</span><span>S<sub>xx</sub></span></span></span></div>
+      <div class="formula steps"><span class="fp"><span class="lbl">① 模型（線性迴歸的多特徵版）</span>ŷ = β<sub>0</sub> + β<sub>1</sub>x<sub>1</sub> + ⋯ + β<sub>p</sub>x<sub>p</sub> = β<sub>0</sub> + Σβ<sub>j</sub>x<sub>j</sub></span><span class="fp"><span class="lbl">② 方法：Ridge</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σβ<sub>j</sub>²</span><span class="fp"><span class="lbl">Lasso</span>Loss = Σ(y<sub>i</sub> − ŷ<sub>i</sub>)² + λ Σ|β<sub>j</sub>|</span><span class="x fp"><span class="lbl">③ 解出來（單一特徵）</span>β<sub>Ridge</sub> = <span class="frac"><span>S<sub>xy</sub></span><span>S<sub>xx</sub> + λ</span></span></span><span class="x fp">β<sub>Lasso</sub> = <span class="frac"><span>sign(S<sub>xy</sub>) · max(|S<sub>xy</sub>| − λ/2, 0)</span><span>S<sub>xx</sub></span></span></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -678,10 +685,10 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       </table></div>
       <p>例：Ridge 第 1 筆 ŷ = (−2) − 0.286 × 1 = −2.286，e = −5 − (−2.286) = −2.714，e² = 7.367。Lasso 第 1 筆 ŷ = 1.5 × (−2) = −3，e = −5 − (−3) = −2，e² = 4。</p>
       <p><span class="step">STEP 4</span>換算成 R²：y 已減去平均，所以 SST = Σy² = 25 + 1 + 9 + 9 = 44。普通線性迴歸 1 − 0 ÷ 44 = <b>1</b>；Ridge 1 − 12.04 ÷ 44 ≈ <b>0.726</b>；Lasso 1 − 6.5 ÷ 44 ≈ <b>0.852</b>。</p>
-      <p><b>補充：公式怎麼來、為什麼是 λ/2</b></p>
-      <p>只有一個係數 β 時，把損失對 β 微分、令它等於 0。<b>Ridge</b>：Loss = Σ(y<sub>i</sub> − βx<sub>i</sub>)² + λβ²，微分得 −2S<sub>xy</sub> + 2βS<sub>xx</sub> + 2λβ = 0，整理成 β = S<sub>xy</sub> ÷ (S<sub>xx</sub> + λ)。</p>
-      <p><b>Lasso</b>：Loss = Σ(y<sub>i</sub> − βx<sub>i</sub>)² + λ|β|，微分得 −2S<sub>xy</sub> + 2βS<sub>xx</sub> + λ · sign(β) = 0，兩邊除以 2：βS<sub>xx</sub> = S<sub>xy</sub> − (λ/2) · sign(β)。誤差項微分後帶一個 2，|β| 微分後只有 ±1，除以 2 就剩 λ/2。如果 |S<sub>xy</sub>| ≤ λ/2，找不到符號一致的非零解，最佳解就是 β = 0，這就是 max(…, 0) 的由來。</p>
-      <p><b>兩者的縮法不同</b>：Ridge 是「除」（分母加 λ），係數越大被縮掉的量越多，β<sub>1</sub> 從 2 縮成 1；Lasso 是「減」（固定扣 λ/2），強特徵只從 2 縮成 1.5，弱特徵直接歸零。所以這個例子裡 Lasso 的 SSE（6.5）反而比 Ridge（12.04）小。</p>
+      <p class="x"><b>補充：公式怎麼來、為什麼是 λ/2</b></p>
+      <p class="x">只有一個係數 β 時，把損失對 β 微分、令它等於 0。<b>Ridge</b>：Loss = Σ(y<sub>i</sub> − βx<sub>i</sub>)² + λβ²，微分得 −2S<sub>xy</sub> + 2βS<sub>xx</sub> + 2λβ = 0，整理成 β = S<sub>xy</sub> ÷ (S<sub>xx</sub> + λ)。</p>
+      <p class="x"><b>Lasso</b>：Loss = Σ(y<sub>i</sub> − βx<sub>i</sub>)² + λ|β|，微分得 −2S<sub>xy</sub> + 2βS<sub>xx</sub> + λ · sign(β) = 0，兩邊除以 2：βS<sub>xx</sub> = S<sub>xy</sub> − (λ/2) · sign(β)。誤差項微分後帶一個 2，|β| 微分後只有 ±1，除以 2 就剩 λ/2。如果 |S<sub>xy</sub>| ≤ λ/2，找不到符號一致的非零解，最佳解就是 β = 0，這就是 max(…, 0) 的由來。</p>
+      <p class="x"><b>兩者的縮法不同</b>：Ridge 是「除」（分母加 λ），係數越大被縮掉的量越多，β<sub>1</sub> 從 2 縮成 1；Lasso 是「減」（固定扣 λ/2），強特徵只從 2 縮成 1.5，弱特徵直接歸零。所以這個例子裡 Lasso 的 SSE（6.5）反而比 Ridge（12.04）小。</p>
       <p class="take"><b>解讀</b>：普通線性迴歸把 4 筆資料完全擬合（SSE = 0），連影響很弱的 x<sub>2</sub> 也給了 −1。Ridge 把兩個係數都縮小，但 x<sub>2</sub> 仍然留著（−0.286）。Lasso 保留了重要的 x<sub>1</sub>（1.5），把 x<sub>2</sub> 直接設成 0，模型只剩一個特徵，更簡單。訓練誤差變大（R² 從 1 降到 0.726、0.852）是預期中的代價：換來的是對新資料比較不會過擬合。</p>
     </div>
 
@@ -751,8 +758,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <ul>
       <li><b>λ（lambda）</b>：懲罰強度。λ = 0 就是普通線性迴歸；λ 越大 → 係數越小 → 偏差升高、變異降低，太大會欠擬合。用交叉驗證挑。</li>
       <li><b>Elastic Net</b> 同時加 L1 和 L2，用一個比例參數調整 L1 和 L2 的比重。</li>
-      <li>截距 β<sub>0</sub> 不加懲罰。</li>
-      <li><b>Ridge 的閉式解</b>：β = (XᵀX + λI)<sup>−1</sup>Xᵀy，比 OLS 多了 <b>+ λI</b>，所以就算特徵共線、XᵀX 不可逆也解得出來。Lasso 因為絕對值在 0 不能微分，沒有閉式解。</li>
+      <li class="x">截距 β<sub>0</sub> 不加懲罰。</li>
+      <li class="x"><b>Ridge 的閉式解</b>：β = (XᵀX + λI)<sup>−1</sup>Xᵀy，比 OLS 多了 <b>+ λI</b>，所以就算特徵共線、XᵀX 不可逆也解得出來。Lasso 因為絕對值在 0 不能微分，沒有閉式解。</li>
     </ul>
 
     <div class="pc">
@@ -877,7 +884,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <p class="take"><b>為什麼解決不了</b>：邊界只能是直線，XOR 的兩類交錯在對角上。<b>對策</b>：加一個交互作用特徵 x<sub>1</sub>x<sub>2</sub>，例如 z = x<sub>1</sub> + x<sub>2</sub> − 2x<sub>1</sub>x<sub>2</sub> − 0.5，四點的 z 分別是 −0.5、−0.5、0.5、0.5，全部判對；或改用決策樹、核函數 SVM 這類能畫彎曲邊界的模型。</p>
     </div>
 
-    <div class="ex ng">
+    <div class="x ex ng">
       <div class="ex-h">❌ 解決不了 2：資料完全分得開時，w 會一直變大</div>
       <p>同樣 4 位學生（2.5 小時以下都不及格、以上都及格，完全分得開）。把邊界固定在 x = 2.5，讓 w 越來越大（b = −2.5w）：</p>
       <div class="tbl"><table>
@@ -921,14 +928,14 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     </div>
 
     <div class="formula"><span class="lbl">線性部分</span>z = wᵀx + b<span class="lbl" style="margin-left:24px">Sigmoid</span>p = σ(z) = <span class="frac"><span>1</span><span>1 + e<sup>−z</sup></span></span></div>
-    <div class="formula"><span class="lbl">Log-odds</span>ln <span class="frac"><span>p</span><span>1 − p</span></span> = wᵀx + b</div>
+    <div class="x formula"><span class="lbl">Log-odds</span>ln <span class="frac"><span>p</span><span>1 − p</span></span> = wᵀx + b</div>
     <div class="formula"><span class="lbl">損失（Log Loss／Cross-Entropy）</span>L = −[ y ln p + (1 − y) ln(1 − p) ]</div>
     <ul>
       <li><b>Sigmoid</b> 把任意實數壓到 (0, 1)。z = 0 時 p = 0.5，那就是決策邊界 wᵀx + b = 0，所以邊界是<b>線性</b>的。</li>
       <li>用<b>最大概似估計</b>（MLE）求參數，等同最小化 Log Loss。沒有解析解，用梯度下降等迭代法。</li>
-      <li><b>係數解讀</b>：x<sub>j</sub> 增加 1，log-odds 增加 w<sub>j</sub>，勝算（odds）變成 e<sup>w<sub>j</sub></sup> 倍。</li>
-      <li><b>多類別</b>：One-vs-Rest（每類各訓練一個二元分類器）或 Softmax（Multinomial）。</li>
-      <li><b>梯度</b>：單一筆資料的 log-loss 對 w 的梯度是 <b>(p − y)x</b>，也就是「預測 − 實際」乘上特徵，形式和線性迴歸一樣。梯度下降就是 w ← w − η(p − y)x。</li>
+      <li class="x"><b>係數解讀</b>：x<sub>j</sub> 增加 1，log-odds 增加 w<sub>j</sub>，勝算（odds）變成 e<sup>w<sub>j</sub></sup> 倍。</li>
+      <li class="x"><b>多類別</b>：One-vs-Rest（每類各訓練一個二元分類器）或 Softmax（Multinomial）。</li>
+      <li class="x"><b>梯度</b>：單一筆資料的 log-loss 對 w 的梯度是 <b>(p − y)x</b>，也就是「預測 − 實際」乘上特徵，形式和線性迴歸一樣。梯度下降就是 w ← w − η(p − y)x。</li>
     </ul>
 
     <h4>重要超參數</h4>
@@ -949,8 +956,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <ul class="trap">
       <li><span>它是<b>分類</b>演算法，不是回歸。</span></li>
       <li><span>為什麼不用 MSE 當損失？套上 Sigmoid 後 MSE 不是凸函數，有很多局部最小值；Log Loss 是凸的。</span></li>
-      <li><span>邏輯迴歸是<b>判別式模型</b>（直接學 P(y|x)），朴素貝氏是<b>生成式模型</b>（學 P(x|y) 和 P(y)）。</span></li>
-      <li><span>門檻不一定要 0.5：要提高 Recall 就調低門檻。</span></li>
+      <li class="x"><span>邏輯迴歸是<b>判別式模型</b>（直接學 P(y|x)），朴素貝氏是<b>生成式模型</b>（學 P(x|y) 和 P(y)）。</span></li>
+      <li class="x"><span>門檻不一定要 0.5：要提高 Recall 就調低門檻。</span></li>
     </ul>
 <div class="key3"><b>考前重點</b><ul><li><b>用途</b>：二元分類並輸出機率，例如會不會違約、會不會點擊；係數可以解讀成勝算比（x 增加 1，勝算變 e<sup>w</sup> 倍）。</li><li><b>和線性迴歸的差別</b>：多了 sigmoid 把分數壓到 0～1，損失改成 log-loss；但決策邊界仍是直線。</li><li><b>最常考</b>：σ(0) = 0.5、邊界 x = −b ÷ w；調門檻是在 Precision 與 Recall 之間取捨；C 越小正則化越強。</li></ul></div>
   </section>
@@ -974,7 +981,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">p</td><td>訓練資料中的某一點</td><td class="nw">例如 (3, 2)</td></tr>
           <tr><td class="nw">p<sub>1</sub>、q<sub>1</sub></td><td>兩點的第 1 個特徵；下標是第幾個特徵</td><td class="nw">3、2</td></tr>
           <tr><td class="nw">d(p, q)</td><td>兩點之間的直線距離；越小表示越像</td><td class="nw">(3, 2) 到 (2, 2) 是 1</td></tr>
-          <tr><td class="nw">明氏距離（Minkowski）<br>( Σ|p<sub>j</sub> − q<sub>j</sub>|<sup>r</sup> )<sup>1/r</sup></td><td>距離的通式，r 是自己選的次方：r = 1 是曼哈頓距離 Σ|p<sub>j</sub> − q<sub>j</sub>|（各軸差的絕對值相加），r = 2 就是上面的歐氏距離。用 r 是為了不和點 p 混淆</td><td class="nw">(1, 2) 到 (4, 6)：<br>r = 1 得 7、r = 2 得 5</td></tr>
+          <tr class="x"><td class="nw">明氏距離（Minkowski）<br>( Σ|p<sub>j</sub> − q<sub>j</sub>|<sup>r</sup> )<sup>1/r</sup></td><td>距離的通式，r 是自己選的次方：r = 1 是曼哈頓距離 Σ|p<sub>j</sub> − q<sub>j</sub>|（各軸差的絕對值相加），r = 2 就是上面的歐氏距離。用 r 是為了不和點 p 混淆</td><td class="nw">(1, 2) 到 (4, 6)：<br>r = 1 得 7、r = 2 得 5</td></tr>
           <tr><td class="nw">√</td><td>開根號</td><td class="nw">√2 = 1.414</td></tr>
           <tr><td class="nw">k</td><td>要看幾個最近的鄰居，自己設定的超參數；兩個類別時常取奇數，避免票數平手</td><td class="nw">1、3、7</td></tr>
           <tr><td class="nw">ŷ</td><td>預測結果：分類取多數類別、回歸取平均</td><td class="nw">k = 3 時為 A</td></tr>
@@ -1074,7 +1081,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <p class="note">計算器的標準化用「訓練資料 ＋ 新點」各特徵實際的最小值、最大值，所以數字會和上面範例（固定用 20～60 歲、20000～80000 元）不同，但最近的鄰居一樣是 25 歲那位。圖中空心圓是新點 q，虛線連到被選中的 k 個鄰居；圖用的是計算距離時的座標（勾選標準化時就是 0～1）。</p>
     </div>
 
-    <div class="formula"><span class="lbl">歐氏距離</span>d(x, x′) = √Σ (x<sub>j</sub> − x′<sub>j</sub>)²<span class="lbl" style="margin-left:24px">曼哈頓距離</span>d = Σ |x<sub>j</sub> − x′<sub>j</sub>|</div>
+    <div class="formula"><span class="lbl">歐氏距離</span>d(x, x′) = √Σ (x<sub>j</sub> − x′<sub>j</sub>)²<span class="x"><span class="lbl" style="margin-left:24px">曼哈頓距離</span>d = Σ |x<sub>j</sub> − x′<sub>j</sub>|</span></div>
     <ul>
       <li><b>懶惰學習</b>（Lazy Learning）：訓練階段只是把資料存起來，沒有學參數；計算都在預測時做，所以<b>訓練快、預測慢</b>。</li>
       <li><b>無母數</b>（Non-parametric）：不假設資料分布的形式。</li>
@@ -1085,7 +1092,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <thead><tr><th>超參數</th><th>效果</th></tr></thead>
       <tbody>
         <tr><td class="nw">k</td><td><b>k 小</b> → 邊界彎曲、受雜訊影響 → <b>過擬合</b>（k = 1 時訓練準確率 100%）。<b>k 大</b> → 邊界平滑 → 欠擬合。用交叉驗證挑；二元分類常取奇數避免平手</td></tr>
-        <tr><td class="nw">投票權重</td><td>每個鄰居一票，或距離加權（越近權重越大）</td></tr>
+        <tr class="x"><td class="nw">投票權重</td><td>每個鄰居一票，或距離加權（越近權重越大）</td></tr>
         <tr><td class="nw">距離定義</td><td>距離定義：歐氏、曼哈頓、Minkowski（p=1 曼哈頓、p=2 歐氏）</td></tr>
       </tbody>
     </table></div>
@@ -1295,7 +1302,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula"><span class="fp"><span class="lbl">貝氏定理</span>P(C | x) = <span class="frac"><span>P(C) · P(x | C)</span><span>P(x)</span></span></span><span class="fp"><span class="lbl">朴素假設</span>P(x | C) = P(x<sub>1</sub> | C) · P(x<sub>2</sub> | C) ⋯</span><span class="fp"><span class="lbl">比較用的分數</span>score(C) = P(C) · ∏ P(x<sub>j</sub> | C)</span><span class="fp"><span class="lbl">Laplace 平滑</span>P(x<sub>j</sub> | C) = <span class="frac"><span>count + α</span><span>N<sub>C</sub> + 2α</span></span></span></div>
+      <div class="formula"><span class="fp"><span class="lbl">貝氏定理</span>P(C | x) = <span class="frac"><span>P(C) · P(x | C)</span><span>P(x)</span></span></span><span class="fp"><span class="lbl">朴素假設</span>P(x | C) = P(x<sub>1</sub> | C) · P(x<sub>2</sub> | C) ⋯</span><span class="fp"><span class="lbl">比較用的分數</span>score(C) = P(C) · ∏ P(x<sub>j</sub> | C)</span><span class="x fp"><span class="lbl">Laplace 平滑</span>P(x<sub>j</sub> | C) = <span class="frac"><span>count + α</span><span>N<sub>C</sub> + 2α</span></span></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -1309,7 +1316,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
           <tr><td class="nw">∏（讀作 pi）</td><td>連乘符號：把後面每一項乘起來（Σ 是連加）</td><td class="nw">—</td></tr>
           <tr><td class="nw">count</td><td>在類別 C 的訓練信中，出現這個字的封數</td><td class="nw">垃圾信中「免費」3 封</td></tr>
           <tr><td class="nw">N<sub>C</sub></td><td>類別 C 的訓練信總數</td><td class="nw">垃圾 4、正常 6</td></tr>
-          <tr><td class="nw">α（讀作 alpha）</td><td>平滑參數，通常取 1；給每個字「預設先出現 α 次」，避免機率變成 0。分母的 2α 是因為每個字只有「出現／沒出現」兩種情況</td><td class="nw">0（不平滑）或 1</td></tr>
+          <tr class="x"><td class="nw">α（讀作 alpha）</td><td>平滑參數，通常取 1；給每個字「預設先出現 α 次」，避免機率變成 0。分母的 2α 是因為每個字只有「出現／沒出現」兩種情況</td><td class="nw">0（不平滑）或 1</td></tr>
         </tbody>
       </table></div>
       <p class="formal"><b>正式說明</b>：用貝氏定理，從「每一類會產生什麼樣的特徵」反推「看到這些特徵時是哪一類」。為了好算，假設在類別已知的情況下，各特徵彼此獨立，於是 P(x | C) 可以拆成每個特徵機率的連乘。取後驗機率最大的類別作為預測。</p>
@@ -1334,7 +1341,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <p class="take"><b>解讀</b>：雖然垃圾信只佔 4 成，但「免費」在垃圾信裡太常見（75% vs 17%），看到它之後，垃圾信的機率從 40% 升到 75%。這就是「用證據更新判斷」。</p>
     </div>
 
-    <div class="ex ng">
+    <div class="x ex ng">
       <div class="ex-h">❌ 解決不了 1：沒見過的組合讓機率變成 0（零頻率問題）</div>
       <p>另一個字「會議」：垃圾信 0 封有、正常信 3 封有。新信同時有「免費」和「會議」：</p>
       <div class="tbl"><table>
@@ -1386,7 +1393,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <ul>
       <li><b>P(y)</b> 先驗機率（各類別的比例），<b>P(x<sub>j</sub>|y)</b> 概似（該類別下出現這個特徵值的機率），<b>P(y|x)</b> 後驗機率。</li>
       <li>P(x) 對每一類都一樣，比大小時可以省略。</li>
-      <li>實作上會取 log 把連乘變連加：很多個小於 1 的機率連乘，結果會小到接近 0，電腦存不下（下溢，underflow）；取 log 後變成加總負數，就不會有這個問題，而且大小順序不變。</li>
+      <li class="x">實作上會取 log 把連乘變連加：很多個小於 1 的機率連乘，結果會小到接近 0，電腦存不下（下溢，underflow）；取 log 後變成加總負數，就不會有這個問題，而且大小順序不變。</li>
     </ul>
 
     <h4>三種變體</h4>
@@ -1399,8 +1406,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       </tbody>
     </table></div>
 
-    <h4>拉普拉斯平滑（Laplace Smoothing）</h4>
-    <p>如果某個字在訓練資料的某類別裡從沒出現，P(x<sub>j</sub>|y) = 0，整串連乘就變 0。解法是每個計數都加 α（通常 α = 1）。</p>
+    <h4 class="x">拉普拉斯平滑（Laplace Smoothing）</h4>
+    <p class="x">如果某個字在訓練資料的某類別裡從沒出現，P(x<sub>j</sub>|y) = 0，整串連乘就變 0。解法是每個計數都加 α（通常 α = 1）。</p>
 
     <div class="pc">
       <div class="pro"><b>優點</b><ul><li>訓練和預測都極快</li><li>小資料、高維資料（文字）表現好</li><li>新資料進來只要更新計數，可以逐批更新</li></ul></div>
@@ -1410,8 +1417,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     <h4>常考陷阱</h4>
     <ul class="trap">
       <li><span>獨立假設雖然常不成立，但只要<b>機率的大小順序</b>對，分類結果還是準。</span></li>
-      <li><span>零機率問題 → 拉普拉斯平滑。</span></li>
-      <li><span>它是<b>生成式模型</b>：先學每一類「長什麼樣」P(x|y)，再反推 P(y|x)。</span></li>
+      <li class="x"><span>零機率問題 → 拉普拉斯平滑。</span></li>
+      <li class="x"><span>它是<b>生成式模型</b>：先學每一類「長什麼樣」P(x|y)，再反推 P(y|x)。</span></li>
     </ul>
 <div class="key3"><b>考前重點</b><ul><li><b>用途</b>：文字分類（垃圾信、情緒分析）的快速基線，資料少也能用，訓練與預測都極快。</li><li><b>和邏輯迴歸的差別</b>：朴素貝氏是生成模型（學每一類怎麼產生特徵，P(x | C)），邏輯迴歸是判別模型（直接學分界）。</li><li><b>最常考</b>：條件獨立假設；零頻率問題用 Laplace 平滑；分類結果常常對，但給的機率偏極端、不可盡信。</li></ul></div>
   </section>
@@ -1534,8 +1541,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     </table></div>
     <ul>
       <li>選讓<b>不純度下降最多</b>（資訊增益最大）的切法。常用 Gini；CART 演算法每次切成兩支。</li>
-      <li><b>回歸樹</b>：切分標準改成讓子節點的 MSE（變異）最小，葉節點預測值 = 該葉樣本的平均。</li>
-      <li>建樹是<b>貪婪演算法</b>（Greedy）：每一步只選當下增益最大的切法，選了就不回頭改，所以不保證整棵樹是最佳的（找最佳的樹太難，只能這樣近似）。</li>
+      <li class="x"><b>回歸樹</b>：切分標準改成讓子節點的 MSE（變異）最小，葉節點預測值 = 該葉樣本的平均。</li>
+      <li class="x">建樹是<b>貪婪演算法</b>（Greedy）：每一步只選當下增益最大的切法，選了就不回頭改，所以不保證整棵樹是最佳的（找最佳的樹太難，只能這樣近似）。</li>
       <li>算熵要用的 log<sub>2</sub> 值：<a href="#numtable">完整的查表數值見「免計算機數值表」</a>。</li>
     </ul>
 
@@ -1576,7 +1583,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="teach">
       <h4>教學：這個公式在解決什麼問題</h4>
-      <div class="formula"><span class="fp"><span class="lbl">預測</span>分類：B 棵樹投票取多數；回歸：ŷ = <span class="frac"><span>1</span><span>B</span></span> Σ ŷ<sub>b</sub></span><span class="fp"><span class="lbl">平均後的變異數</span>Var = ρσ² + <span class="frac"><span>(1 − ρ)σ²</span><span>B</span></span></span><span class="fp"><span class="lbl">獨立時多數決的準確率</span>P(對) = Σ<sub>m &gt; B/2</sub> C(B, m) p<sup>m</sup>(1 − p)<sup>B − m</sup></span></div>
+      <div class="formula"><span class="fp"><span class="lbl">預測</span>分類：B 棵樹投票取多數；回歸：ŷ = <span class="frac"><span>1</span><span>B</span></span> Σ ŷ<sub>b</sub></span><span class="x fp"><span class="lbl">平均後的變異數</span>Var = ρσ² + <span class="frac"><span>(1 − ρ)σ²</span><span>B</span></span></span><span class="x fp"><span class="lbl">獨立時多數決的準確率</span>P(對) = Σ<sub>m &gt; B/2</sub> C(B, m) p<sup>m</sup>(1 − p)<sup>B − m</sup></span></div>
       <div class="tbl"><table>
         <thead><tr><th>符號</th><th>意思</th><th>✅ 範例中的值</th></tr></thead>
         <tbody>
@@ -1603,7 +1610,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     </div>
 
     <h4>計算範例</h4>
-    <div class="ex ok">
+    <div class="x ex ok">
       <div class="ex-h">✅ 解決得了：多棵獨立的樹投票，比單棵準</div>
       <p><span class="step">STEP 1</span>5 棵樹對一筆資料的預測是 1、1、0、1、0：類別 1 有 3 票、類別 0 有 2 票，森林預測 <b>1</b>（3/5 = 60% 的樹同意）。</p>
       <p><span class="step">STEP 2</span>為什麼投票比較準？假設每棵樹判對的機率 p = 0.7，而且樹之間互相獨立。5 棵樹中至少 3 棵判對，多數決就對：</p>
@@ -1622,7 +1629,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <p class="take"><b>解讀</b>：每棵樹只有 70% 準，但 5 棵獨立的樹投票就有 83.7%。個別的錯被其他樹的對抵消了。</p>
     </div>
 
-    <div class="ex ng">
+    <div class="x ex ng">
       <div class="ex-h">❌ 解決不了 1：樹之間太像，加再多棵也降不下來</div>
       <p>如果樹之間的相關係數 ρ = 0.5（σ² = 1）：</p>
       <div class="tbl"><table>
@@ -1636,7 +1643,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <p class="take"><b>為什麼解決不了</b>：ρσ² = 0.5 這一項和 B 無關，樹再多變異數也降不到 0.5 以下。極端情況 ρ = 1（每棵樹都一樣），森林就等於一棵樹。<b>對策</b>：讓樹更不像：減少每次切分考慮的特徵數，保持 bootstrap 抽樣。這就是隨機森林比單純的 Bagging 多做「隨機選特徵」的原因。</p>
     </div>
 
-    <div class="ex ng">
+    <div class="x ex ng">
       <div class="ex-h">❌ 解決不了 2：每棵樹都比亂猜還差，投票反而更糟</div>
       <p>如果每棵樹判對的機率只有 p = 0.45（比丟銅板的 0.5 還差），5 棵獨立的樹投票，至少 3 棵判對才對：</p>
       <div class="tbl"><table>
@@ -1665,8 +1672,8 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <h4>兩種隨機</h4>
     <ol>
-      <li><b>資料隨機（Bootstrap）</b>：每棵樹從訓練集<b>有放回</b>地抽 n 筆。每次約有 63.2% 的不同樣本被抽到，剩下約 36.8% 沒被抽到，稱為 <b>OOB</b>（Out-of-Bag）樣本。</li>
-      <li><b>特徵隨機</b>：每次切分只從隨機挑的一部分特徵裡找最佳切點（分類常用 √p 個）。這讓樹之間的相關性降低，平均起來效果更好。</li>
+      <li class="x"><b>資料隨機（Bootstrap）</b>：每棵樹從訓練集<b>有放回</b>地抽 n 筆。每次約有 63.2% 的不同樣本被抽到，剩下約 36.8% 沒被抽到，稱為 <b>OOB</b>（Out-of-Bag）樣本。</li>
+      <li><b>特徵隨機</b>：每次切分只從隨機挑的一部分特徵裡找最佳切點<span class="x">（分類常用 √p 個）</span>。這讓樹之間的相關性降低，平均起來效果更好。</li>
     </ol>
     <div class="flow"><span>訓練集</span><i>→</i><span>Bootstrap 抽 B 份</span><i>→</i><span>每份長一棵樹（切分時隨機選特徵）</span><i>→</i><span>投票／平均</span></div>
     <p><b>Bagging</b> = <b>B</b>ootstrap <b>Agg</b>regat<b>ing</b>。隨機森林 = Bagging + 特徵隨機。</p>
@@ -1677,7 +1684,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
         <tr><td class="nw">樹的棵數</td><td>越多越穩定，<b>通常不會因此過擬合</b>，只是變慢</td></tr>
         <tr><td class="nw">每次切分考慮的特徵數</td><td>每次切分考慮幾個特徵。越小 → 樹之間越不相關</td></tr>
         <tr><td class="nw">最大深度等</td><td>同決策樹，限制單棵樹</td></tr>
-        <tr><td class="nw">袋外評估（OOB）</td><td>每棵樹約 36.8% 的資料沒被抽到，用它們估泛化誤差，不必另切驗證集</td></tr>
+        <tr class="x"><td class="nw">袋外評估（OOB）</td><td>每棵樹約 36.8% 的資料沒被抽到，用它們估泛化誤差，不必另切驗證集</td></tr>
       </tbody>
     </table></div>
 
@@ -1820,7 +1827,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
 
     <div class="formula"><span class="lbl">逐步相加</span>F<sub>m</sub>(x) = F<sub>m−1</sub>(x) + η · h<sub>m</sub>(x)</div>
     <ul>
-      <li>h<sub>m</sub> 是第 m 棵樹，擬合損失函數的<b>負梯度</b>；用 MSE 時，負梯度剛好就是殘差 y − F<sub>m−1</sub>(x)。</li>
+      <li class="x">h<sub>m</sub> 是第 m 棵樹，擬合損失函數的<b>負梯度</b>；用 MSE 時，負梯度剛好就是殘差 y − F<sub>m−1</sub>(x)。</li>
       <li>η 是<b>學習率</b>（learning rate），讓每棵樹只修正一點，避免一次修過頭。</li>
       <li>每棵樹通常很淺（深度 3～6），是「弱學習器」。</li>
     </ul>
@@ -1841,7 +1848,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <thead><tr><th></th><th>重點</th></tr></thead>
       <tbody>
         <tr><td class="nw">XGBoost</td><td>損失函數加入正則化項；用二階導數（梯度和 Hessian）找切點；<b>內建處理缺值</b>（學每個切點缺值該往哪邊走）；切點搜尋可平行化</td></tr>
-        <tr><td class="nw">LightGBM</td><td>直方圖分箱加速；樹<b>按葉生長</b>（leaf-wise），每次挑誤差下降最多的葉子長，資料大時更快</td></tr>
+        <tr class="x"><td class="nw">LightGBM</td><td>直方圖分箱加速；樹<b>按葉生長</b>（leaf-wise），每次挑誤差下降最多的葉子長，資料大時更快</td></tr>
       </tbody>
     </table></div>
 
@@ -1934,7 +1941,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <tbody>
         <tr><td class="nw">L1（Lasso）</td><td class="nw">L2（Ridge）</td><td>L1 會把係數壓成 0（特徵選擇）；L2 只縮小</td></tr>
         <tr><td class="nw">邏輯迴歸</td><td class="nw">線性迴歸</td><td>邏輯迴歸做分類、輸出機率、用 Log Loss；線性迴歸做回歸、用 MSE</td></tr>
-        <tr><td class="nw">邏輯迴歸</td><td class="nw">朴素貝氏</td><td>判別式（直接學 P(y|x)） vs 生成式（學 P(x|y)、P(y)）</td></tr>
+        <tr class="x"><td class="nw">邏輯迴歸</td><td class="nw">朴素貝氏</td><td>判別式（直接學 P(y|x)） vs 生成式（學 P(x|y)、P(y)）</td></tr>
         <tr><td class="nw">KNN</td><td class="nw">K-Means</td><td>監督式、k = 鄰居數 vs 非監督式、k = 群數</td></tr>
         <tr><td class="nw">參數</td><td class="nw">超參數</td><td>模型學到的（係數） vs 人設定的（k、C、深度）</td></tr>
         <tr><td class="nw">Precision</td><td class="nw">Recall</td><td>預測為正的有多準 vs 真的正例抓到多少</td></tr>
