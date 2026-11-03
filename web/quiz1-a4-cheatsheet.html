@@ -126,7 +126,7 @@ sub, sup { font-size: 70%; line-height: 0; }
       <div class="f">d = √[Σ(p<sub>j</sub> − q<sub>j</sub>)²]（歐氏）；<span class="x">曼哈頓 Σ|p<sub>j</sub> − q<sub>j</sub>|</span></div>
       <div class="f">分類：前 k 名多數決；回歸：前 k 名平均</div>
       <ul>
-        <li>不訓練（懶惰學習），<span class="k">預測慢</span></li>
+        <li>不訓練（懶惰學習、基於實例），<span class="k">預測慢</span></li>
         <li><span class="k">k 小 → 過擬合</span>（雜訊）；k 大 → 欠擬合（多數類）</li>
         <li><span class="k">必須標準化</span>；兩類時 k 取奇數；高維度效果差</li>
         <li class="x">距離加權：越近票越重</li>
@@ -144,7 +144,7 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>y·f = 1：支援向量；&lt; 1：在間隔內；&lt; 0：判錯</li>
         <li>只有支援向量決定邊界，遠處的點移動不影響</li>
         <li><span class="k">C 大 → 間隔窄、過擬合</span>；C 小 → 容許違規</li>
-        <li>核函數（poly、rbf）處理非線性；rbf 的 <span class="k">γ 大 → 過擬合</span></li>
+        <li>核函數（poly、rbf）處理非線性；<span class="k">γ 大</span>＝單點影響範圍小 → <span class="k">過擬合</span></li>
         <li>要標準化；大資料慢</li>
       </ul>
     </div>
@@ -305,6 +305,14 @@ sub, sup { font-size: 70%; line-height: 0; }
         <li>√2 1.414、√3 1.732、√5 2.236、√8 2.828、√10 3.162</li>
         <li>C(3,2) 3、C(4,2) 6、C(5,3) 10、C(5,4) 5；ln 2 .693、e 2.718、e<sup>−1</sup> .368</li>
         <li class="x"><b>RF 多數決</b>（B 棵、每棵對的機率 p）：P(對) = Σ<sub>m &gt; B/2</sub> C(B,m)p<sup>m</sup>(1−p)<sup>B−m</sup></li>
+      </ul>
+      <h2 style="margin-top:1mm">ChatGPT 新考題補充</h2>
+      <ul>
+        <li><b>SVM Margin 兩種定義</b>：單側（邊界到最近支援向量）= 1/‖w‖；兩側總寬 = 2/‖w‖。都是越大越好，看題目定義</li>
+        <li><b>超平面</b>：2 維是直線、3 維是平面，更高維叫超平面</li>
+        <li><b>RF 特徵重要性</b>：看出哪些特徵影響預測，但<span class="k">不代表因果</span></li>
+        <li class="x"><b>零條件平均</b>：E[誤差 | x] = 0，OLS 係數無偏的條件</li>
+        <li class="x"><b>XGBoost</b>：用梯度＋二階導數（Hessian）的泰勒展開近似目標函數</li>
       </ul>
     </div>
 
