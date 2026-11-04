@@ -11,6 +11,7 @@ GitHub Pages：https://hobartxiii.github.io/AIoT/
 - Quiz 1 題庫：https://hobartxiii.github.io/AIoT/web/quiz1-question-bank.html （原始檔 [`web/quiz1-question-bank.html`](web/quiz1-question-bank.html)）
 - Quiz 1 ChatGPT 考題專區：https://hobartxiii.github.io/AIoT/web/quiz1-chatgpt-bank.html （原始檔 [`web/quiz1-chatgpt-bank.html`](web/quiz1-chatgpt-bank.html)）
 - Quiz 1 進階挑戰題：https://hobartxiii.github.io/AIoT/web/quiz1-advanced-bank.html （原始檔 [`web/quiz1-advanced-bank.html`](web/quiz1-advanced-bank.html)）
+- Quiz 1 實際考題（2026-11-04）：https://hobartxiii.github.io/AIoT/web/quiz1-actual-exam.html （原始檔 [`web/quiz1-actual-exam.html`](web/quiz1-actual-exam.html)）
 - Quiz 1 計算題練習：https://hobartxiii.github.io/AIoT/web/quiz1-calc-practice.html （原始檔 [`web/quiz1-calc-practice.html`](web/quiz1-calc-practice.html)）
 - Quiz 1 A4 筆記草稿（正反兩面，可列印）：https://hobartxiii.github.io/AIoT/web/quiz1-a4-cheatsheet.html （原始檔 [`web/quiz1-a4-cheatsheet.html`](web/quiz1-a4-cheatsheet.html)）
 
@@ -29,6 +30,7 @@ GitHub Pages：https://hobartxiii.github.io/AIoT/
 | [Quiz 1 題庫](Quiz1-question-bank.md) | — | 監督式學習 209 題選擇題（附答案解析；[網頁版](web/quiz1-question-bank.html)） | — |
 | [Quiz 1 ChatGPT 考題專區](Quiz1-chatgpt-question-bank.md) | — | ChatGPT 產生的 100 題：9 種演算法＋綜合比較（[網頁版](web/quiz1-chatgpt-bank.html)） | — |
 | [Quiz 1 進階挑戰題](Quiz1-advanced-question-bank.md) | — | 比題庫難一級的 100 題：多步驟計算、承上題、陷阱題（[網頁版](web/quiz1-advanced-bank.html)） | — |
+| [Quiz 1 實際考題](Quiz1-actual-exam.md) | 2026.11.4 | 老師出的 50 題原題，附答案解析與錯題分析（[網頁版](web/quiz1-actual-exam.html)） | — |
 | [L07](L07-logistic-regression.md) | 2026.10.14 | Logistic Regression（分類問題）、混淆矩陣 | — |
 
 ## 筆記整理方式

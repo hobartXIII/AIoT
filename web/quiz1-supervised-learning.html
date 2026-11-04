@@ -250,6 +250,7 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
       <ol>
         <li><a href="#compare">總比較表</a></li>
         <li><a href="#confuse">易混淆對照</a></li>
+        <li><a href="#examgap">實際考題補充</a></li>
         <li><a href="#numtable">免計算機數值表</a></li>
       </ol>
     </div>
@@ -1952,9 +1953,79 @@ footer { grid-column: 1 / -1; margin-top: 48px; padding-top: 16px; border-top: 1
     </table></div>
   </section>
 
-  <section class="sec" id="numtable">
+  <!-- ============ 實際考題補充 ============ -->
+  <section class="sec" id="examgap">
     <div class="sec-head">
       <div class="sec-code">14 · 考前</div>
+      <h2>實際考題補充</h2>
+    </div>
+    <p class="gist">2026-11-04 的 <a href="quiz1-actual-exam.html">Quiz 1 實際考題</a>中，下面這些考點在原本的筆記、題庫和 A4 小抄裡沒有寫到，或只寫到一半。題號是實際考題的題號。</p>
+    <h3>迴歸</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>考點</th><th>重點</th><th>題號</th></tr></thead>
+      <tbody>
+        <tr><td class="nw"><b>RMSE 相同 → R² 相同</b></td><td>R² = 1 − MSE ÷ Var(y)，同一批資料 Var(y) 固定，所以 RMSE（MSE）相同，R² 必定相同；MAE、最大誤差、平均殘差不一定相同。</td><td class="nw">4</td></tr>
+        <tr><td class="nw"><b>MAE 和 RMSE 排名可能相反</b></td><td>RMSE 先平方，比較在意大誤差。誤差 0、0、6 的 MAE 2、RMSE 3.46；誤差 3、3、3 的 MAE 3、RMSE 3。</td><td class="nw">9</td></tr>
+        <tr><td class="nw"><b>只有線性迴歸能外推</b></td><td>線性迴歸是直線，可以預測超出訓練目標範圍的值；決策樹、隨機森林、KNN 迴歸輸出的是訓練樣本的平均，不會超出範圍。</td><td class="nw">8</td></tr>
+        <tr><td class="nw"><b>線性迴歸的假設不含「特徵彼此獨立」</b></td><td>假設是：線性、誤差彼此獨立、誤差變異相同（同質變異）、沒有完全共線性、誤差常態。特徵之間可以相關；「特徵條件獨立」是樸素貝氏的假設。</td><td class="nw">6</td></tr>
+        <tr><td class="nw"><b>用線性迴歸做 0／1 預測</b></td><td>輸出 wᵀx + b 沒有上下限，可能小於 0 或大於 1，不能當機率；標準化也改不了，要用邏輯迴歸。</td><td class="nw">19</td></tr>
+        <tr><td class="nw"><b>類別變數要用獨熱編碼</b></td><td>城市編成 1、2、3 等於假設城市之間等距、有順序，而且只有一個係數。獨熱編碼讓每個城市有自己的係數。</td><td class="nw">44</td></tr>
+      </tbody>
+    </table></div>
+    <h3>分類指標</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>考點</th><th>重點</th><th>題號</th></tr></thead>
+      <tbody>
+        <tr><td class="nw"><b>提高門檻：Recall 不會上升</b></td><td>判為正類的只會變少，TP 不會增加，Recall 的分母（實際正類數）固定。Precision 通常上升但不保證；模型輸出的機率不會因門檻改變。</td><td class="nw">21、23</td></tr>
+        <tr><td class="nw"><b>全部預測為正類</b></td><td>Recall = 1，Precision = 資料中的正類比例。</td><td class="nw">26</td></tr>
+        <tr><td class="nw"><b>交換正類與負類的定義</b></td><td>TP ↔ TN、FP ↔ FN，只有 Accuracy 一定不變；Precision、Recall、F1 會變成在算另一類。</td><td class="nw">29</td></tr>
+        <tr><td class="nw"><b>混淆矩陣相同，交叉熵仍可能不同</b></td><td>Accuracy、Precision、Recall、F1 只看四格；交叉熵（Log Loss）看預測機率本身。</td><td class="nw">24</td></tr>
+        <tr><td class="nw"><b>畫 ROC 需要什麼</b></td><td>每筆的實際類別和預測分數（才能換門檻）。只有最終類別只能得到一個點。</td><td class="nw">13</td></tr>
+        <tr><td class="nw"><b>F1 靠近較小的值</b></td><td>F1 是調和平均：P = 0.9、R = 0.1 時 F1 = 0.18，不是 0.5。</td><td class="nw">28</td></tr>
+        <tr><td class="nw"><b>AUC 衡量排序能力</b></td><td>AUC = 隨機抽一正一負，正類分數較高的機率。不是 Precision、不是 Accuracy，也不是機率準不準（校準）。</td><td class="nw">30</td></tr>
+      </tbody>
+    </table></div>
+    <h3>邏輯迴歸</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>考點</th><th>重點</th><th>題號</th></tr></thead>
+      <tbody>
+        <tr><td class="nw"><b>任何門檻的分類邊界都是超平面</b></td><td>σ(z) = t ⇔ wᵀx + b = ln(t ÷ (1 − t))，門檻只是把超平面平移，不會變成非線性。</td><td class="nw">22</td></tr>
+      </tbody>
+    </table></div>
+    <h3>KNN、樸素貝氏</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>考點</th><th>重點</th><th>題號</th></tr></thead>
+      <tbody>
+        <tr><td class="nw"><b>KNN 不會排除無關欄位</b></td><td>所有欄位都參與距離計算，加入無關欄位會改變鄰居、讓預測變差。</td><td class="nw">15</td></tr>
+        <tr><td class="nw"><b>KNN 要保留訓練樣本</b></td><td>惰性學習，預測時才和所有訓練樣本算距離；邏輯迴歸、線性迴歸存係數，決策樹存規則。</td><td class="nw">40</td></tr>
+        <tr><td class="nw"><b>條件獨立是「同一類別內」獨立</b></td><td>P(x₁, x₂ | y) = P(x₁ | y) × P(x₂ | y)。只有同類別內特徵相關才違反；不分類別時特徵相關不違反。</td><td class="nw">43</td></tr>
+        <tr><td class="nw"><b>樸素貝氏怎麼合併</b></td><td>P(y | x) ∝ P(y) × ∏ P(xᵢ | y)：特徵機率相乘，再乘類別比例。</td><td class="nw">5</td></tr>
+      </tbody>
+    </table></div>
+    <h3>決策樹、隨機森林</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>考點</th><th>重點</th><th>題號</th></tr></thead>
+      <tbody>
+        <tr><td class="nw"><b>單位換算只要換門檻</b></td><td>攝氏改華氏是遞增轉換，大小順序不變，門檻同步換算（30°C → 86°F）分組就一樣。所以樹模型不需要標準化。</td><td class="nw">33</td></tr>
+        <tr><td class="nw"><b>同一特徵可以在下層再用</b></td><td>連續特徵可以重複切，每次重新選門檻（先切 ≤ 30，再切 ≤ 10）。</td><td class="nw">35</td></tr>
+        <tr><td class="nw"><b>隨機森林「每次切分」抽候選特徵</b></td><td>不是每棵樹固定一組特徵，也不是只隨機選一個特徵。</td><td class="nw">36</td></tr>
+        <tr><td class="nw"><b>隨機森林降低的是變異</b></td><td>多棵樹平均，降低訓練樣本變動造成的預測波動；降低偏差是 Boosting。</td><td class="nw">50</td></tr>
+      </tbody>
+    </table></div>
+    <h3>流程與特徵處理</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>考點</th><th>重點</th><th>題號</th></tr></thead>
+      <tbody>
+        <tr><td class="nw"><b>先用整份資料選特徵 = 資料洩漏</b></td><td>測試集的標籤參與了特徵選擇，分數偏樂觀。要先切分，只用訓練集做特徵選擇和前處理。</td><td class="nw">27</td></tr>
+        <tr><td class="nw"><b>特徵選擇 vs PCA</b></td><td>特徵選擇留下的是原始欄位；PCA 的主成分是原始欄位的線性組合，不再對應原始量測。</td><td class="nw">46</td></tr>
+        <tr><td class="nw"><b>前向選擇怎麼加下一個特徵</b></td><td>把每個候選特徵分別和已選特徵一起放進模型，比較驗證表現，挑最好的加入。先全放再刪是後向刪除。</td><td class="nw">47</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec" id="numtable">
+    <div class="sec-head">
+      <div class="sec-code">15 · 考前</div>
       <h2>免計算機數值表</h2>
     </div>
     <p class="gist">考試不能帶計算機，題目通常會給數值。這張表和 A4 小抄反面的表內容相同：每兩列一組，<b>上面一列是你手上的數字，下面一列是查出來的答案</b>。</p>
