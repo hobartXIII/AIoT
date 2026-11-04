@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz 1 性質判斷題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Same palette as the other Quiz 1 banks: reference tables first, then the sticky toolbar and one column of question cards */
+:root {
+  --bg: #f4f6f8; --surface: #ffffff; --fg: #17212b; --muted: #5a6876; --line: #d9e0e7;
+  --accent: #1c6b86; --accent-soft: #e2eff4; --code-bg: #eef2f5; --mark: #b4541f;
+  --good: #2f7a4a; --good-soft: #e3f2e8; --bad: #b23b3b; --bad-soft: #f8e5e5;
+  --font-display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1317; --surface: #151c22; --fg: #e2e8ee; --muted: #94a2af; --line: #263139;
+    --accent: #63b5d2; --accent-soft: #15303a; --code-bg: #1a232b; --mark: #e39a6c;
+    --good: #7cc89a; --good-soft: #15291d; --bad: #ec8b8b; --bad-soft: #351a1a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1317; --surface: #151c22; --fg: #e2e8ee; --muted: #94a2af; --line: #263139;
+  --accent: #63b5d2; --accent-soft: #15303a; --code-bg: #1a232b; --mark: #e39a6c;
+  --good: #7cc89a; --good-soft: #15291d; --bad: #ec8b8b; --bad-soft: #351a1a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom: 64px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 820px; margin: 0 auto; }
+
+.mast { padding-block: 40px 18px; }
+.eyebrow { font-size: 13px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
+h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 5vw, 40px); line-height: 1.25; margin: 6px 0 10px; text-wrap: balance; }
+.mast p { margin: 0; color: var(--muted); max-width: 64ch; }
+
+.bar {
+  position: sticky; top: 0; z-index: 5; background: var(--bg);
+  padding: 12px 0 10px; border-bottom: 1px solid var(--line);
+  display: grid; gap: 10px;
+}
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: none; padding: 5px 14px; cursor: pointer; font-size: 14px; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); font-weight: 700; }
+.score { font-family: var(--font-mono); font-size: 14px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+.score b { color: var(--fg); }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 5px 12px; cursor: pointer; font-size: 14px; }
+.btn[aria-pressed="true"] { border-color: var(--bad); color: var(--bad); font-weight: 700; }
+:root { --extc: #1d4ed8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --extc: #8fb0ff; } }
+:root[data-theme="dark"] { --extc: #8fb0ff; }
+.q.x h3 > span:last-child, .q.x .opt span:last-child { color: var(--extc); }
+.ext { display: inline-block; font-size: 12px; font-weight: 600; color: var(--extc); border: 1px solid var(--extc); border-radius: 6px; padding: 0 6px; margin-right: 6px; vertical-align: 2px; }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+.chip { flex: none; border: 1px solid var(--line); border-radius: 999px; padding: 2px 11px; background: var(--surface); cursor: pointer; font-size: 13.5px; color: var(--muted); white-space: nowrap; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--fg); font-weight: 700; }
+.chip small { font-family: var(--font-mono); margin-left: 4px; }
+
+.sec-title { font-family: var(--font-display); font-size: 21px; margin: 34px 0 6px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
+.sec-title span { font-family: var(--font-body); font-size: 14px; color: var(--muted); font-weight: 400; margin-left: 8px; }
+
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin-top: 14px; }
+.q h3 { font-size: 16.5px; line-height: 1.6; margin: 0 0 10px; font-weight: 700; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; }
+.q h3 .no { font-family: var(--font-mono); color: var(--accent); font-weight: 600; }
+.opts { display: grid; gap: 6px; }
+.opt { display: grid; grid-template-columns: 1.6em minmax(0, 1fr); gap: 6px; text-align: left; border: 1px solid var(--line); background: none; border-radius: 8px; padding: 7px 12px; cursor: pointer; line-height: 1.6; }
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.opt:disabled { cursor: default; }
+.opt .k { font-family: var(--font-mono); font-weight: 600; color: var(--muted); }
+.opt.ok { border-color: var(--good); background: var(--good-soft); font-weight: 700; }
+.opt.ok .k { color: var(--good); }
+.opt.no { border-color: var(--bad); background: var(--bad-soft); }
+.opt.no .k { color: var(--bad); }
+.ans { margin-top: 10px; padding: 9px 14px; border-left: 3px solid var(--accent); background: var(--code-bg); border-radius: 0 8px 8px 0; font-size: 15px; }
+.ans b { color: var(--good); }
+.ans .wrong { color: var(--bad); font-weight: 700; }
+.notes h2 { font-family: var(--font-display); font-size: 24px; margin: 10px 0 4px; }
+.notes h3 { font-size: 17px; margin: 26px 0 4px; }
+.notes p { margin: 0 0 8px; color: var(--muted); font-size: 15px; }
+.tbl { overflow-x: auto; }
+.tbl table { border-collapse: collapse; width: 100%; font-size: 14.5px; background: var(--surface); line-height: 1.55; }
+.tbl th, .tbl td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+.tbl th { background: var(--code-bg); white-space: nowrap; }
+.tbl td:first-child { font-weight: 700; white-space: nowrap; }
+.qs-head { font-family: var(--font-display); font-size: 24px; margin: 40px 0 4px; }
+.empty { color: var(--muted); text-align: center; padding: 48px 0; }
+.foot { margin-top: 40px; font-size: 14px; color: var(--muted); }
+@media (max-width: 560px) {
+  .score { margin-left: 0; width: 100%; }
+  .q { padding: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="eyebrow">AIoT-DA · Quiz 1 檢討</div>
+    <h1>性質判斷題：筆記＋60 題</h1>
+    <p>依 <a href="quiz1-actual-exam.html">Quiz 1 實際考題</a>的出題方向整理：不考計算，考「改了某個條件之後，什麼會變、什麼必定成立」，以及「這個性質屬於哪個模型」。先看觀念對照表，再做題。題目由 Claude 編寫，情境都換過，不和實際考題重複；Ridge／Lasso 和梯度提升這次沒考，只收少量。</p>
+  </header>
+
+  <section class="notes" aria-label="觀念對照">
+    <h2>觀念對照</h2>
+    <h3>分類指標：用到什麼資訊、什麼會讓它變</h3>
+    <p>判斷「改了某個條件後指標會不會變」，先問這個指標是用什麼算出來的：只用混淆矩陣四格的，四格不變它就不變；用排序的，排序不變它就不變；用機率值的，機率一動它就動。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>指標</th><th>用到的資訊</th><th>換門檻</th><th>分數做遞增轉換（排序不變）</th><th>要記的性質</th></tr></thead>
+      <tbody>
+        <tr><td>Accuracy</td><td>四格：(TP + TN) ÷ 全部</td><td>會變</td><td>會變（判為正的樣本會變）</td><td>交換正負類定義也不變；類別不平衡時會誤導</td></tr>
+        <tr><td>Precision</td><td>TP ÷ (TP + FP)</td><td>會變；提高門檻通常上升，但不保證</td><td>會變</td><td>全部判正類時 = 正類比例</td></tr>
+        <tr><td>Recall</td><td>TP ÷ (TP + FN)</td><td>提高門檻不會上升；降低門檻不會下降</td><td>會變</td><td>全部判正類時 = 1；全部判負類時 = 0</td></tr>
+        <tr><td>F1</td><td>P 和 R 的調和平均</td><td>會變</td><td>會變</td><td>靠近較小的值；P 或 R 為 0 時 F1 = 0</td></tr>
+        <tr><td>ROC-AUC</td><td>分數的排序</td><td>不受門檻影響</td><td>不變</td><td>0.5 ≈ 隨機猜；AUC 相同，ROC 曲線不一定相同</td></tr>
+        <tr><td>Log Loss（交叉熵）</td><td>每筆的預測機率</td><td>不受門檻影響</td><td>會變</td><td>混淆矩陣相同仍可能不同；對「很有把握卻錯」懲罰很重</td></tr>
+      </tbody>
+    </table></div>
+    <h3>迴歸指標：單位與排名</h3>
+    <p>同一批資料上，MSE、RMSE、R² 的排名一定一致（R² = 1 − MSE ÷ Var(y)）；MAE 不一定。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>指標</th><th>單位</th><th>目標值 × c（換單位）</th><th>要記的性質</th></tr></thead>
+      <tbody>
+        <tr><td>MSE</td><td>y 的單位平方</td><td>× c²</td><td>對大誤差、離群值敏感</td></tr>
+        <tr><td>RMSE</td><td>和 y 相同</td><td>× c</td><td>排名和 MSE 一樣</td></tr>
+        <tr><td>MAE</td><td>和 y 相同</td><td>× c</td><td>較不受離群值影響；排名可能和 RMSE 相反</td></tr>
+        <tr><td>R²</td><td>沒有單位</td><td>不變</td><td>可以是負的（比直接預測平均還差）；OLS 加特徵，訓練集 R² 不會下降</td></tr>
+      </tbody>
+    </table></div>
+    <h3>模型性質總表</h3>
+    <p>考試最愛問「哪個模型可以／不行」。這張表每一欄都是一種常考的性質。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>模型</th><th>受特徵尺度影響</th><th>能外推</th><th>預測時要留訓練樣本</th><th>邊界／預測形狀</th><th>核心假設或機制</th></tr></thead>
+      <tbody>
+        <tr><td>線性迴歸</td><td>預測不受影響；係數大小受影響</td><td>能</td><td>不用，存係數</td><td>直線／超平面</td><td>線性、誤差獨立、誤差變異相同、無完全共線</td></tr>
+        <tr><td>Ridge／Lasso</td><td>受影響（懲罰看係數大小），要先標準化</td><td>能</td><td>不用</td><td>超平面</td><td>L2 只縮小係數；L1 可壓成 0</td></tr>
+        <tr><td>邏輯迴歸</td><td>沒正則化時不受影響；有正則化時受影響</td><td>輸出限制在 0～1</td><td>不用</td><td>任何門檻都是超平面</td><td>線性分數經 Sigmoid 轉機率</td></tr>
+        <tr><td>KNN</td><td>受影響，要標準化</td><td>不能（鄰居平均）</td><td>要，全部</td><td>可任意彎曲</td><td>惰性學習；所有欄位都參與距離</td></tr>
+        <tr><td>SVM</td><td>受影響，要標準化</td><td>—</td><td>核 SVM 要存支持向量</td><td>線性；換核函數可非線性</td><td>最大化間隔，只看支持向量</td></tr>
+        <tr><td>樸素貝氏</td><td>Gaussian NB 不受線性縮放影響</td><td>—</td><td>不用，存機率</td><td>—</td><td>給定類別後特徵條件獨立</td></tr>
+        <tr><td>決策樹</td><td>不受影響（遞增轉換不改分組）</td><td>不能（葉節點平均）</td><td>不用，存規則</td><td>與座標軸平行的矩形區域</td><td>依不純度切分；同一特徵可重複切</td></tr>
+        <tr><td>隨機森林</td><td>不受影響</td><td>不能</td><td>不用</td><td>矩形區域的平均</td><td>Bagging：獨立訓練、投票／平均，降低變異</td></tr>
+        <tr><td>梯度提升</td><td>不受影響</td><td>不能</td><td>不用</td><td>矩形區域的加總</td><td>Boosting：依序修正前面的錯，降低偏差</td></tr>
+      </tbody>
+    </table></div>
+    <h3>容易張冠李戴的性質</h3>
+    <p>考題常把一個模型的性質放到另一個模型身上。看到下列描述，先確認它屬於誰。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>描述</th><th>真正屬於</th><th>常被誤套到</th></tr></thead>
+      <tbody>
+        <tr><td>給定類別後，特徵彼此獨立</td><td>樸素貝氏</td><td>線性迴歸的假設</td></tr>
+        <tr><td>誤差變異相同（同質變異）</td><td>線性迴歸</td><td>樸素貝氏</td></tr>
+        <tr><td>後一棵依前一棵的錯誤修正</td><td>梯度提升（Boosting）</td><td>隨機森林</td></tr>
+        <tr><td>各棵樹獨立訓練，再投票／平均</td><td>隨機森林（Bagging）</td><td>梯度提升</td></tr>
+        <tr><td>每次切分隨機抽候選特徵</td><td>隨機森林</td><td>單棵決策樹</td></tr>
+        <tr><td>把係數壓成 0、做特徵選擇</td><td>Lasso（L1）</td><td>Ridge（L2）</td></tr>
+        <tr><td>最大化分界到最近樣本的距離</td><td>SVM</td><td>邏輯迴歸</td></tr>
+        <tr><td>線性分數經 Sigmoid 轉成機率</td><td>邏輯迴歸</td><td>線性迴歸</td></tr>
+        <tr><td>預測時才和訓練樣本算距離</td><td>KNN</td><td>決策樹</td></tr>
+        <tr><td>估計 P(x | y) 與 P(y)（生成式）</td><td>樸素貝氏</td><td>邏輯迴歸</td></tr>
+        <tr><td>k 是群數、非監督式</td><td>K-Means</td><td>KNN</td></tr>
+      </tbody>
+    </table></div>
+    <h3>流程判斷</h3>
+    <p>流程題問的是「這樣做，分數還能不能信」。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>情境</th><th>判斷</th><th>正確做法</th></tr></thead>
+      <tbody>
+        <tr><td>用整份資料做標準化、補值或特徵選擇，再切分</td><td>資料洩漏，分數偏樂觀</td><td>先切分，只用訓練集 fit 前處理</td></tr>
+        <tr><td>用測試集反覆調超參數</td><td>測試分數偏樂觀</td><td>用驗證集或交叉驗證調，測試集只用一次</td></tr>
+        <tr><td>時間序列隨機打亂再切分</td><td>用未來預測過去，分數偏樂觀</td><td>依時間切分，過去訓練、未來測試</td></tr>
+        <tr><td>訓練好、驗證差</td><td>過擬合</td><td>加資料、正則化、降低複雜度</td></tr>
+        <tr><td>訓練和驗證都差</td><td>欠擬合</td><td>提高複雜度、加入有用特徵；加資料幫助不大</td></tr>
+        <tr><td>只切一次，分數忽高忽低</td><td>評估受切分影響</td><td>交叉驗證；但它修不好標籤錯誤</td></tr>
+        <tr><td>名目類別（城市、顏色）</td><td>編成 1、2、3 會假設順序和等距</td><td>獨熱編碼；有順序的類別可用序數編碼</td></tr>
+        <tr><td>想降維又保留原始量測意義</td><td>PCA 的新特徵是線性組合</td><td>特徵選擇（前向選擇、後向刪除）</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <h2 class="qs-head" id="questions">題目</h2>
+  <div class="bar">
+    <div class="row">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" data-mode="practice">練習</button>
+        <button type="button" data-mode="review">看答案</button>
+      </div>
+      <button type="button" class="btn" id="wrongOnly" aria-pressed="false">只看答錯</button>
+      <button type="button" class="btn" id="reset">重設作答</button>
+      <div class="score" id="score"></div>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="主題"></div>
+  </div>
+
+  <main id="list"></main>
+  <p class="foot">題目和解析由 Claude 依實際考題的出題方向編寫，非老師公布的官方題目。</p>
+</div>
+
+<script>
+const DATA = {"topics":[{"k":"metric","zh":"分類指標","en":"Classification Metrics"},{"k":"reg","zh":"迴歸與迴歸指標","en":"Regression & Metrics"},{"k":"cls","zh":"邏輯迴歸、KNN、SVM、樸素貝氏","en":"LogReg · KNN · SVM · NB"},{"k":"tree","zh":"決策樹與集成","en":"Trees & Ensembles"},{"k":"flow","zh":"流程與特徵處理","en":"Workflow & Features"}],"items":[{"n":1,"t":"metric","s":"二元分類器輸出的分數都介於 0 與 1。把每筆分數都平方後當作新分數，其他設定不變。下列哪個指標必定不變？","o":["門檻 0.5 下的 Accuracy","Log Loss","ROC-AUC","門檻 0.5 下的 Recall"],"a":2,"e":"0～1 之間平方是遞增轉換，樣本的分數排序不變，所以只看排序的 ROC-AUC 不變。分數數值變了，Log Loss 會變；例如 0.6 平方成 0.36，在門檻 0.5 下從正類變負類，Accuracy、Recall 都可能變。"},{"n":2,"t":"metric","s":"模型輸出的機率固定，把分類門檻調低。下列哪項變化可以確定？","o":["Precision 不會下降","Recall 不會下降","Accuracy 不會下降","F1-score 不會下降"],"a":1,"e":"門檻調低，判為正類的樣本只會變多，原本的 TP 不會消失，所以 TP 不減少；Recall 的分母（實際正類數）固定，Recall 不會下降。新增的正類判斷可能是 FP，所以 Precision、Accuracy、F1 都可能下降。"},{"n":3,"t":"metric","s":"資料同時有正類與負類，模型把所有樣本都預測為負類。下列何者正確？","o":["Recall 為 0，Accuracy 等於資料中的負類比例","Recall 為 1，Accuracy 等於資料中的正類比例","Precision 為 1，Accuracy 為 0","Recall 與 Accuracy 都為 0"],"a":0,"e":"沒有任何樣本被判為正類，TP = 0，Recall = 0。判對的只有實際負類，所以 Accuracy = 負類比例。Precision 的分母 TP + FP = 0，無法定義。"},{"n":4,"t":"metric","s":"某資料集 95% 是負類，模型的 Accuracy 是 95%。下列哪個解讀最適當？","o":["模型辨識正類的能力一定很好","模型可能只是全部判為負類，還要看 Recall 等指標","模型的 Precision 必定也是 95%","模型的 ROC-AUC 必定也是 0.95"],"a":1,"e":"類別不平衡時，全部猜多數類就有 95% Accuracy，但一個正類都沒抓到（Recall = 0）。Accuracy 和 Precision、AUC 沒有必然的數值關係。"},{"n":5,"t":"metric","s":"某二元分類器在評估資料上的 ROC-AUC 是 0.5。下列哪個解讀最適當？","o":["有一半的樣本被分對","門檻設在 0.5 時表現最好","Precision 等於 0.5","依分數排序區分正負類的能力，和隨機猜測差不多"],"a":3,"e":"AUC 是「隨機抽一正一負，正類分數較高」的機率，0.5 代表排序和亂猜一樣。它和門檻無關，也不等於 Accuracy 或 Precision。"},{"n":6,"t":"metric","s":"異常偵測以「異常」為正類。系統漏掉的真正異常越來越多，其他條件不變。這類錯誤會直接拉低哪個指標？","o":["Recall","Precision","Specificity（負類判對的比例）","不影響任何指標"],"a":0,"e":"漏掉的真正異常是 FN。Recall = TP ÷ (TP + FN)，FN 增加 Recall 下降。Precision 的分母是 TP + FP，不含 FN；Specificity 只看實際負類。"},{"n":7,"t":"metric","s":"混淆矩陣四格都有樣本。若每一格的數量都剛好變成原本的兩倍，下列何者正確？","o":["Accuracy、Precision、Recall 都不變","只有 Accuracy 不變","Precision 與 Recall 都變成兩倍","只有 F1-score 不變"],"a":0,"e":"這三個指標都是四格之間的比例，分子分母同時變兩倍，比例不變。F1 由 Precision 和 Recall 算出，也不變。"},{"n":8,"t":"metric","s":"想知道「模型說是正類的時候，有多大比例真的是正類」，應該看哪個指標？","o":["Recall","Specificity","Precision","Accuracy"],"a":2,"e":"Precision = TP ÷ (TP + FP)，分母是所有被判為正類的樣本。Recall 的分母是所有實際正類。"},{"n":9,"t":"metric","s":"疾病篩檢最在意不要漏掉病人。只調整分類門檻時，通常的做法和代價是什麼？","o":["調高門檻提高 Precision，代價是 Recall 下降","調低門檻提高 Recall，代價是 Precision 可能下降","調低門檻提高 ROC-AUC，代價是 Log Loss 上升","調高門檻提高 Accuracy，代價是 ROC-AUC 下降"],"a":1,"e":"不想漏掉病人就是要高 Recall，調低門檻讓更多人被判陽性；多出來的人有些是健康的（FP），Precision 可能下降。換門檻不會改變 ROC-AUC 和 Log Loss，因為兩者都不看門檻。"},{"n":10,"t":"metric","s":"Precision 與 Recall 其中一個為 0，另一個大於 0。F1-score 是多少？","o":["0","另一個指標的一半","等於另一個指標","無法定義"],"a":0,"e":"F1 = 2PR ÷ (P + R)，分子有 P × R，其中一個為 0 分子就是 0，分母大於 0，所以 F1 = 0。這也說明 F1 會被較小的值拉低。"},{"n":11,"t":"metric","s":"兩個二元分類器在同一份資料上的 ROC-AUC 相同。下列何者正確？","o":["任何門檻下的 Accuracy 都相同","Log Loss 必定相同","混淆矩陣必定相同","ROC 曲線不一定相同，各門檻下的表現仍可能不同"],"a":3,"e":"AUC 是曲線下的面積，不同形狀的曲線可以有相同面積，所以在某個門檻下一個模型較好、另一個門檻下另一個較好。AUC 也不看機率值，Log Loss 可能不同。"},{"n":12,"t":"metric","s":"一筆樣本實際為正類，模型卻給它 0.01 的正類機率。這一筆對哪個指標的懲罰最重？","o":["Log Loss","Accuracy","ROC-AUC","Precision"],"a":0,"e":"Log Loss 對這筆是 −ln(0.01) ≈ 4.6，越有把握地判錯，懲罰越大，會讓整體 Log Loss 明顯上升。Accuracy 只把它當成一筆錯誤，和給 0.49 的錯誤一樣；它是 FN，不影響 Precision。"},{"n":13,"t":"reg","s":"目標值的單位從公斤改成公克（全部乘以 1000），重新訓練後預測也跟著乘以 1000。下列哪個指標不變？","o":["MSE","RMSE","MAE","R²"],"a":3,"e":"誤差全部乘以 1000：MAE、RMSE 乘以 1000，MSE 乘以 10⁶。R² = 1 − MSE ÷ Var(y)，分子分母都乘以 10⁶，所以不變。"},{"n":14,"t":"reg","s":"迴歸模型在驗證資料上的 R² 是負值。這代表什麼？","o":["計算一定出錯，R² 不可能為負","模型比「每筆都預測平均值」還差","預測值和實際值呈負相關","模型完全擬合了資料"],"a":1,"e":"R² = 1 − MSE ÷ Var(y)，Var(y) 就是一直猜平均值的 MSE。模型的 MSE 比它大，R² 就小於 0。在驗證或測試資料上很常發生，表示模型很差。"},{"n":15,"t":"reg","s":"在同一批資料上，模型甲的 MSE 比模型乙小。下列何者必定成立？","o":["甲的 MAE 也比乙小","甲的最大絕對誤差比乙小","甲的 RMSE 比乙小，R² 比乙大","甲在每一筆資料的誤差都比乙小"],"a":2,"e":"RMSE 是 MSE 開根號，排名一樣；R² = 1 − MSE ÷ Var(y)，同一批資料 Var(y) 固定，MSE 小 R² 就大。MAE、最大誤差、個別誤差和 MSE 沒有必然的大小關係。"},{"n":16,"t":"reg","s":"評估資料裡有少數離群值，希望指標不要被它們過度影響。下列哪個較合適？","o":["MSE","RMSE","MAE","R²"],"a":2,"e":"MSE、RMSE 和 R² 都建立在誤差平方上，大誤差會被放大。MAE 用絕對值，每筆誤差照原比例計入。"},{"n":17,"t":"reg","s":"多元線性迴歸用最小平方法擬合，加入一個和目標完全無關的特徵後重新擬合。訓練集的 R² 會如何？","o":["不會下降","一定下降","一定完全不變","可能大幅下降"],"a":0,"e":"最小平方法至少可以把新特徵的係數設成 0，得到和原本一樣的誤差，所以訓練誤差不會變大、R² 不會下降，通常還會微幅上升。這也是只看訓練集 R² 會高估模型的原因，要看驗證表現或調整後 R²。"},{"n":18,"t":"reg","s":"一般線性迴歸（沒有正則化）把某個特徵的單位從公尺改成公分，重新擬合。下列何者正確？","o":["該特徵的係數變成原本的 1/100，預測值不變","係數與預測值都變成 100 倍","係數不變，預測值變成 100 倍","係數與預測值都不變"],"a":0,"e":"特徵數值變成 100 倍，係數只要變成 1/100，乘積就和原本一樣，所以預測不變。這說明係數大小會受單位影響，不能直接拿來比較重要性。"},{"n":19,"t":"reg","s":"某個特徵的單位從公尺改成公分，但模型是 Ridge 迴歸。下列何者較正確？","o":["和一般線性迴歸一樣，預測完全不變","懲罰項看的是係數大小，預測可能改變，所以建議先標準化","Ridge 會自動把這個特徵的係數壓成 0","Ridge 不使用係數，所以不受影響"],"a":1,"e":"單位改成公分後，同樣的效果只需要 1/100 的係數，受到的 L2 懲罰變小，模型的取捨就變了，預測可能不同。所以使用正則化前要先標準化，讓每個特徵受到公平的懲罰。把係數壓成 0 是 Lasso 的特性。"},{"n":20,"t":"reg","s":"希望模型在訓練時自動讓部分特徵的係數變成 0，達到特徵選擇的效果。應優先選擇哪個方法？","o":["Ridge 迴歸","一般線性迴歸","Lasso 迴歸","加入更多特徵"],"a":2,"e":"Lasso 用 L1 懲罰（係數絕對值），會把不重要的係數直接壓成 0。Ridge 用 L2 懲罰，只會讓係數變小，不會剛好變成 0。"},{"n":21,"t":"reg","s":"線性迴歸的殘差圖中，預測值越大，殘差的分散程度也越大（呈漏斗形）。這主要違反哪個假設？","o":["誤差的變異程度相同（同質變異）","輸入特徵之間彼此獨立","輸入特徵之間沒有完全共線性","模型使用的特徵數不能太多"],"a":0,"e":"漏斗形表示不同輸入條件下誤差的變異不同，違反同質變異假設。線性迴歸本來就不要求特徵彼此獨立。"},{"n":22,"t":"reg","s":"多元線性迴歸中，有一個特徵剛好是另一個特徵的 2 倍（完全共線）。下列何者正確？","o":["模型會自動讓兩個係數相同","只要先標準化就能解決","預測一定會出現很大的誤差","兩個特徵的係數無法唯一決定"],"a":3,"e":"x₂ = 2x₁ 時，w₁x₁ + w₂x₂ = (w₁ + 2w₂)x₁，只要 w₁ + 2w₂ 固定，任何組合的預測都一樣，所以係數無法唯一決定。標準化後兩個特徵會變得完全相同，還是共線。預測本身不一定變差。"},{"n":23,"t":"reg","s":"多元線性迴歸中，特徵 x₁ 的係數是 3。下列哪個解讀最適當？","o":["x₁ 是最重要的特徵","在其他特徵不變時，x₁ 每增加 1 單位，預測值增加 3","x₁ 和目標的相關係數是 3","x₁ 每增加 1，實際目標值必定增加 3"],"a":1,"e":"係數描述的是模型的預測，而且是「其他特徵固定」下的效果。係數大小受單位影響，不能直接代表重要性；相關係數介於 −1 和 1 之間；實際值還有誤差，不會「必定」增加。"},{"n":24,"t":"reg","s":"訓練資料的目標值都介於 0 與 100。對任何新資料，下列哪個模型的預測必定落在 0 到 100 之間？","o":["線性迴歸","Ridge 迴歸","決策樹迴歸","多項式迴歸"],"a":2,"e":"決策樹迴歸的預測是葉節點內訓練樣本的平均，一定落在訓練目標的範圍內。線性、Ridge、多項式迴歸都是公式，輸入夠極端時可以超出範圍。"},{"n":25,"t":"cls","s":"二元邏輯迴歸中，某個特徵的係數為正。在其他特徵不變時，這代表什麼？","o":["該特徵越大，預測為正類的機率越高","該特徵越大，預測為正類的機率越低","該特徵和類別無關","該特徵的值必定都是正數"],"a":0,"e":"係數為正，特徵變大會讓線性分數 z 變大，Sigmoid 是遞增函數，正類機率也跟著變大。係數的正負和特徵本身是不是正數無關。"},{"n":26,"t":"cls","s":"邏輯迴歸對兩筆資料輸出的正類機率分別是 0.9 和 0.6，原本門檻 0.5，兩筆都判為正類。門檻改成 0.7 後，結果如何？","o":["兩筆都改判負類","兩筆的機率都要重新計算","0.9 那筆仍是正類，0.6 那筆改判負類","兩筆都仍是正類"],"a":2,"e":"門檻只決定怎麼把機率轉成類別，機率本身不變。0.9 ≥ 0.7 仍是正類，0.6 < 0.7 改判負類。"},{"n":27,"t":"cls","s":"比較邏輯迴歸和線性迴歸，下列何者正確？","o":["邏輯迴歸的輸出沒有上下限","邏輯迴歸把線性分數經過 Sigmoid，輸出限制在 0 到 1 之間","兩者訓練時都以 MSE 作為損失","邏輯迴歸只能使用一個特徵"],"a":1,"e":"兩者都先算線性分數 wᵀx + b；邏輯迴歸再經過 Sigmoid 變成機率，訓練時用 Log Loss（交叉熵）。線性迴歸輸出沒有上下限，用 MSE。"},{"n":28,"t":"cls","s":"KNN 分類的鄰居數 k 從 1 逐漸增加到接近訓練樣本總數。預測會怎麼變化？","o":["越來越受單一錯誤標記影響","決策邊界越來越複雜","越來越接近「全部猜多數類別」，可能欠擬合","訓練時間大幅增加"],"a":2,"e":"k 越大，參考的鄰居越多，邊界越平滑；k 接近全部樣本時，每筆都投出整體多數類，模型太簡單而欠擬合。受單一錯誤標記影響、邊界複雜是 k 太小的問題。KNN 沒有訓練步驟，k 不影響訓練時間。"},{"n":29,"t":"cls","s":"KNN 使用歐氏距離，「年收入」的範圍是 0～1,000,000，「信用使用比例」的範圍是 0～1，兩者都沒有標準化。結果最可能是？","o":["兩個特徵的影響相同","距離幾乎完全由年收入決定","信用使用比例主導距離","KNN 會自動依特徵的重要性調整權重"],"a":1,"e":"收入的差距動輒上萬，比例的差距最多 1，平方加總後比例幾乎沒有影響。KNN 不會自己學權重，所以要先標準化。"},{"n":30,"t":"cls","s":"KNN 的訓練資料量變成原本的兩倍，對預測階段有什麼影響？","o":["預測變快，因為資料更多","沒有影響，因為預測只看 k 個鄰居","模型需要學習的係數變多","每次預測要比較的樣本變多，通常變慢"],"a":3,"e":"KNN 是惰性學習，預測時要和所有訓練樣本算距離才能找出最近的 k 個，訓練資料越多，預測越慢。KNN 沒有係數。"},{"n":31,"t":"cls","s":"線性可分的資料用硬間隔 SVM 訓練。刪除一筆離分界很遠、不是支持向量的訓練樣本後重新訓練，分界會如何？","o":["不變","大幅改變","間隔變小","變成非線性"],"a":0,"e":"SVM 的分界只由支持向量（離分界最近的樣本）決定。刪掉遠處的樣本，支持向量不變，分界也不變。這是 SVM 和邏輯迴歸的差別：邏輯迴歸會用到所有樣本。"},{"n":32,"t":"cls","s":"軟間隔 SVM 的參數 C 設得很大。下列何者正確？","o":["容忍更多分錯的訓練樣本，間隔變寬","會自動改用非線性核函數","C 只影響訓練速度，和間隔無關","盡量不分錯訓練樣本，間隔可能變窄，較容易過擬合"],"a":3,"e":"C 是分錯的懲罰。C 大表示很不能接受分錯，寧可間隔窄也要把訓練樣本分對，容易過擬合；C 小則容忍分錯，間隔較寬。"},{"n":33,"t":"cls","s":"多項式樸素貝氏沒有做平滑。測試郵件裡有一個字詞在某類別的訓練資料中從未出現。結果如何？","o":["該字詞會被自動忽略","該類別的機率乘積變成 0","該類別的機率變成 1","對結果沒有影響"],"a":1,"e":"沒出現過，P(字詞 | 類別) 估計為 0，相乘後整個乘積為 0，不管其他字詞多支持這個類別都沒用。所以要用拉普拉斯平滑（每個次數加 1）。"},{"n":34,"t":"cls","s":"樸素貝氏的輸入中，有兩個特徵其實是同一個量測的重複複製。最可能造成什麼問題？","o":["同一份證據被乘了兩次，預測機率過度偏向某一類","模型會自動合併這兩個特徵","違反的是類別先驗的假設","沒有任何影響"],"a":0,"e":"兩個特徵在同一類別內完全相關，違反條件獨立假設。模型把它們當成兩份獨立證據相乘，等於同一個證據算兩次，機率會過度自信。分類結果有時仍然對，但機率不可靠。"},{"n":35,"t":"cls","s":"下列哪個模型屬於生成式模型，訓練時估計各類別的特徵分布 P(x | y) 和類別比例 P(y)？","o":["邏輯迴歸","支援向量機","樸素貝氏","K 近鄰法"],"a":2,"e":"樸素貝氏用貝氏定理 P(y | x) ∝ P(y) × P(x | y)，要估計 P(x | y) 和 P(y)，是生成式。邏輯迴歸直接學 P(y | x)，是判別式；SVM 直接找分界；KNN 不估計分布。"},{"n":36,"t":"cls","s":"使用 RBF 核的 SVM 訓練完成後，預測新資料時需要保存什麼？","o":["全部訓練樣本","支持向量和它們的權重","只有一組特徵係數","每個類別的平均值和變異數"],"a":1,"e":"核 SVM 的預測是新樣本和各支持向量算核函數的加權和，所以要保存支持向量。保存全部訓練樣本的是 KNN；只存係數的是線性模型；存平均和變異數的是 Gaussian NB。"},{"n":37,"t":"tree","s":"決策樹的某個特徵都是正數，把它取對數（log）後重新訓練。關於能否得到原本的分組，下列何者正確？","o":["可以，取對數是遞增轉換，門檻換算後分組相同","不行，取對數後一定變差","不行，取對數前必須先標準化","不行，決策樹無法使用取過對數的特徵"],"a":0,"e":"決策樹只看「大於或小於門檻」，遞增轉換不改變樣本的大小順序，原本的門檻 t 換成 log t 就能分出相同的組。所以樹模型不需要標準化，也不太需要取對數。"},{"n":38,"t":"tree","s":"決策樹的最大深度從 3 提高到 20。最可能的變化是？","o":["訓練誤差上升，驗證誤差下降","訓練誤差通常下降，驗證誤差可能上升","訓練誤差和驗證誤差一定都下降","對誤差沒有影響"],"a":1,"e":"樹越深，可以切得越細，訓練資料幾乎能被完全分對，訓練誤差下降；但細節可能只是雜訊，新資料表現變差，就是過擬合。"},{"n":39,"t":"tree","s":"決策樹某個節點內的訓練樣本全部屬於同一類。這個節點的 Gini 不純度是多少？","o":["0","0.5","1","無法計算"],"a":0,"e":"Gini = 1 − Σ pᵢ²，只有一類時 p = 1，Gini = 1 − 1 = 0，表示完全純。二元各半時 Gini = 0.5 最亂。"},{"n":40,"t":"tree","s":"只用兩個連續特徵訓練決策樹分類器。畫在平面上，決策邊界通常長什麼樣子？","o":["一條斜的直線","平滑的曲線","由與座標軸平行的線段組成的矩形區域","以樣本為圓心的圓形"],"a":2,"e":"每次切分只看一個特徵的門檻（x₁ ≤ t 或 x₂ ≤ t），切線一定和某個座標軸平行，多次切分後形成階梯狀的矩形區域。斜直線是線性模型，平滑曲線是核 SVM 一類的模型。"},{"n":41,"t":"tree","s":"隨機森林的樹數量從 100 增加到 1000（其他設定不變）。最可能的結果是？","o":["預測通常更穩定，不太會因為樹變多而過擬合","一定會嚴重過擬合","每一棵樹都會變得更深","整體模型變得更容易解釋"],"a":0,"e":"隨機森林是平均很多棵獨立的樹，樹越多，平均越穩定，表現會收斂，不太會因此過擬合，只是計算變慢。梯度提升才是樹太多可能過擬合。"},{"n":42,"t":"tree","s":"「每一棵新樹專門擬合前面所有樹的預測誤差（殘差）」描述的是哪個方法？","o":["隨機森林","單棵決策樹","K 近鄰法","梯度提升"],"a":3,"e":"梯度提升（Boosting）依序建樹，每棵新樹修正前面的錯誤。隨機森林（Bagging）的各棵樹彼此獨立訓練，可以平行。"},{"n":43,"t":"tree","s":"梯度提升在學習率固定下，持續增加樹的數量。下列何者最可能？","o":["訓練誤差持續下降，但可能過擬合，所以常搭配提早停止（early stopping）","樹越多越不會過擬合，和隨機森林一樣","訓練誤差會開始上升","樹的數量和模型表現無關"],"a":0,"e":"每棵樹都在修正剩下的錯誤，樹越多越貼近訓練資料，訓練誤差一直降，最後可能連雜訊都擬合。所以要看驗證誤差，在不再改善時停下來。"},{"n":44,"t":"tree","s":"隨機森林在每次切分時只從部分特徵中挑選。這麼做的主要目的是？","o":["提高每一棵樹單獨的準確率","讓各棵樹差異更大、彼此較不相關，平均後的變異更小","讓模型不需要做標準化","讓每棵樹都能使用全部訓練樣本"],"a":1,"e":"如果每次都能用全部特徵，大家都會挑同一個最強的特徵切，樹長得很像，平均的效果有限。限制候選特徵讓樹彼此不同，平均後才能有效降低變異。單棵樹的準確率反而可能稍微下降。"},{"n":45,"t":"tree","s":"隨機森林中，每一棵樹的訓練樣本是怎麼來的？","o":["每棵樹都使用完全相同的全部訓練樣本","把訓練資料不放回地切成互不重疊的幾份","只使用前一棵樹分錯的樣本","從原始資料有放回地抽樣，有些樣本重複、有些沒被抽到"],"a":3,"e":"這叫 Bootstrap 抽樣：抽和原資料一樣多的筆數，但有放回，平均約 63% 的樣本會被抽到。沒抽到的樣本（Out-of-Bag）可以拿來估計表現。只用分錯樣本的想法屬於 Boosting。"},{"n":46,"t":"tree","s":"訓練資料只換掉少數幾筆，重新訓練一棵不限深度的決策樹。最可能的情況是？","o":["樹的結構可能大幅改變","樹的結構完全不變","只有葉節點的預測值會改變","只有根節點的切分會改變"],"a":0,"e":"決策樹由上往下貪婪地選切分，上層的選擇一變，下面整棵子樹都跟著變，所以單棵樹對資料很敏感（高變異）。這正是隨機森林要用平均來解決的問題。"},{"n":47,"t":"tree","s":"回歸決策樹對落在某個葉節點的新資料，輸出的預測值是什麼？","o":["一條在該葉節點內擬合的直線","該葉節點內訓練樣本目標值的平均","全部訓練樣本目標值的平均","該葉節點內訓練樣本目標值的最大值"],"a":1,"e":"回歸樹的葉節點存的是一個常數，就是落在這裡的訓練樣本目標值平均（用 MSE 準則時）。所以預測是一階一階的，不會超出訓練目標的範圍。"},{"n":48,"t":"tree","s":"需要向使用者說明「這一筆為什麼被判為某類」，而且希望能列出一條條判斷規則。下列哪個模型最適合？","o":["隨機森林","梯度提升","使用 RBF 核的 SVM","單棵決策樹"],"a":3,"e":"單棵決策樹可以列出這筆資料從根到葉經過的條件。隨機森林、梯度提升整合了幾百棵樹，核 SVM 是在高維空間找分界，都很難用幾條規則說明。"},{"n":49,"t":"flow","s":"先用整份資料算出平均數和標準差做標準化，再切分訓練集與測試集。這樣做的主要問題是？","o":["測試集的資訊進入了前處理，評估可能偏樂觀","完全沒有問題，因為標準化沒有用到標籤","訓練資料的筆數會變少","標準化會因此失效"],"a":0,"e":"這是資料洩漏：測試集的平均和變異影響了訓練時用的轉換。雖然沒用到標籤，影響通常比用標籤選特徵小，但原則一樣：所有前處理都只用訓練集 fit，再套用到測試集。"},{"n":50,"t":"flow","s":"研究者用測試集反覆比較多組超參數，選出測試分數最高的一組，並回報這個測試分數。這個分數應如何解讀？","o":["是最準確的估計，因為直接用了測試集","可能偏樂觀，因為超參數是依測試集挑的","代表模型欠擬合","和用驗證集挑選的結果完全相同"],"a":1,"e":"用測試集挑選，等於讓測試集參與了建模，挑出的剛好是對這份測試集最有利的設定。應該用驗證集或交叉驗證挑超參數，測試集只在最後用一次。"},{"n":51,"t":"flow","s":"增加更多訓練資料，通常最能改善下列哪種情況？","o":["訓練與驗證誤差都很高（欠擬合）","測試資料的分布和訓練資料不同","訓練誤差低、驗證誤差高（過擬合）","所有標籤都標錯"],"a":2,"e":"過擬合是模型記住了訓練資料的雜訊，資料多了，雜訊比較難被記住。欠擬合是模型太簡單，再多資料也學不出來，要提高複雜度或加入更有用的特徵。"},{"n":52,"t":"flow","s":"模型的訓練誤差和驗證誤差都偏高，兩者差不多。下列哪個改善方向較合理？","o":["加強正則化","減少特徵數量","減少訓練回合","提高模型複雜度，或加入更有用的特徵"],"a":3,"e":"兩者都高是欠擬合，模型太簡單，要讓模型更有彈性，例如用更深的樹、較小的正則化、加入新特徵。加強正則化和減少特徵會讓模型更簡單，更糟。"},{"n":53,"t":"flow","s":"用過去的股價預測未來股價。研究者把所有日期隨機打亂後切分訓練集與測試集。主要問題是？","o":["模型會用到未來的資訊預測過去，評估偏樂觀，應依時間先後切分","沒有問題，隨機切分最公平","會造成類別不平衡","會讓模型欠擬合"],"a":0,"e":"打亂後，訓練集裡有比測試日期更晚的資料，模型等於偷看了未來。時間序列要用前面一段訓練、後面一段測試，模擬實際部署時只知道過去。"},{"n":54,"t":"flow","s":"K-fold 交叉驗證的 K 從 5 改成 10。下列何者正確？","o":["每次訓練用的資料比例變少，訓練次數也變少","每次訓練用的資料比例變多，訓練次數也變多","每次訓練用的資料比例變少，訓練次數變多","每次訓練用的資料比例不變，訓練次數變少"],"a":1,"e":"每一輪用 (K − 1) ÷ K 的資料訓練：K = 5 是 80%，K = 10 是 90%。K 是幾就要訓練幾次，所以計算量也變大。"},{"n":55,"t":"flow","s":"線性迴歸要使用「顏色：紅、綠、藍」這個沒有順序的類別特徵。下列哪種處理較適當？","o":["編成 1、2、3 當作一個數值欄位","直接做標準化","使用獨熱編碼，每個顏色一個 0／1 欄位","因為不是數字，直接刪除"],"a":2,"e":"編成 1、2、3 會讓模型以為藍 = 3 × 紅、綠在紅和藍中間，對沒有順序的類別不合理。獨熱編碼讓每個顏色有自己的係數。類別文字也不能直接標準化。"},{"n":56,"t":"flow","s":"「滿意度：低、中、高」是有順序的類別特徵。下列敘述何者較適當？","o":["只能使用獨熱編碼，否則一定出錯","類別特徵完全不能放進模型","只有樸素貝氏可以使用這種特徵","可以考慮依順序編成 1、2、3，保留大小順序"],"a":3,"e":"有順序的類別可以用序數編碼保留順序，但要知道這會假設「低到中」和「中到高」的差距相同。如果這個假設不合理，也可以改用獨熱編碼。"},{"n":57,"t":"flow","s":"對溫度、濕度、電壓三個量測做主成分分析（PCA），得到的第一主成分是什麼？","o":["三個原始特徵其中最重要的那一個","三個原始特徵的線性組合，不直接對應單一量測","預測目標的類別標籤","和原始特徵無關的隨機數"],"a":1,"e":"主成分是原始特徵的加權組合，第一主成分是變異最大的方向。所以 PCA 可以降維，但新特徵沒有「溫度」那樣直接的意義。要保留原始量測就用特徵選擇。PCA 也不看標籤。"},{"n":58,"t":"flow","s":"後向刪除（Backward Elimination）是怎麼挑選特徵的？","o":["從空集合開始，每次加入一個最能提升表現的特徵","每次隨機選一組特徵比較","從全部特徵開始，每次刪掉一個刪除後表現最好（影響最小）的特徵","一次把相關係數低的特徵全部刪掉"],"a":2,"e":"後向刪除和前向選擇方向相反：一開始全部放進去，每輪試著刪掉每一個特徵，刪掉後驗證表現最好的那個就真的刪掉，直到再刪會變差。從空集合開始逐一加入的是前向選擇。"},{"n":59,"t":"flow","s":"下列哪一項是超參數（訓練前由人設定），而不是由資料學出來的參數？","o":["邏輯迴歸的特徵係數","支援向量機的懲罰參數 C","回歸決策樹葉節點的預測值","線性迴歸的截距"],"a":1,"e":"C 要在訓練前決定，再用驗證集或交叉驗證挑。係數、截距、葉節點的值都是訓練時從資料算出來的參數。"},{"n":60,"t":"flow","s":"下列哪個問題是交叉驗證無法解決的？","o":["單次切分造成的評估結果波動","資料量少時評估不穩定","比較不同超參數時缺少可靠的依據","訓練資料中有不少標籤是錯的"],"a":3,"e":"交叉驗證只是換不同方式切分，讓評估更穩定、更能比較模型。資料本身的標籤錯了，每一折都一樣錯，交叉驗證修不好，要回頭清理資料。"}]};
+const KEY = "aiot-quiz1-property-v1";
+const L = "ABCD";
+let state = { mode: "practice", topic: "all", wrongOnly: false, picks: {} };
+try { Object.assign(state, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const topicName = Object.fromEntries(DATA.topics.map(t => [t.k, t]));
+const $ = id => document.getElementById(id);
+
+const pool = () => DATA.items;
+
+function renderChips() {
+  const counts = {};
+  pool().forEach(it => counts[it.t] = (counts[it.t] || 0) + 1);
+  const all = [{ k: "all", zh: "全部", n: pool().length }].concat(DATA.topics.map(t => ({ k: t.k, zh: t.zh, n: counts[t.k] })));
+  $("chips").innerHTML = all.map(t =>
+    `<button type="button" class="chip" data-topic="${t.k}" aria-pressed="${state.topic === t.k}">${esc(t.zh)}<small>${t.n}</small></button>`).join("");
+}
+
+function card(it) {
+  const pick = state.picks[it.n];
+  const answered = pick !== undefined;
+  const show = state.mode === "review" || answered;
+  const opts = it.o.map((o, j) => {
+    let cls = "opt";
+    if (show && j === it.a) cls += " ok";
+    if (state.mode === "practice" && answered && j === pick && pick !== it.a) cls += " no";
+    const dis = state.mode === "review" || answered ? " disabled" : "";
+    return `<button type="button" class="${cls}" data-q="${it.n}" data-j="${j}"${dis}><span class="k">${L[j]}.</span><span>${esc(o)}</span></button>`;
+  }).join("");
+  let ans = "";
+  if (show) {
+    const verdict = state.mode === "practice" && answered
+      ? (pick === it.a ? "答對了。" : `<span class="wrong">你選 ${L[pick]}，答錯了。</span>`) : "";
+    ans = `<div class="ans">${verdict}<b>答案：${L[it.a]}</b><br>解析：${esc(it.e)}</div>`;
+  }
+  return `<article class="q" id="q${it.n}"><h3><span class="no">${it.n}</span><span>${esc(it.s)}</span></h3><div class="opts">${opts}</div>${ans}</article>`;
+}
+
+function render() {
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === state.mode));
+  $("wrongOnly").setAttribute("aria-pressed", state.wrongOnly);
+  $("wrongOnly").hidden = state.mode !== "practice";
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.topic === state.topic));
+
+  let items = pool().filter(it => state.topic === "all" || it.t === state.topic);
+  if (state.mode === "practice" && state.wrongOnly) items = items.filter(it => state.picks[it.n] !== undefined && state.picks[it.n] !== it.a);
+
+  let html = "", cur = null;
+  for (const it of items) {
+    if (it.t !== cur) {
+      cur = it.t;
+      const t = topicName[cur];
+      html += `<h2 class="sec-title">${esc(t.zh)}<span>${esc(t.en)}</span></h2>`;
+    }
+    html += card(it);
+  }
+  $("list").innerHTML = html || `<p class="empty">${state.wrongOnly ? "目前沒有答錯的題目。" : "沒有題目。"}</p>`;
+  renderScore();
+}
+
+function renderScore() {
+  const scope = pool().filter(it => state.topic === "all" || it.t === state.topic);
+  const done = scope.filter(it => state.picks[it.n] !== undefined);
+  const right = done.filter(it => state.picks[it.n] === it.a).length;
+  const pct = done.length ? Math.round(right / done.length * 100) : 0;
+  $("score").innerHTML = `答對 <b>${right}</b> / 已答 <b>${done.length}</b> / 共 ${scope.length}` + (done.length ? `（${pct}%）` : "");
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.mode) { state.mode = b.dataset.mode; save(); render(); }
+  else if (b.dataset.topic) { state.topic = b.dataset.topic; save(); render(); window.scrollTo({ top: $("list").offsetTop - 140 }); }
+  else if (b.id === "wrongOnly") { state.wrongOnly = !state.wrongOnly; save(); render(); }
+  else if (b.id === "reset") {
+    if (confirm("清除所有作答紀錄？")) { state.picks = {}; state.wrongOnly = false; save(); render(); }
+  }
+  else if (b.dataset.q) {
+    const n = +b.dataset.q, it = DATA.items[n - 1];
+    state.picks[n] = +b.dataset.j; save();
+    document.getElementById("q" + n).outerHTML = card(it);
+    renderScore();
+  }
+});
+
+renderChips();
+render();
+</script>
+</body>
+</html>
